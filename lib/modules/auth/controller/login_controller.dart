@@ -19,7 +19,6 @@ class LoginController extends ChangeNotifier {
         final responseBody = json.decode(response.body);
 
         if (responseBody['status'] == 'success') {
-          // Navigate to the next screen or perform a successful login action
           Navigator.pushReplacementNamed(context, '/home');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
