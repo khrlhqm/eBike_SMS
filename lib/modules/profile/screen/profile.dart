@@ -56,15 +56,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('Your Details'),
-      //   leading: IconButton(
-      //     icon: const Icon(Icons.edit),
-      //     onPressed: () => _openModal(context),
-      //   ),
-      // ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(16.0),
+        decoration: const BoxDecoration(
+          border: Border(),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -90,7 +86,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               style: TextStyle(fontSize: 18),
             ),
             const SizedBox(height: 20),
-            // Additional info
             const Text(
               'About:',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -100,14 +95,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               'Ntah.',
               style: TextStyle(fontSize: 16),
             ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                foregroundColor: Theme.of(context).colorScheme.onPrimary,
-              ),
-              onPressed: () {},
-              child: const Text('Logout'),
-            ),
+            const SizedBox(height: 30),
+            Container(
+                margin: const EdgeInsets.all(16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      onPressed: () {},
+                      child: const Text('Logout'),
+                    ),
+                  ],
+                )),
           ],
         ),
       ),

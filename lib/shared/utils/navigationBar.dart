@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/profile/screen/profile.dart';
 import 'package:ebikesms/modules/dashboard/screen/dashboard.dart';
+import 'package:ebikesms/modules/location/screen/location.dart';
 
 /// Flutter code sample for [BottomNavigationBar].
 
@@ -40,9 +41,6 @@ class _BottomNavWithPageViewState extends State<BottomNavWithPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('eBike Student Mobility Solutions'),
-      ),
       body: PageView(
         controller: _pageController,
         onPageChanged: (index) {
@@ -52,28 +50,53 @@ class _BottomNavWithPageViewState extends State<BottomNavWithPageView> {
         },
         children: const <Widget>[
           Dashboard(),
+          Location(),
           AnalyticsTab(),
           Profile(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Dashboard',
+      bottomNavigationBar: Stack(
+        alignment: AlignmentDirectional.topCenter,
+        clipBehavior: Clip.none,
+        children: [
+          BottomNavigationBar(
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.location_on),
+                label: 'Located',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.qr_code_2_rounded),
+                label: 'Qr Code',
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.bar_chart), label: 'Statictic'),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.menu),
+                label: 'Menu',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: const Color.fromARGB(255, 0, 51, 153),
+            unselectedItemColor: Colors.black,
+            onTap: _onItemTapped,
+            showUnselectedLabels: true,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.analytics),
-            label: 'Analytics',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_circle),
-            label: 'Profile',
+          Positioned(
+            top: -20.0,
+            child: FloatingActionButton(
+              backgroundColor: Colors.blue,
+              onPressed: () {
+                // Handle Scan QR button press
+              },
+              child: const Icon(Icons.qr_code_2_rounded, color: Colors.white),
+            ),
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
-        onTap: _onItemTapped,
       ),
     );
   }
@@ -84,7 +107,7 @@ class AnalyticsTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return const Center(
       child: Text(
         'Analytics Content',
         style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -92,76 +115,3 @@ class AnalyticsTab extends StatelessWidget {
     );
   }
 }
-// class BottomNavigationBarExampleApp extends StatelessWidget {
-//   const BottomNavigationBarExampleApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: BottomNavigationBarExample(
-//         length: 3,
-//         child: const BottomNavigationBarExample(),
-//       ),
-//     );
-//   }
-// }
-
-// class BottomNavigationBarExample extends StatefulWidget {
-//   const BottomNavigationBarExample({super.key});
-
-//   @override
-//   State<BottomNavigationBarExample> createState() =>
-//       _BottomNavigationBarExampleState();
-// }
-
-// class _BottomNavigationBarExampleState
-//     extends State<BottomNavigationBarExample> {
-//   int _selectedIndex = 0;
-//   static const TextStyle optionStyle =
-//       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-//   static const List<Widget> _widgetOptions = <Widget>[
-//     Dashboard(),
-    // Text(
-    //   'nak buat kira kira atau sum maybe',
-    //   style: optionStyle,
-    // ),
-//     Profile(),
-//   ];
-
-//   void _onItemTapped(int index) {
-//     setState(() {
-//       _selectedIndex = index;
-//     });
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('eBike Student Mobility Solutions'),
-//       ),
-//       body: Center(
-//         child: _widgetOptions.elementAt(_selectedIndex),
-//       ),
-//       bottomNavigationBar: BottomNavigationBar(
-//         items: const <BottomNavigationBarItem>[
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.home),
-//             label: 'Dashboard',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.ads_click_rounded),
-//             label: 'Analytics',
-//           ),
-//           BottomNavigationBarItem(
-//             icon: Icon(Icons.account_circle),
-//             label: 'Profile',
-//           ),
-//         ],
-//         currentIndex: _selectedIndex,
-//         selectedItemColor: Colors.amber[800],
-//         onTap: _onItemTapped,
-//       ),
-//     );
-//   }
-// }
