@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../../shared/utils/navigationBar.dart';
 
 class LoginController extends ChangeNotifier {
   Future<void> loginValidation(
@@ -28,7 +29,10 @@ class LoginController extends ChangeNotifier {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful')),
           );
-          Navigator.pushReplacementNamed(context, '/home');
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const BottomNavSmoothTransitionApp()),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),

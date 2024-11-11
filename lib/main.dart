@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'modules/auth/screen/login.dart';
 import 'shared/constants/app_constants.dart';
-import 'shared/utils/navigationBar.dart';
 
 void main() {
   runApp(const MyApp());
