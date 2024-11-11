@@ -5,8 +5,14 @@ import 'dart:convert';
 class LoginController extends ChangeNotifier {
   Future<void> loginValidation(
       BuildContext context, String username, String password) async {
-    final url = Uri.parse(
-        "http://10.0.2.2/e-bike/api.php");
+    if (username.isEmpty || password.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Username and password are required')),
+      );
+      return; // Stop execution if validation fails
+    }
+
+    final url = Uri.parse("http://localhost/e-bike/api.php");
 
     try {
       final response = await http.post(
@@ -20,8 +26,9 @@ class LoginController extends ChangeNotifier {
 
         if (responseBody['status'] == 'success') {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(responseBody['message'] ?? 'Login suces')),
+            const SnackBar(content: Text('Login successful')),
           );
+          Navigator.pushReplacementNamed(context, '/home');
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
@@ -29,13 +36,12 @@ class LoginController extends ChangeNotifier {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-              content: Text('Server error. Please try again later.')),
+          const SnackBar(content: Text('Server error. Please try again later.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Egrho: $e')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
   }
