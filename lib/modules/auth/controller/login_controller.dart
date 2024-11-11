@@ -6,7 +6,7 @@ class LoginController extends ChangeNotifier {
   Future<void> loginValidation(
       BuildContext context, String username, String password) async {
     final url = Uri.parse(
-        "https://your-server.com/api.php"); // Replace with your PHP API URL
+        "http://10.0.2.2/e-bike/api.php");
 
     try {
       final response = await http.post(
@@ -19,7 +19,9 @@ class LoginController extends ChangeNotifier {
         final responseBody = json.decode(response.body);
 
         if (responseBody['status'] == 'success') {
-          Navigator.pushReplacementNamed(context, '/home');
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(responseBody['message'] ?? 'Login suces')),
+          );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(responseBody['message'] ?? 'Login failed')),
@@ -33,7 +35,7 @@ class LoginController extends ChangeNotifier {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $e')),
+        SnackBar(content: Text('Egrho: $e')),
       );
     }
   }
