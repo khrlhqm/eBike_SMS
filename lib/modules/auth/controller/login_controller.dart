@@ -13,7 +13,7 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("http://localhost/e-bike/api.php");
+    final url = Uri.parse("http://192.168.0.30/e-bike/api.php");
 
     try {
       final response = await http.post(
@@ -31,7 +31,8 @@ class LoginController extends ChangeNotifier {
           );
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const BottomNavSmoothTransitionApp()),
+            MaterialPageRoute(
+                builder: (context) => const BottomNavSmoothTransitionApp()),
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -40,7 +41,8 @@ class LoginController extends ChangeNotifier {
         }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Server error. Please try again later.')),
+          const SnackBar(
+              content: Text('Server error. Please try again later.')),
         );
       }
     } catch (e) {

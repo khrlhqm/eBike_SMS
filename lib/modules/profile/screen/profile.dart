@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/profile/widget/profileCard.dart';
+import 'package:ebikesms/modules/profile/widget/modal.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -56,64 +58,158 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: const BoxDecoration(
-          border: Border(),
-        ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Center(
-              child: CircleAvatar(
-                radius: 50,
-                backgroundImage: AssetImage('.jpg'),
+            // Profile Section
+            const Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Colors.red,
+                  child: Icon(Icons.person, color: Colors.white, size: 40),
+                ),
+                SizedBox(width: 16),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Muhammad Lorem Ipsum',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      'B033300099',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                    Text(
+                      '+60 19 888 4444',
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+
+            // Ride Time Available Section
+            Container(
+              padding: const EdgeInsets.all(20.0),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Row(
+                    children: [
+                      Icon(Icons.access_time, color: Colors.white),
+                      SizedBox(width: 8),
+                      Text(
+                        'Ride Time Available',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    '2 hours 40 mins',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Add more button action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.blue,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: const Text('Add more'),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Name: Testing',
-              style: TextStyle(fontSize: 18),
+
+            // Ride History and Learn How to Use Section
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildIconCard(
+                  icon: Icons.directions_bike,
+                  label: 'Ride history',
+                  onTap: () {
+                    // Ride history action
+                  },
+                ),
+                buildIconCard(
+                  icon: Icons.lightbulb,
+                  label: 'Learn how to use',
+                  onTap: () {
+                    // Learn how to use action
+                    print('Learn how to use clicked');
+                  },
+                ),
+              ],
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Email: test123@example.com',
-              style: TextStyle(fontSize: 18),
+            //const Spacer(),
+
+            ListTile(
+              leading: const Icon(Icons.settings, color: Colors.black),
+              title: const Text('Settings'),
+              onTap: () {
+                // Settings action
+              },
             ),
-            const SizedBox(height: 10),
-            const Text(
-              'Phone: +1234567890',
-              style: TextStyle(fontSize: 18),
+            ListTile(
+              leading: const Icon(Icons.logout, color: Colors.red),
+              title: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: () {
+                logoutModal(context);
+              },
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'About:',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 10),
-            const Text(
-              'Ntah.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 30),
-            Container(
-                margin: const EdgeInsets.all(16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor:
-                            Theme.of(context).colorScheme.onPrimary,
-                      ),
-                      onPressed: () {},
-                      child: const Text('Logout'),
-                    ),
-                  ],
-                )),
           ],
         ),
+      ),
+    );
+  }
+
+  // Helper method to create icon cards
+  Widget _buildIconCard({required IconData icon, required String label}) {
+    return Container(
+      width: 140,
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF2F7FF),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black12,
+            blurRadius: 5,
+            offset: Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(icon, size: 40, color: Colors.black),
+          const SizedBox(height: 10),
+          Text(label, style: const TextStyle(color: Colors.black)),
+        ],
       ),
     );
   }
