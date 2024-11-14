@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/auth/controller/login_controller.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,12 +14,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _handleLogin() {
     final username = _usernameController.text;
-    //final password = _passwordController.text;
+    final password = _passwordController.text;
 
-    // Implement login logic here. For now, just show a message.
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Login pressed with username: $username')),
-    );
+    (username == '' || password == '')
+        ? ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Username and password are required')))
+        : LoginController().loginValidation(context, username, password);
   }
 
   @override
