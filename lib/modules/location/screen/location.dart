@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:ebikesms/modules/location/widget/marker.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});
@@ -10,8 +11,6 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
-  get angleInDegrees => 2.3138;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,11 +22,12 @@ class _LocationState extends State<Location> {
     return FlutterMap(
       options: const MapOptions(
         initialCenter: LatLng(2.3138, 102.3211),
-        initialZoom: 13.0,
+        initialZoom: 16.0,
         interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
       ),
       children: [
         openStreetMap,
+        MarkerLayer(markers: buildMarkers()),
       ],
     );
   }
