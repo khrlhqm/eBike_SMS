@@ -19,7 +19,7 @@ class LoginController extends ChangeNotifier {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: json.encode({"username": username, "password": password}),
+        body: json.encode({"matric_number": username, "password": password}),
       );
 
       if (response.statusCode == 200) {
