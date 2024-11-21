@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'modules/auth/screen/login.dart';
-import 'shared/constants/app_constants.dart';
 import '../../../shared/utils/navigationBar.dart';
 import 'modules/auth/screen/signup.dart'; // Adjust path as needed
+import 'modules/auth/screen/autentication.dart'; // Adjust path as needed
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: SignupScreen(),
+      home: BiometricAuthScreen(),
     );
   }
 }

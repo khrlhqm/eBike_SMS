@@ -1,197 +1,252 @@
 import 'package:ebikesms/modules/auth/screen/login.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/auth/controller/signup_controller.dart';
+
 class SignupScreen extends StatefulWidget {
-  
   @override
-  _SignUpPageState  createState() => _SignUpPageState ();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _SignUpPageState  extends State <SignupScreen> {
-
+class _SignUpPageState extends State<SignupScreen> {
+  final PageController _pageController = PageController();
   final TextEditingController _matricnumber = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _repassword = TextEditingController();
+  final TextEditingController _fullname = TextEditingController();
+  final TextEditingController _username = TextEditingController();
 
-  void _handlesignup(){
-    final String matric_number = _matricnumber.text;
-    final String password = _password.text;
-    final String repassword = _repassword.text;
+  void _nextPage() {
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+  }
 
-    if (matric_number == '' || password == '' || repassword == '') {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(content: Text('Please fill all required information')),
-  );
-} else {
-  
-  SignupController().registerUser(context,matric_number,password,repassword);
-  
-}
-
-
-}
+  void _handleSignup() {
+    // Replace with actual signup logic
+    SignupController().registerUser(
+      context,
+      _matricnumber.text,
+      _password.text,
+      _repassword.text,
+      _fullname.text,
+      _username.text,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // Header section with wave and icon
-            Container(
-              height: 250,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/modules/Assets/Vector_3.png'),
-                  fit: BoxFit
-                      .cover, // This will ensure the image covers the entire container
+      body: PageView(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        children: [
+          // Page 1: Matric Number and Password
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header section with wave and icon
+                Container(
+                  height: 250,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(100),
+                    ),
+                  ),
                 ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(100),
-                ),
-              ),
-              
-            ),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Let's Get Started",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    "Create your own account",
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  // Matric Number TextField
-                  TextField(
-                    controller: _matricnumber,
-                    decoration: InputDecoration(
-                      labelText: 'Matric Number',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  // Password TextField
-                  TextField(
-                    obscureText: true,
-                    controller: _password,
-                    decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      suffixIcon: const Icon(Icons.visibility),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  // Confirm Password TextField
-                  TextField(
-                    obscureText: true,
-                    controller: _repassword,
-                    decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  // Terms and Privacy Checkbox
-                  Row(
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Checkbox(value: false, onChanged: (value) {}),
-                      Expanded(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "I agree to the ",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: "Term ",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                              const TextSpan(
-                                text: "and ",
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              TextSpan(
-                                text: "Privacy Policy",
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ],
+                      const Text(
+                        "Let's Get Started",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        "Create your own account",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Matric Number TextField
+                      TextField(
+                        controller: _matricnumber,
+                        decoration: InputDecoration(
+                          labelText: 'Matric Number',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      // Password TextField
+                      TextField(
+                        obscureText: true,
+                        controller: _password,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          suffixIcon: const Icon(Icons.visibility),
+                        ),
+                      ),
+                      const SizedBox(height: 15),
+                      // Confirm Password TextField
+                      TextField(
+                        obscureText: true,
+                        controller: _repassword,
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Next Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _nextPage,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF003366),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Next'),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
-                  // Get Started Button
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _handlesignup,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF003366),
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                ),
+              ],
+            ),
+          ),
+          // Page 2: Full Name and Username
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                // Header section with wave and icon
+                Container(
+                  height: 250,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      fit: BoxFit.cover,
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(100),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        "Almost There!",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      child: const Text('Sign Up'),
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-                  
-                  // Sign In link
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Already have an account? "),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => LoginScreen()),);
-                          },
-                          child: const Text(
-                            "Sign in",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontWeight: FontWeight.bold,
-                            ),
+                      const SizedBox(height: 5),
+                      const Text(
+                        "Just a few more details",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Full Name TextField
+                      TextField(
+                        controller: _fullname,
+                        decoration: InputDecoration(
+                          labelText: 'Full Name',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                      const SizedBox(height: 15),
+                      // Username TextField
+                      TextField(
+                        controller: _username,
+                        decoration: InputDecoration(
+                          labelText: 'Username',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      // Sign Up Button
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: _handleSignup,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF003366),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: const Text('Sign Up'),
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text("Already have an account? "),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()),
+                                );
+                              },
+                              child: const Text(
+                                "Sign in",
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

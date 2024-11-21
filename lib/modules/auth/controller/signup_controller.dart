@@ -5,7 +5,7 @@ import 'package:ebikesms/modules/auth/screen/login.dart';
 
 class SignupController extends ChangeNotifier {
   Future<void> registerUser(
-      BuildContext context, String matricNumber, String password, String confirmPassword) async {
+      BuildContext context, String matricNumber, String password, String confirmPassword, String fullname, String username) async {
     
     // Validation: check for empty fields and matching passwords
     if (matricNumber.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
@@ -33,6 +33,8 @@ class SignupController extends ChangeNotifier {
         body: json.encode({
           "matric_number": matricNumber,
           "password": password,
+          "username" : username,
+          "full_name" : fullname,
         }),
       );
 
