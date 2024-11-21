@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:ebikesms/modules/auth/screen/login.dart';
 
 class BiometricAuthScreen extends StatefulWidget {
   @override
@@ -21,7 +22,8 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
           localizedReason: 'Please authenticate to proceed',
           options: const AuthenticationOptions(
             biometricOnly: true, // Limit to biometric methods only
-            stickyAuth: true,    // Keeps authentication active until user authenticates
+            stickyAuth:
+                true, // Keeps authentication active until user authenticates
           ),
         );
       }
@@ -87,7 +89,10 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
           const SizedBox(height: 20),
           OutlinedButton(
             onPressed: () {
-              Navigator.pushReplacementNamed(context, '/home');
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             },
             child: const Text("Remind me later"),
           ),
