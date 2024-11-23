@@ -13,7 +13,7 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("http://localhost/e-bike/api.php");
+    final url = Uri.parse("http://192.168.0.25/e-bike/api.php");
 
     try {
       final response = await http.post(

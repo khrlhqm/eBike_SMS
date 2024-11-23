@@ -12,35 +12,54 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
 
   Future<void> _authenticate() async {
     try {
-      // Check if biometrics are available
       bool canCheckBiometrics = await auth.canCheckBiometrics;
+      print('Can check biometrics: $canCheckBiometrics');
       bool authenticated = false;
 
       if (canCheckBiometrics) {
-        // Try to authenticate
         authenticated = await auth.authenticate(
           localizedReason: 'Please authenticate to proceed',
           options: const AuthenticationOptions(
-            biometricOnly: true, // Limit to biometric methods only
-            stickyAuth:
-                true, // Keeps authentication active until user authenticates
+            biometricOnly: true,
+            stickyAuth: true,
           ),
         );
+        print('Authentication result: $authenticated');
+      } else {
+        print('Biometrics not available');
+        checkBiometrics();
       }
 
       if (authenticated) {
-        Navigator.pushReplacementNamed(context, '/home');
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Authentication success')),
+        );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Authentication failed')),
         );
       }
     } catch (e) {
+      print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
     }
   }
+
+  Future<void> checkBiometrics() async {
+  try {
+    bool canCheckBiometrics = await auth.canCheckBiometrics;
+    List<BiometricType> availableBiometrics =
+        await auth.getAvailableBiometrics();
+
+    print('Can check biometrics: $canCheckBiometrics');
+    print('Available biometrics: $availableBiometrics');
+  } catch (e) {
+    print('Error checking biometrics: $e');
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +71,8 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
           Container(
             height: 200,
             decoration: const BoxDecoration(
-              color: Colors.blue,
               image: DecorationImage(
-                image: AssetImage('assets/wave_top.png'),
+                image: AssetImage('lib/modules/Assets/Vector_3.png'),
                 fit: BoxFit.cover,
               ),
             ),

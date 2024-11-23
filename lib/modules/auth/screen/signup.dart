@@ -37,6 +37,8 @@ class _SignUpPageState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:
+          const Color.fromARGB(255, 243, 245, 252), // Light blue background
       body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
@@ -47,7 +49,7 @@ class _SignUpPageState extends State<SignupScreen> {
               children: [
                 // Header section with wave and icon
                 Container(
-                  height: 250,
+                  height: 200,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('lib/modules/Assets/Vector_3.png'),
@@ -64,54 +66,93 @@ class _SignUpPageState extends State<SignupScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Center(
+                        child: const Text(
                         "Let's Get Started",
                         style: TextStyle(
-                          fontSize: 24,
+                          fontSize: 30,
+                          letterSpacing: 1.0,
                           fontWeight: FontWeight.bold,
+                          fontFamily: 'Poppins',
                         ),
                       ),
+                      ),
                       const SizedBox(height: 5),
-                      const Text(
+                      Center(
+                        child: const Text(
                         "Create your own account",
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.grey,
                         ),
                       ),
+                      ),
                       const SizedBox(height: 20),
                       // Matric Number TextField
-                      TextField(
-                        controller: _matricnumber,
-                        decoration: InputDecoration(
-                          labelText: 'Matric Number',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Center(
+                        child: Container(
+                          width: 350.0,
+                          child: TextField(
+                            controller: _matricnumber,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'Matric Number',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF003366),
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 15),
                       // Password TextField
-                      TextField(
-                        obscureText: true,
-                        controller: _password,
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Center(
+                        child: Container(
+                          width: 350.0,
+                          child: TextField(
+                            obscureText: true,
+                            controller: _password,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'Password',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF003366),
+                                  width: 2.0,
+                                ),
+                              ),
+                              suffixIcon: const Icon(Icons.visibility),
+                            ),
                           ),
-                          suffixIcon: const Icon(Icons.visibility),
                         ),
                       ),
                       const SizedBox(height: 15),
                       // Confirm Password TextField
-                      TextField(
-                        obscureText: true,
-                        controller: _repassword,
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Center(
+                        child: Container(
+                          width: 350.0,
+                          child: TextField(
+                            obscureText: true,
+                            controller: _repassword,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'Confirm Password',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF003366),
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -119,17 +160,24 @@ class _SignUpPageState extends State<SignupScreen> {
                       // Next Button
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 60,
                         child: ElevatedButton(
                           onPressed: _nextPage,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF003366),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text('Next'),
+                          child: const Text(
+                            'Next',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -178,23 +226,45 @@ class _SignUpPageState extends State<SignupScreen> {
                       ),
                       const SizedBox(height: 20),
                       // Full Name TextField
-                      TextField(
-                        controller: _fullname,
-                        decoration: InputDecoration(
-                          labelText: 'Full Name',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Center(
+                        child: Container(
+                          width: 350.0,
+                          child: TextField(
+                            controller: _fullname,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'Full Name',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF003366),
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
                       const SizedBox(height: 15),
                       // Username TextField
-                      TextField(
-                        controller: _username,
-                        decoration: InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
+                      Center(
+                        child: Container(
+                          width: 350.0,
+                          child: TextField(
+                            controller: _username,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white,
+                              labelText: 'Username',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(25),
+                                borderSide: BorderSide(
+                                  color: const Color(0xFF003366),
+                                  width: 2.0,
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       ),
@@ -202,17 +272,24 @@ class _SignUpPageState extends State<SignupScreen> {
                       // Sign Up Button
                       SizedBox(
                         width: double.infinity,
-                        height: 50,
+                        height: 60,
                         child: ElevatedButton(
                           onPressed: _handleSignup,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF003366),
                             foregroundColor: Colors.white,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text('Sign Up'),
+                          child: const Text(
+                            'Sign Up',
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 20),

@@ -23,7 +23,7 @@ class SignupController extends ChangeNotifier {
     }
 
     // Define the URL for the API endpoint
-    final url = Uri.parse("http://localhost/e-bike/signup.php");
+    final url = Uri.parse("http://192.168.0.25/e-bike/signup.php");
 
     try {
       // Make a POST request with JSON body
