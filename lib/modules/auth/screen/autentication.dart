@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:ebikesms/modules/auth/screen/login.dart';
+import 'package:ebikesms/shared/widget/back_button_widget.dart';
 
 class BiometricAuthScreen extends StatefulWidget {
   @override
@@ -27,92 +27,132 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
         print('Authentication result: $authenticated');
       } else {
         print('Biometrics not available');
-        checkBiometrics();
+        await checkBiometrics();
       }
 
       if (authenticated) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Authentication success')),
-        );
+        // Return 1 for success
+        Navigator.pop(context, 1);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Authentication failed')),
-        );
+        // Return 0 for failure
+        Navigator.pop(context, 0);
       }
     } catch (e) {
       print('Error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
+      // Return 0 for error
+      Navigator.pop(context, 0);
     }
   }
 
   Future<void> checkBiometrics() async {
-  try {
-    bool canCheckBiometrics = await auth.canCheckBiometrics;
-    List<BiometricType> availableBiometrics =
-        await auth.getAvailableBiometrics();
+    try {
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      List<BiometricType> availableBiometrics =
+          await auth.getAvailableBiometrics();
 
-    print('Can check biometrics: $canCheckBiometrics');
-    print('Available biometrics: $availableBiometrics');
-  } catch (e) {
-    print('Error checking biometrics: $e');
+      print('Can check biometrics: $canCheckBiometrics');
+      print('Available biometrics: $availableBiometrics');
+    } catch (e) {
+      print('Error checking biometrics: $e');
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
         children: [
+          // Wave at the top
           Container(
             height: 200,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('lib/modules/Assets/Vector_3.png'),
                 fit: BoxFit.cover,
               ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(100),
+              ),
+            ),
+            child: Stack(
+              children: [
+                // Back button positioned above the image
+                Positioned(
+                  top: 150,
+                  left: 20,
+                  child: BackButtonWidget(
+                    buttonColor: Colors.blue,
+                    iconSize: 30.0,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 40),
-          const Text(
-            "Face Verification",
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          // Main content
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    "Verify that it's you",
+                    style: TextStyle(
+                      fontSize: 30,
+                      letterSpacing: 1.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                    ),
+                  ),
+                  const Text(
+                    "Just one more step",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1.0,
+                    ),
+                  ),
+                  const SizedBox(height: 100),
+                  Icon(
+                    Icons.fingerprint,
+                    size: 100,
+                    color: const Color(0xFF003366),
+                  ),
+                  const SizedBox(height: 100),
+                  Center(
+                    child: Container(
+                      width: 350.0,
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 60,
+                        child: ElevatedButton(
+                          onPressed: _authenticate,
+                          child: const Text(
+                            "Get Started",
+                            style: TextStyle(
+                              fontFamily: 'Poppins',
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF003366),
+                            foregroundColor: Colors.white,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 80, vertical: 15),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Text(
-            "Create your own account",
-            style: TextStyle(fontSize: 16),
-          ),
-          const SizedBox(height: 40),
-          Icon(
-            Icons.face_rounded,
-            size: 100,
-            color: Colors.blue,
-          ),
-          const SizedBox(height: 40),
-          ElevatedButton(
-            onPressed: _authenticate,
-            child: const Text("Get Started"),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
-              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-            ),
-          ),
-          const SizedBox(height: 20),
-          OutlinedButton(
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-              );
-            },
-            child: const Text("Remind me later"),
           ),
         ],
       ),
