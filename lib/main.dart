@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: BiometricAuthScreen(),
+      home: const BottomNavSmoothTransitionApp(),
     );
   }
 }
