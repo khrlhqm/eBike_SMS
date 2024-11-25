@@ -13,13 +13,13 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("http://localhost/e-bike/api.php");
+    final url = Uri.parse("http://192.168.0.25/e-bike/api.php");
 
     try {
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
-        body: json.encode({"matric_number": username, "password": password}),
+        body: json.encode({"username": username, "password": password}),
       );
 
       if (response.statusCode == 200) {
