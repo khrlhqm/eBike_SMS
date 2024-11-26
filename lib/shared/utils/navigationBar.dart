@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/widget/BottomNavBarItem.dart';
+import 'package:ebikesms/shared/constants/app_constants.dart';
 
 class BottomNavSmoothTransitionApp extends StatelessWidget {
   const BottomNavSmoothTransitionApp({super.key});
@@ -43,13 +44,13 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorConstant.white,
               borderRadius: BorderRadius.circular(30.0),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: ColorConstant.black,
                   blurRadius: 10.0,
                   spreadRadius: 2.0,
                   offset: Offset(0, 5),
@@ -63,8 +64,8 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
                 elevation: 0,
                 items: bottomNavigationBarItems(),
                 currentIndex: _selectedIndex,
-                selectedItemColor: const Color.fromARGB(255, 0, 51, 153),
-                unselectedItemColor: Colors.black,
+                selectedItemColor: ColorConstant.darkBlue,
+                unselectedItemColor: ColorConstant.black,
                 onTap: _onItemTapped,
                 showUnselectedLabels: true,
               ),
@@ -73,12 +74,13 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
           Positioned(
             bottom: 25.0, // Position above the BottomNavigationBar
             child: FloatingActionButton(
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorConstant.darkBlue,
               onPressed: () {
                 // Handle Scan button press
               },
               elevation: 4.0,
-              child: const Icon(Icons.qr_code_2_rounded, color: Colors.white),
+              child: const Icon(Icons.qr_code_2_rounded,
+                  color: ColorConstant.white),
             ),
           ),
         ],

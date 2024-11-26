@@ -1,6 +1,11 @@
+import 'package:ebikesms/modules/menu/learn/screen/learn.dart';
+import 'package:ebikesms/modules/menu/rideHistory/screen/history.dart';
+import 'package:ebikesms/modules/menu/settings/screen/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/menu/widget/iconCard.dart';
 import 'package:ebikesms/modules/menu/widget/modal.dart';
+import 'package:ebikesms/shared/constants/app_constants.dart';
+import 'package:flutter_svg/svg.dart';
 
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key}) : super(key: key);
@@ -35,8 +40,9 @@ class _MenuScreenState extends State<MenuScreen> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.red,
-                  child: Icon(Icons.person, color: Colors.white, size: 40),
+                  backgroundColor: ColorConstant.red,
+                  child:
+                      Icon(Icons.person, color: ColorConstant.white, size: 40),
                 ),
                 SizedBox(width: 16),
                 Column(
@@ -49,11 +55,11 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     Text(
                       'B033300099',
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(color: ColorConstant.grey),
                     ),
                     Text(
-                      '+60 19 888 4444',
-                      style: TextStyle(color: Colors.grey),
+                      '+60 ',
+                      style: TextStyle(color: ColorConstant.grey),
                     ),
                   ],
                 ),
@@ -65,7 +71,7 @@ class _MenuScreenState extends State<MenuScreen> {
             Container(
               padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: ColorConstant.lightBlue,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -73,11 +79,12 @@ class _MenuScreenState extends State<MenuScreen> {
                 children: [
                   const Row(
                     children: [
-                      Icon(Icons.access_time, color: Colors.white),
+                      Icon(Icons.access_time, color: ColorConstant.white),
                       SizedBox(width: 8),
                       Text(
                         'Ride Time Available',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                        style:
+                            TextStyle(color: ColorConstant.white, fontSize: 16),
                       ),
                     ],
                   ),
@@ -85,7 +92,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   const Text(
                     '2 hours 40 mins',
                     style: TextStyle(
-                        color: Colors.white,
+                        color: ColorConstant.white,
                         fontSize: 24,
                         fontWeight: FontWeight.bold),
                   ),
@@ -95,8 +102,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       // Add more button action
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.blue,
+                      backgroundColor: ColorConstant.white,
+                      foregroundColor: ColorConstant.lightBlue,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -115,27 +122,64 @@ class _MenuScreenState extends State<MenuScreen> {
                 iconCard(
                   icon: Icons.directions_bike,
                   label: 'Ride history',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RideHistoryPage(),
+                      ),
+                    );
+                  },
                 ),
                 iconCard(
                   icon: Icons.lightbulb,
                   label: 'Learn how to use',
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Learn(),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
             //const Spacer(),
 
             ListTile(
-              leading: const Icon(Icons.settings, color: Colors.black),
+              leading: IconButton(
+                onPressed: () {},
+                icon: SvgPicture.asset(
+                  'assets/icons/settings.svg',
+                  width: 24,
+                  height: 24,
+                  color: ColorConstant.black,
+                ),
+              ),
               title: const Text('Settings'),
               onTap: () {
-                // Settings action
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsPage(),
+                  ),
+                );
               },
             ),
             ListTile(
-              leading: const Icon(Icons.logout, color: Colors.red),
+              leading: IconButton(
+                onPressed: () {},
+                icon: SvgPicture.asset(
+                  'assets/icons/logout.svg',
+                  width: 24,
+                  height: 24,
+                  color: ColorConstant.red,
+                ),
+              ),
               title: const Text(
                 'Logout',
-                style: TextStyle(color: Colors.red),
+                style: TextStyle(color: ColorConstant.red),
               ),
               onTap: () {
                 logoutModal(context);
@@ -145,9 +189,5 @@ class _MenuScreenState extends State<MenuScreen> {
         ),
       ),
     );
-  }
-
-  Widget content() {
-    return const Text('Menu Screen');
   }
 }

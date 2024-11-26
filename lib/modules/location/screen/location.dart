@@ -1,8 +1,9 @@
+import 'package:ebikesms/modules/menu/learn/screen/learn.dart';
+import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:ebikesms/modules/location/widget/marker.dart';
-import 'package:ebikesms/modules/dashboard/screen/dashboard.dart';
 
 class Location extends StatefulWidget {
   const Location({super.key});
@@ -27,7 +28,7 @@ class _LocationState extends State<Location> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const Dashboard(),
+        builder: (context) => const Learn(),
       ),
     );
   }
@@ -62,18 +63,19 @@ class _LocationState extends State<Location> {
                   height: 50,
                   width: 50,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: ColorConstant.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: ColorConstant.black,
                         blurRadius: 5,
                         offset: Offset(0, 3),
                       ),
                     ],
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.lightbulb, color: Colors.yellow),
+                    icon: const Icon(Icons.lightbulb,
+                        color: ColorConstant.yellow),
                     onPressed: _navigateToProfile,
                     splashRadius: 25,
                   ),
@@ -84,18 +86,19 @@ class _LocationState extends State<Location> {
                   height: 50,
                   width: 50,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: ColorConstant.white,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black26,
+                        color: ColorConstant.black,
                         blurRadius: 5,
                         offset: Offset(0, 3),
                       ),
                     ],
                   ),
                   child: IconButton(
-                    icon: const Icon(Icons.gps_fixed, color: Colors.blue),
+                    icon: const Icon(Icons.gps_fixed,
+                        color: ColorConstant.darkBlue),
                     onPressed: _getCurrentLocation,
                     splashRadius: 25,
                   ),
