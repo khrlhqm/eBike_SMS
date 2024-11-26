@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 class TextConstant {
   static const String appName = "eBike Student Mobility Solutions";
   static const String greet = "Welcome to Unibike";
+  static const String description =
+      "located any bike nearby and scan the qr code.Enjoy your ride!";
+  static const String description2 =
+      "This is a tutorial on how to use the e-bike. Enjoy learning!";
   static const String priceRateLabel = "RM1/15 minutes";
   static const String minTopUpLabel = "RM10";
 }
 
 class PricingConstant {
   static const int minTopUpAmt = 10;
-  static const double priceRate = 1/15;
+  static const double priceRate = 1 / 15;
   static const int rideTimeLimit = 1800; // 30 Hours (1800 minutes)
 }
 

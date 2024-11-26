@@ -1,3 +1,5 @@
+import 'package:ebikesms/modules/menu/learn/screen/learn.dart';
+import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
@@ -11,15 +13,29 @@ class Location extends StatefulWidget {
 }
 
 class _LocationState extends State<Location> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: content(),
+  final MapController _mapController = MapController();
+
+  void _getCurrentLocation() {
+    setState(() {
+      _mapController.move(const LatLng(2.3138, 102.3211), 16.0);
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Moved to current location")),
+    );
+  }
+
+  void _navigateToProfile() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Learn(),
+      ),
     );
   }
 
   Widget content() {
     return FlutterMap(
+      mapController: _mapController,
       options: const MapOptions(
         initialCenter: LatLng(2.3138, 102.3211),
         initialZoom: 16.0,
@@ -27,8 +43,71 @@ class _LocationState extends State<Location> {
       ),
       children: [
         openStreetMap,
-        MarkerLayer(markers: buildMarkers()),
+        MarkerLayer(markers: buildMarkers(context)),
       ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          content(),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: Column(
+              children: [
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                    color: ColorConstant.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorConstant.black,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.lightbulb,
+                        color: ColorConstant.yellow),
+                    onPressed: _navigateToProfile,
+                    splashRadius: 25,
+                  ),
+                ),
+                const SizedBox(height: 10), // Space between buttons
+
+                Container(
+                  height: 50,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                    color: ColorConstant.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: ColorConstant.black,
+                        blurRadius: 5,
+                        offset: Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.gps_fixed,
+                        color: ColorConstant.darkBlue),
+                    onPressed: _getCurrentLocation,
+                    splashRadius: 25,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget buildIconCard({
+Widget iconCard({
   required IconData icon,
   required String label,
   required VoidCallback onTap,
