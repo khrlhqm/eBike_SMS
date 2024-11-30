@@ -48,6 +48,7 @@ dependencies:
   angles: ^2.1.1
   latlong2: ^0.9.1
   flutter_svg: ^2.0.15
+  ntp: ^2.0.0
 
 dev_dependencies:
   flutter_test:
