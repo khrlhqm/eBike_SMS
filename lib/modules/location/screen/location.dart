@@ -1,4 +1,4 @@
-import 'package:ebikesms/modules/learn/screen/learn.dart';
+import 'package:ebikesms/modules/menu/learn/screen/learn.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
