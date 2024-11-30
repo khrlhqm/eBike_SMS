@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../../../shared/utils/navigationBar.dart';
 import 'user_storage_service.dart'; // Adjust the path as needed
+import 'package:ebikesms/ip.dart';
 
 class LoginController extends ChangeNotifier {
    final UserStorageService _userStorageService = UserStorageService();
@@ -16,7 +17,7 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("http://192.168.0.25/e-bike/api.php");
+    final url = Uri.parse("${ApiBase.baseUrl}/api.php");
 
     try {
       final response = await http.post(

@@ -9,6 +9,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add secure storage dependency
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:ebikesms/ip.dart';
+
 
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key}) : super(key: key);
@@ -47,7 +49,7 @@ class _MenuScreenState extends State<MenuScreen> {
       if (userId != null) {
         // Fetch user data from the API using the user_id
         final response = await http.get(
-          Uri.parse('http://192.168.0.25/e-bike/get_user.php?user_id=$userId'),
+          Uri.parse('${ApiBase.baseUrl}/get_user.php?user_id=$userId'),
         );
 
         if (response.statusCode == 200) {
