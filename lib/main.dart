@@ -1,9 +1,11 @@
+import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:flutter/material.dart';
 import 'modules/auth/screen/login.dart'; // Adjust the path as needed
 import '../../../shared/utils/navigationBar.dart'; // Adjust the path as needed
 import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add dependency in pubspec.yaml
 
+<<<<<<< Updated upstream
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -14,6 +16,12 @@ void main() async {
   String? userId = await secureStorage.read(key: 'userId');
 
   runApp(MyApp(isLoggedIn: userId != null));
+=======
+import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.dart';
+
+void main() {
+  runApp(const MyApp());
+>>>>>>> Stashed changes
 }
 
 class MyApp extends StatelessWidget {
@@ -28,10 +36,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
+<<<<<<< Updated upstream
       home: LoginScreen()
     );
   }
 }
+
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -85,6 +96,9 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+=======
+      home: const TimeTopUpScreen(),
+>>>>>>> Stashed changes
     );
   }
 }
