@@ -6,11 +6,10 @@ import 'package:ebikesms/modules/menu/widget/iconCard.dart';
 import 'package:ebikesms/modules/menu/widget/modal.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add secure storage dependency
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ebikesms/ip.dart';
-
 
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key}) : super(key: key);
@@ -29,7 +28,6 @@ class MenuScreen extends StatefulWidget {
   @override
   _MenuScreenState createState() => _MenuScreenState();
 }
-
 
 class _MenuScreenState extends State<MenuScreen> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
@@ -59,10 +57,12 @@ class _MenuScreenState extends State<MenuScreen> {
           if (responseBody['status'] == 'success') {
             // Set the user data
             setState(() {
-              _userData = responseBody['data'];  // Assuming the user data is in 'data' key
+              _userData = responseBody[
+                  'data']; // Assuming the user data is in 'data' key
             });
           } else {
-            throw Exception('Failed to fetch user data: ${responseBody['message']}');
+            throw Exception(
+                'Failed to fetch user data: ${responseBody['message']}');
           }
         } else {
           throw Exception('Failed to load user data');
@@ -99,7 +99,8 @@ class _MenuScreenState extends State<MenuScreen> {
                 const CircleAvatar(
                   radius: 30,
                   backgroundColor: ColorConstant.red,
-                  child: Icon(Icons.person, color: ColorConstant.white, size: 40),
+                  child:
+                      Icon(Icons.person, color: ColorConstant.white, size: 40),
                 ),
                 const SizedBox(width: 16),
                 Column(
@@ -107,7 +108,8 @@ class _MenuScreenState extends State<MenuScreen> {
                   children: [
                     Text(
                       _userData?['full_name'] ?? 'Loading...',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       _userData?['matric_number'] ?? 'Loading...',
@@ -139,7 +141,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Ride Time Available',
-                        style: TextStyle(color: ColorConstant.white, fontSize: 16),
+                        style:
+                            TextStyle(color: ColorConstant.white, fontSize: 16),
                       ),
                     ],
                   ),
