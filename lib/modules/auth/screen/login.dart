@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           filled: true,
                           fillColor: Colors
                               .white, // White background for the text field
-                          labelText: 'Matric Number',
+                          labelText: 'Username',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25),
                               borderSide: BorderSide(

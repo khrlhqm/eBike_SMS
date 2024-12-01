@@ -81,13 +81,13 @@ class _MenuScreenState extends State<MenuScreen> {
     // Make sure _userData is available before building the UI
     if (_userData == null) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ColorConstant.white,
         body: const Center(child: CircularProgressIndicator()),
       );
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: ColorConstant.white,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(
@@ -181,12 +181,12 @@ class _MenuScreenState extends State<MenuScreen> {
                   icon: Icons.directions_bike,
                   label: 'Ride history',
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const RideHistoryPage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RideHistoryPage(),
+                      ),
+                    );
                   },
                 ),
                 iconCard(

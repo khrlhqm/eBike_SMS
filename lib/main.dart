@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'modules/auth/screen/login.dart'; // Adjust the path as needed
-import '../../../shared/utils/navigationBar.dart'; // Adjust the path as needed
-import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add dependency in pubspec.yaml
+import 'modules/auth/screen/login.dart';
+import '../../../shared/utils/navigationBar.dart';
+import 'modules/auth/controller/user_storage_service.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize secure storage
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  
+
   // Check if user ID exists in storage
   String? userId = await secureStorage.read(key: 'userId');
 
@@ -24,16 +24,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
-        useMaterial3: true,
-      ),
-      home: LoginScreen()
-    );
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
+          useMaterial3: true,
+        ),
+        home: LoginScreen());
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -90,4 +87,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
