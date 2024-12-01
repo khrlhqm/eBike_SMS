@@ -1,16 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/menu/learn/screen/learn.dart';
 import 'package:ebikesms/modules/menu/rideHistory/screen/history.dart';
 import 'package:ebikesms/modules/menu/settings/screen/setting.dart';
+import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/menu/widget/iconCard.dart';
 import 'package:ebikesms/modules/menu/widget/modal.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add secure storage dependency
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-import 'package:ebikesms/ip.dart';
-
+import 'package:flutter_svg/svg.dart';
 
 class MenuApp extends StatelessWidget {
   const MenuApp({Key? key}) : super(key: key);
@@ -30,62 +25,9 @@ class MenuScreen extends StatefulWidget {
   _MenuScreenState createState() => _MenuScreenState();
 }
 
-
 class _MenuScreenState extends State<MenuScreen> {
-  final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-  Map<String, dynamic>? _userData;
-
-  @override
-  void initState() {
-    super.initState();
-    _loadUserData();
-  }
-
-  Future<void> _loadUserData() async {
-    try {
-      // Retrieve the user ID from secure storage
-      String? userId = await _secureStorage.read(key: 'userId');
-
-      if (userId != null) {
-        // Fetch user data from the API using the user_id
-        final response = await http.get(
-          Uri.parse('${ApiBase.baseUrl}/get_user.php?user_id=$userId'),
-        );
-
-        if (response.statusCode == 200) {
-          // Parse the user data
-          final responseBody = json.decode(response.body);
-
-          if (responseBody['status'] == 'success') {
-            // Set the user data
-            setState(() {
-              _userData = responseBody['data'];  // Assuming the user data is in 'data' key
-            });
-          } else {
-            throw Exception('Failed to fetch user data: ${responseBody['message']}');
-          }
-        } else {
-          throw Exception('Failed to load user data');
-        }
-      } else {
-        print("User ID not found in secure storage");
-      }
-    } catch (e) {
-      // Handle errors (e.g., show a dialog or log)
-      print('Error loading user data: $e');
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Make sure _userData is available before building the UI
-    if (_userData == null) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: const Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
@@ -94,28 +36,30 @@ class _MenuScreenState extends State<MenuScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Profile Section
-            Row(
+            const Row(
               children: [
-                const CircleAvatar(
+                CircleAvatar(
                   radius: 30,
                   backgroundColor: ColorConstant.red,
-                  child: Icon(Icons.person, color: ColorConstant.white, size: 40),
+                  child:
+                      Icon(Icons.person, color: ColorConstant.white, size: 40),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: 16),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _userData?['full_name'] ?? 'Loading...',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      'Muhammad Lorem Ipsum',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     Text(
-                      _userData?['matric_number'] ?? 'Loading...',
-                      style: const TextStyle(color: ColorConstant.grey),
+                      'B033300099',
+                      style: TextStyle(color: ColorConstant.grey),
                     ),
                     Text(
-                      _userData?['phone'] ?? 'Loading...',
-                      style: const TextStyle(color: ColorConstant.grey),
+                      '+60 ',
+                      style: TextStyle(color: ColorConstant.grey),
                     ),
                   ],
                 ),
@@ -139,7 +83,8 @@ class _MenuScreenState extends State<MenuScreen> {
                       SizedBox(width: 8),
                       Text(
                         'Ride Time Available',
-                        style: TextStyle(color: ColorConstant.white, fontSize: 16),
+                        style:
+                            TextStyle(color: ColorConstant.white, fontSize: 16),
                       ),
                     ],
                   ),
@@ -178,12 +123,12 @@ class _MenuScreenState extends State<MenuScreen> {
                   icon: Icons.directions_bike,
                   label: 'Ride history',
                   onTap: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //     builder: (context) => const RideHistoryPage(),
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RideHistoryPage(),
+                      ),
+                    );
                   },
                 ),
                 iconCard(
@@ -200,6 +145,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 ),
               ],
             ),
+            //const Spacer(),
 
             ListTile(
               leading: IconButton(

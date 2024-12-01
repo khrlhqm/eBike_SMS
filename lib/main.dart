@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
-import 'modules/auth/screen/login.dart'; // Adjust the path as needed
-import '../../../shared/utils/navigationBar.dart'; // Adjust the path as needed
-import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add dependency in pubspec.yaml
+import 'modules/auth/screen/login.dart';
+import '../../../shared/utils/navigationBar.dart';
+import 'modules/auth/screen/signup.dart'; // Adjust path as needed
+import 'modules/auth/screen/autentication.dart'; // Adjust path as needed
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize secure storage
-  const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  
-  // Check if user ID exists in storage
-  String? userId = await secureStorage.read(key: 'userId');
-
-  runApp(MyApp(isLoggedIn: userId != null));
+void main() {
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final bool isLoggedIn;
-
-  const MyApp({super.key, required this.isLoggedIn});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +18,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
         useMaterial3: true,
       ),
-      home: LoginScreen()
+      home: const BottomNavSmoothTransitionApp(),
     );
   }
 }
@@ -62,6 +52,8 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+        // Center is a layout widget. It takes a single child and positions it
+        // in the middle of the parent.
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -88,4 +80,3 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
-
