@@ -3,33 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter_svg/svg.dart';
 
-class Learn extends StatelessWidget {
-  const Learn({super.key});
+import '../../../shared/utils/custom_icon.dart';
+
+class LearnScreen extends StatelessWidget {
+  const LearnScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: CustomIcon.back(30),
+        ),
         title: const Text(
           'Learn',
           style: TextStyle(color: ColorConstant.white),
         ),
         backgroundColor: ColorConstant.darkBlue,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MenuApp(),
-              ),
-            );
-          },
-          icon: SvgPicture.asset(
-            'assets/icons/back.svg',
-            width: 24,
-            height: 24,
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
