@@ -1,4 +1,4 @@
-import 'package:ebikesms/modules/menu/sub-menu/settings/screen/setting.dart';
+import 'package:ebikesms/modules/menu/settings/screen/setting.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter_svg/svg.dart';
