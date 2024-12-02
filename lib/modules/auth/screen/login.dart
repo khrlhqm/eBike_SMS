@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/login_controller.dart';
 import 'package:ebikesms/modules/auth/screen/signup.dart';
 

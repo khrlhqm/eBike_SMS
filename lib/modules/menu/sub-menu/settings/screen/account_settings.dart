@@ -1,10 +1,6 @@
 import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/settings.dart';
-import 'package:flutter/material.dart';
-import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:flutter_svg/svg.dart';
-
-import '../../../../../shared/utils/custom_icon.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import '../../../widget/menu_strip_item.dart';
 
 class AccountSettingsScreen extends StatelessWidget {
@@ -15,7 +11,9 @@ class AccountSettingsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: TextButton(
-          onPressed: () { Navigator.pop(context); },
+          onPressed: () {
+            Navigator.pop(context);
+          },
           child: CustomIcon.back(30),
         ),
         title: const Text(
@@ -32,7 +30,8 @@ class AccountSettingsScreen extends StatelessWidget {
             onTap: () {
               Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountSettingsScreen()));
+                  MaterialPageRoute(
+                      builder: (context) => const AccountSettingsScreen()));
             },
           ),
           StripMenuItem(

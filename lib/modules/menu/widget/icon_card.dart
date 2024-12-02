@@ -1,5 +1,4 @@
-import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 
 Widget IconCard({
   required Widget iconWidget,
@@ -25,12 +24,10 @@ Widget IconCard({
         children: [
           iconWidget,
           const SizedBox(height: 5),
-          Text(
-            label,
-            style: const TextStyle(
-              color: Colors.black,
-            )
-          ),
+          Text(label,
+              style: const TextStyle(
+                color: Colors.black,
+              )),
         ],
       ),
     ),
