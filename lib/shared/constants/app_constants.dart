@@ -28,5 +28,4 @@ class ColorConstant {
   static const Color whitesmoke = Color(0xFF636363); // #636363
   static const Color red = Color(0xFFFF0400); // #FF0400
   static const Color yellow = Color(0xFFEED202); // #eed202
-  static const Color shadow = Color(0x41000000); // #eed202
 }
