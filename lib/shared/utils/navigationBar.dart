@@ -3,18 +3,30 @@ import 'package:ebikesms/shared/widget/BottomNavBarItem.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 
 class BottomNavSmoothTransitionApp extends StatelessWidget {
-  const BottomNavSmoothTransitionApp({super.key});
+  final int userId; // Add userId
+
+  const BottomNavSmoothTransitionApp({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: BottomNavWithFloatingBar(),
+    return MaterialApp(
+      home: BottomNavWithFloatingBar(
+        userId: userId, // Pass userId to the next screen
+      ),
     );
   }
 }
 
 class BottomNavWithFloatingBar extends StatefulWidget {
-  const BottomNavWithFloatingBar({super.key});
+  final int userId; // Add userId
+
+  const BottomNavWithFloatingBar({
+    super.key,
+    required this.userId,
+  });
 
   @override
   _BottomNavWithFloatingBarState createState() =>
@@ -37,6 +49,9 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // title: Text('Welcome, ${widget.fullName}'), // Display full name
+      ),
       body: Center(
         child: BottomNavChildrenWidget().elementAt(_selectedIndex),
       ),

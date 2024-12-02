@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ebikesms/modules/auth/screen/login.dart';
 import 'package:ebikesms/modules/auth/screen/autentication.dart'; // Import biometric screen
+import 'package:ebikesms/ip.dart';
 
 class SignupController extends ChangeNotifier {
   Future<int> registerUser(
@@ -37,8 +38,8 @@ class SignupController extends ChangeNotifier {
     // Proceed based on biometric authentication result
     if (authResult == 1) {
       // Biometric authentication successful, proceed with API call
-      final url = Uri.parse("http://192.168.0.25/e-bike/signup.php");
-
+      final url = Uri.parse("${ApiBase.baseUrl}/signup.php");
+      
       try {
         // Make a POST request with JSON body
         final response = await http.post(

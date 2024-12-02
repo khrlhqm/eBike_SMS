@@ -34,6 +34,8 @@ dependencies:
   # other dependencies
   flutter_plugin_android_lifecycle: ^2.0.7
 
+  flutter_secure_storage: ^9.0.0
+  shared_preferences: ^2.0.15
 
 
 
@@ -46,6 +48,7 @@ dependencies:
   angles: ^2.1.1
   latlong2: ^0.9.1
   flutter_svg: ^2.0.15
+  ntp: ^2.0.0
 
 dev_dependencies:
   flutter_test:
