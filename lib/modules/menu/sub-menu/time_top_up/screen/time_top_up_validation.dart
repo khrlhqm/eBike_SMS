@@ -8,18 +8,18 @@ import 'package:ebikesms/shared/widget/loading_animation.dart';
 import 'package:ebikesms/shared/widget/rectangle_button.dart';
 
 
-class TimeTopUpValidation extends StatefulWidget {
+class TimeTopUpValidationScreen extends StatefulWidget {
   final int keyedTotal;
-  const TimeTopUpValidation({
+  const TimeTopUpValidationScreen({
     super.key,
     required this.keyedTotal
   });
 
   @override
-  State<TimeTopUpValidation> createState() => _TimeTopUpValidationState();
+  State<TimeTopUpValidationScreen> createState() => _TimeTopUpValidationScreenState();
 }
 
-class _TimeTopUpValidationState extends State<TimeTopUpValidation> {
+class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
   late String transactionDate;
   late int transactionTotal;
   late int obtainedRideTime;
@@ -39,7 +39,10 @@ class _TimeTopUpValidationState extends State<TimeTopUpValidation> {
       appBar: AppBar(
         leading: IconButton(
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> const MenuScreen()));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context)=> const MenuScreen())
+          );
         },
             icon: CustomIcon.close(20, color: ColorConstant.black)
         ),
@@ -117,8 +120,9 @@ class _TimeTopUpValidationState extends State<TimeTopUpValidation> {
             child: RectangleButton(
               label: "Back to menu",
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (context)=> const MenuScreen())
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)=> const MenuScreen())
                 );
               },
             ),
@@ -144,7 +148,7 @@ class _TimeTopUpValidationState extends State<TimeTopUpValidation> {
   }
 
   Future<void> _processTransaction() async {
-    var result = await PaymentController.addTransaction(
+    var result = await TransactionController.addTransaction(
       transactionDate: transactionDate,
       transactionTotal: transactionTotal,
       obtainedRideTime: obtainedRideTime,
@@ -161,7 +165,8 @@ class _TimeTopUpValidationState extends State<TimeTopUpValidation> {
     }
     // Successful
     else if(result['status'] == 1) {
-      await Future.delayed(const Duration(seconds: 3, milliseconds: 2));
+      // For fake loading effect :P
+      await Future.delayed(const Duration(seconds: 1, milliseconds: 2));
       setState(() { isSuccessful = true; });
     }
   }

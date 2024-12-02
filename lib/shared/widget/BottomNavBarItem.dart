@@ -35,6 +35,6 @@ List<Widget> BottomNavChildrenWidget() {
   return [
     const Location(),
     const Center(child: Text("QR Code Dummy")),
-    const MenuApp(),
+    const MenuScreen(),
   ];
 }

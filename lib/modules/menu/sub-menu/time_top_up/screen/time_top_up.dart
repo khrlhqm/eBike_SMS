@@ -56,9 +56,7 @@ class _TimeTopUpScreenState extends State<TimeTopUpScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> const MenuScreen()));
-          },
+          onPressed: () { Navigator.pop(context); },
           icon: CustomIcon.close(20, color: ColorConstant.black)
         ),
         title: const Text("Enter amount"),
@@ -118,8 +116,9 @@ class _TimeTopUpScreenState extends State<TimeTopUpScreen> {
                   label: "Confirm",
                   onPressed: () {
                     int value = int.parse(_controller.text);
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (context)=> TimeTopUpValidation(keyedTotal: value)
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context)=> TimeTopUpValidationScreen(keyedTotal: value)
                     ));
                   },
                   enable: isValidAmount ? true : false,

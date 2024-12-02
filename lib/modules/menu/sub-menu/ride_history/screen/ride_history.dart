@@ -1,85 +1,87 @@
+import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:ebikesms/modules/menu/sub-menu/ride_history/widget/history_card.dart';
+import 'package:ebikesms/modules/menu/sub-menu/ride_history/widget/history_strip_item.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:flutter_svg/svg.dart';
 
-class RideHistoryPage extends StatelessWidget {
+class RideHistoryScreen extends StatelessWidget {
+  const RideHistoryScreen({super.key});
+  final String totalTrips = '5 trips completed';
+  final String totalRideTime = '2 hours 32 minutes';
+  final String totalDistance = '2.3 km';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: ColorConstant.darkBlue,
+        leading: TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: CustomIcon.back(30),
+        ),
         title: const Text(
           'Ride History',
           style: TextStyle(color: ColorConstant.white),
         ),
-        backgroundColor: ColorConstant.darkBlue,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MenuApp(),
-              ),
-            );
-          },
-          icon: SvgPicture.asset(
-            'assets/icons/back.svg',
-            width: 24,
-            height: 24,
-          ),
-        ),
       ),
       body: Column(
         children: [
-          // Top section with summary
+          // Summary section
           Container(
-            padding: const EdgeInsets.all(16.0),
-            color: Colors.blue.shade100,
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            decoration: const BoxDecoration(
+              boxShadow: [ BoxShadow(
+                  color: ColorConstant.shadow,
+                  blurRadius: 10,
+                  offset: Offset(0,5)
+              )],
+              color: ColorConstant.lightBlue,
+            ),
             child: Column(
               children: [
-                Text(
-                  'Your journey with us',
-                  style: TextStyle(color: Colors.grey[700]),
-                ),
-                const SizedBox(height: 4.0),
                 const Text(
-                  '5 trips completed',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  'Your journey with us',
+                  style: TextStyle(color: ColorConstant.grey, fontSize: 14),
                 ),
-                const SizedBox(height: 8.0),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 1, 0, 10),
+                  child: Text(
+                    totalTrips,
+                    style: const TextStyle(color: ColorConstant.black, fontWeight: FontWeight.bold, fontSize: 20),
+                  ),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.access_time, size: 16, color: Colors.grey[600]),
-                    const SizedBox(width: 4.0),
+                    CustomIcon.clock(16, color: ColorConstant.black),
+                    const SizedBox(width: 6),
                     Text(
-                      '10 hours 20 mins',
-                      style: TextStyle(color: Colors.grey[700]),
+                      totalDistance,
+                      style: const TextStyle(color: ColorConstant.black),
                     ),
-                    const SizedBox(width: 16.0),
-                    Icon(Icons.directions_bike,
-                        size: 16, color: Colors.grey[600]),
-                    const SizedBox(width: 4.0),
+                    const SizedBox(width: 20),
+                    CustomIcon.distance(16, color: ColorConstant.black),
+                    const SizedBox(width: 6),
                     Text(
-                      '5.2 km (5269 m)',
-                      style: TextStyle(color: Colors.grey[700]),
+                      totalRideTime,
+                      style: const TextStyle(color: ColorConstant.black),
                     ),
                   ],
                 ),
               ],
             ),
           ),
-          // Divider line
-          Divider(height: 1, color: Colors.grey[300]),
 
-          // List of rides
+          // History strip items
           Expanded(
             child: ListView.builder(
-              itemCount: 3, // number of trips
+              itemCount: 10, // number of trips
               itemBuilder: (context, index) {
-                return RideHistoryCard(
-                  bikeId: '888432',
+                return HistoryStripItem(
+                  bikeId: '#8323',
                   distance: index == 0
                       ? '0 m'
                       : index == 1

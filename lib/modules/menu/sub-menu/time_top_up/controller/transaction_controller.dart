@@ -2,8 +2,9 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/cupertino.dart';
+import 'package:ebikesms/ip.dart';
 
-class PaymentController extends ChangeNotifier{
+class TransactionController extends ChangeNotifier{
   static Future<Map<String, dynamic>> addTransaction({
     required String transactionDate,
     required int transactionTotal,
@@ -12,7 +13,7 @@ class PaymentController extends ChangeNotifier{
   }) async {
 
     // TODO: Make it dynamic
-    final url = Uri.parse("http://192.168.1.109/w2_e-bikesms/time_top_up.php");
+    final url = Uri.parse("${ApiBase.baseUrl}/time_top_up.php");
 
     try {
       debugPrint("Starting HTTP POST request to URL: $url");

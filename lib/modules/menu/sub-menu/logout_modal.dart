@@ -48,19 +48,3 @@ Future<void> logoutModal(BuildContext context) async {
   );
 }
 
-//
-//
-// appBar: AppBar(
-//   title: const Text(
-//   'Learn',
-//   style: TextStyle(color: ColorConstant.white),
-//   ),
-//   backgroundColor: ColorConstant.darkBlue,
-//   leading: IconButton(
-//     onPressed: () {
-//       Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuApp()));
-//     },
-//   icon: SvgPicture.asset('assets/icons/back.svg', width: 24, height: 24)),
-// ),
-
-
