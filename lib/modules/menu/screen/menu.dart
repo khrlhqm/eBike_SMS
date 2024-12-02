@@ -1,3 +1,4 @@
+import 'package:ebikesms/shared/widget/loading_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage dependency
 import 'package:http/http.dart' as http;
@@ -72,13 +73,24 @@ class _MenuScreenState extends State<MenuScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Make sure _userData is available before building the UI
-    // if (_userData == null) {
-    //   return const Scaffold(
-    //     backgroundColor: Colors.white,
-    //     body: const Center(child: CircularProgressIndicator()),
-    //   );
-    // }
+    //Make sure _userData is available before building the UI
+    if (_userData == null) {
+      return const Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              LoadingAnimation(dimension: 80.0),
+              SizedBox(height: 20),
+              Text("Loading",
+                style: TextStyle(fontSize: 16)
+              )
+            ],
+          ),
+        )
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
