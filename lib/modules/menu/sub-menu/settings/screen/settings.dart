@@ -1,9 +1,7 @@
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/account_settings.dart';
-import 'package:flutter/material.dart';
-import 'package:ebikesms/shared/constants/app_constants.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
 import '../../../widget/menu_strip_item.dart';
-import '../../../../../shared/utils/custom_icon.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -14,9 +12,8 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         leading: TextButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MenuScreen()));
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const MenuScreen()));
           },
           child: CustomIcon.back(30),
         ),
@@ -29,31 +26,34 @@ class SettingsScreen extends StatelessWidget {
       body: ListView(
         children: [
           StripMenuItem(
-              label: "Account",
-              textColor: ColorConstant.black,
-              onTap: () {
-                Navigator.push(
+            label: "Account",
+            textColor: ColorConstant.black,
+            onTap: () {
+              Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountSettingsScreen()));
-              },
+                  MaterialPageRoute(
+                      builder: (context) => const AccountSettingsScreen()));
+            },
           ),
           StripMenuItem(
-              label: "Policy",
-              textColor: ColorConstant.black,
-              onTap: () {
-                Navigator.push(
+            label: "Policy",
+            textColor: ColorConstant.black,
+            onTap: () {
+              Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountSettingsScreen()));
-              },
+                  MaterialPageRoute(
+                      builder: (context) => const AccountSettingsScreen()));
+            },
           ),
           StripMenuItem(
-              label: "About",
-              textColor: ColorConstant.black,
-              onTap: () {
-                Navigator.push(
+            label: "About",
+            textColor: ColorConstant.black,
+            onTap: () {
+              Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const AccountSettingsScreen()));
-              },
+                  MaterialPageRoute(
+                      builder: (context) => const AccountSettingsScreen()));
+            },
           ),
         ],
       ),

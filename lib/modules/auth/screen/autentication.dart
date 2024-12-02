@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:local_auth/local_auth.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/shared/widget/back_button_widget.dart';
 
 class BiometricAuthScreen extends StatefulWidget {

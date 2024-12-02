@@ -1,9 +1,6 @@
-import 'package:ebikesms/shared/utils/custom_icon.dart';
-import 'package:flutter/material.dart';
-import 'package:ebikesms/shared/constants/app_constants.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/widget/history_strip_item.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
-import 'package:flutter_svg/svg.dart';
 
 class RideHistoryScreen extends StatelessWidget {
   const RideHistoryScreen({super.key});
@@ -33,11 +30,12 @@ class RideHistoryScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
             decoration: const BoxDecoration(
-              boxShadow: [ BoxShadow(
-                  color: ColorConstant.shadow,
-                  blurRadius: 10,
-                  offset: Offset(0,5)
-              )],
+              boxShadow: [
+                BoxShadow(
+                    color: ColorConstant.shadow,
+                    blurRadius: 10,
+                    offset: Offset(0, 5))
+              ],
               color: ColorConstant.lightBlue,
             ),
             child: Column(
@@ -50,7 +48,10 @@ class RideHistoryScreen extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(0, 1, 0, 10),
                   child: Text(
                     totalTrips,
-                    style: const TextStyle(color: ColorConstant.black, fontWeight: FontWeight.bold, fontSize: 20),
+                    style: const TextStyle(
+                        color: ColorConstant.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20),
                   ),
                 ),
                 Row(
