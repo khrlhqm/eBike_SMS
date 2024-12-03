@@ -99,7 +99,7 @@ class _MenuScreenState extends State<MenuScreen> {
               children: [
                 CircleAvatar(
                   radius: 35,
-                  backgroundColor: ColorConstant.darkBlue,
+                  backgroundColor: ColorConstant.red,
                   child: CustomIcon.userColoured(40),
                 ),
                 const SizedBox(width: 16),
@@ -116,6 +116,10 @@ class _MenuScreenState extends State<MenuScreen> {
                     const SizedBox(height: 4),
                     Text(
                       _userData?['matric_number'] ?? 'Loading...',
+                      style: const TextStyle(color: ColorConstant.grey),
+                    ),
+                    Text(
+                      _userData?['phone_number'] ?? '+06 ...',
                       style: const TextStyle(color: ColorConstant.grey),
                     ),
                   ],
@@ -236,7 +240,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 Expanded(
                   child: IconCard(
                     iconWidget:
-                        CustomIcon.clock(50, color: ColorConstant.darkBlue),
+                        CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
                     onTap: () {
                       Navigator.push(
@@ -251,7 +255,7 @@ class _MenuScreenState extends State<MenuScreen> {
                 Expanded(
                   child: IconCard(
                     iconWidget:
-                        CustomIcon.bicycle(50, color: ColorConstant.darkBlue),
+                        CustomIcon.learnColoured(50),
                     label: 'Riding Guide',
                     onTap: () {
                       Navigator.push(
