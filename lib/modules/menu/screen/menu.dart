@@ -44,7 +44,7 @@ class _MenuScreenState extends State<MenuScreen> {
       if (userId != null) {
         // Fetch user data from the API using the user_id
         final response = await http.get(
-          Uri.parse('${ApiBase.baseUrl}/get_user.php?user_id=$userId'),
+          Uri.parse('${ApiBase.baseUrl}/get_user_id.php?user_id=$userId'),
         );
 
         if (response.statusCode == 200) {
