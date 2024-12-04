@@ -1,19 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/widget/BottomNavBarItem.dart';
+import 'package:ebikesms/shared/constants/app_constants.dart';
 
 class BottomNavSmoothTransitionApp extends StatelessWidget {
-  const BottomNavSmoothTransitionApp({super.key});
+  final int userId; // Add userId
+
+  const BottomNavSmoothTransitionApp({
+    super.key,
+    required this.userId,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: BottomNavWithFloatingBar(),
+    return MaterialApp(
+      home: BottomNavWithFloatingBar(
+        userId: userId, // Pass userId to the next screen
+      ),
     );
   }
 }
 
 class BottomNavWithFloatingBar extends StatefulWidget {
-  const BottomNavWithFloatingBar({super.key});
+  final int userId; // Add userId
+
+  const BottomNavWithFloatingBar({
+    super.key,
+    required this.userId,
+  });
 
   @override
   _BottomNavWithFloatingBarState createState() =>
@@ -33,68 +46,12 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
     }
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     body: PageView(
-  //       controller: _pageController,
-  //       onPageChanged: (index) {
-  //         if (index != 2) {
-  //           setState(() {
-  //             _selectedIndex = index;
-  //           });
-  //         }
-  //       },
-  //       children: BottomNavChildrenWidget(),
-  //     ),
-  // bottomNavigationBar: Stack(
-  //   alignment: AlignmentDirectional.topCenter,
-  //   children: [
-  //     Container(
-  //       padding:
-  //           const EdgeInsets.symmetric(horizontal: 20.0, vertical: 8.0),
-  //       margin: const EdgeInsets.only(bottom: 20.0),
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         borderRadius: BorderRadius.circular(30.0),
-  //         boxShadow: const [
-  //           BoxShadow(
-  //             color: Colors.black12,
-  //             blurRadius: 10.0,
-  //             spreadRadius: 2.0,
-  //             offset: Offset(0, 5),
-  //           ),
-  //         ],
-  //       ),
-  //       child: BottomNavigationBar(
-  //         backgroundColor: Colors.transparent,
-  //         elevation: 0,
-  //         items: bottomNavigationBarItems(),
-  //         currentIndex: _selectedIndex,
-  //         selectedItemColor: const Color.fromARGB(255, 0, 51, 153),
-  //         unselectedItemColor: Colors.black,
-  //         onTap: _onItemTapped,
-  //         showUnselectedLabels: true,
-  //       ),
-  //     ),
-  //     Positioned(
-  //       bottom: 30.0,
-  //       child: FloatingActionButton(
-  //         backgroundColor: Colors.blue,
-  //         onPressed: () {
-  //           // Handle Scan button press
-  //         },
-  //         elevation: 4.0,
-  //         child: const Icon(Icons.qr_code_2_rounded, color: Colors.white),
-  //       ),
-  //     ),
-  //   ],
-  // ),
-  //   );
-  // }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // title: Text('Welcome, ${widget.fullName}'), // Display full name
+      ),
       body: Center(
         child: BottomNavChildrenWidget().elementAt(_selectedIndex),
       ),
@@ -102,13 +59,13 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
         alignment: AlignmentDirectional.topCenter,
         children: [
           Container(
-            margin: const EdgeInsets.all(10),
+            margin: const EdgeInsets.all(15),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: ColorConstant.white,
               borderRadius: BorderRadius.circular(30.0),
               boxShadow: const [
                 BoxShadow(
-                  color: Colors.black12,
+                  color: ColorConstant.black,
                   blurRadius: 10.0,
                   spreadRadius: 2.0,
                   offset: Offset(0, 5),
@@ -122,8 +79,8 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
                 elevation: 0,
                 items: bottomNavigationBarItems(),
                 currentIndex: _selectedIndex,
-                selectedItemColor: const Color.fromARGB(255, 0, 51, 153),
-                unselectedItemColor: Colors.black,
+                selectedItemColor: ColorConstant.darkBlue,
+                unselectedItemColor: ColorConstant.black,
                 onTap: _onItemTapped,
                 showUnselectedLabels: true,
               ),
@@ -132,12 +89,13 @@ class _BottomNavWithFloatingBarState extends State<BottomNavWithFloatingBar> {
           Positioned(
             bottom: 25.0, // Position above the BottomNavigationBar
             child: FloatingActionButton(
-              backgroundColor: Colors.blue,
+              backgroundColor: ColorConstant.darkBlue,
               onPressed: () {
                 // Handle Scan button press
               },
               elevation: 4.0,
-              child: const Icon(Icons.qr_code_2_rounded, color: Colors.white),
+              child: const Icon(Icons.qr_code_2_rounded,
+                  color: ColorConstant.white),
             ),
           ),
         ],

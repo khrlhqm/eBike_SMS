@@ -170,12 +170,12 @@ class CustomIcon{
     );
   }
 
-  static Widget tallyMarks(
+  static Widget distance(
     double dimension,
       {Color color = Colors.white}
   ) {
     return SvgPicture.asset(
-      'assets/icons/tally-marks.svg',
+      'assets/icons/distance.svg',
       width: dimension,
       height: dimension,
       colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
