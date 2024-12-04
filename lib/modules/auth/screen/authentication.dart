@@ -3,6 +3,8 @@ import 'package:local_auth/local_auth.dart';
 import 'package:ebikesms/shared/widget/back_button_widget.dart';
 
 class BiometricAuthScreen extends StatefulWidget {
+  const BiometricAuthScreen({super.key});
+
   @override
   _BiometricAuthScreenState createState() => _BiometricAuthScreenState();
 }
@@ -69,16 +71,16 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
           // Wave at the top
           Container(
             height: 200,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage('lib/modules/Assets/Vector_3.png'),
                 fit: BoxFit.cover,
               ),
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(100),
               ),
             ),
-            child: Stack(
+            child: const Stack(
               children: [
                 // Back button positioned above the image
                 Positioned(
@@ -118,20 +120,26 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
                     ),
                   ),
                   const SizedBox(height: 100),
-                  Icon(
+                  const Icon(
                     Icons.fingerprint,
                     size: 100,
-                    color: const Color(0xFF003366),
+                    color: Color(0xFF003366),
                   ),
                   const SizedBox(height: 100),
                   Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 350.0,
                       child: SizedBox(
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
                           onPressed: _authenticate,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF003366),
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 80, vertical: 15),
+                          ),
                           child: const Text(
                             "Get Started",
                             style: TextStyle(
@@ -139,12 +147,6 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
                               letterSpacing: 1.0,
                               fontWeight: FontWeight.bold,
                             ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF003366),
-                            foregroundColor: Colors.white,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 80, vertical: 15),
                           ),
                         ),
                       ),

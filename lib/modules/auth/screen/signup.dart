@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:ebikesms/modules/auth/screen/login.dart';
 import 'package:ebikesms/modules/auth/controller/signup_controller.dart';
 import 'package:ebikesms/shared/widget/back_button_widget.dart';
-import 'package:ebikesms/modules/auth/screen/autentication.dart';
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -70,12 +70,12 @@ void _handleSignup() async {
                 // Header section with wave and icon
                 Container(
                   height: 200,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('lib/modules/Assets/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(100),
                     ),
                   ),
@@ -84,20 +84,20 @@ void _handleSignup() async {
                       // The image is still the background
                       Positioned.fill(
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image:
                                   AssetImage('lib/modules/Assets/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(100),
                             ),
                           ),
                         ),
                       ),
                       // Back button positioned above the image
-                      Positioned(
+                      const Positioned(
                         top:
                             150, // Adjust the top position to move the button up/down
                         left:
@@ -118,8 +118,8 @@ void _handleSignup() async {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           "Let's Get Started",
                           style: TextStyle(
                             fontSize: 30,
@@ -130,8 +130,8 @@ void _handleSignup() async {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           "Create your own account",
                           style: TextStyle(
                             fontSize: 16,
@@ -142,7 +142,7 @@ void _handleSignup() async {
                       const SizedBox(height: 20),
                       // Matric Number TextField
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 350.0,
                           child: TextField(
                             controller: _matricnumber,
@@ -152,8 +152,8 @@ void _handleSignup() async {
                               labelText: 'Matric Number',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  color: const Color(0xFF003366),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF003366),
                                   width: 2.0,
                                 ),
                               ),
@@ -164,7 +164,7 @@ void _handleSignup() async {
                       const SizedBox(height: 15),
                       // Password TextField
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 350.0,
                           child: TextField(
                             obscureText:
@@ -176,8 +176,8 @@ void _handleSignup() async {
                               labelText: 'Password',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  color: const Color(0xFF003366),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF003366),
                                   width: 2.0,
                                 ),
                               ),
@@ -200,7 +200,7 @@ void _handleSignup() async {
                       const SizedBox(height: 15),
                       // Confirm Password TextField
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 350.0,
                           child: TextField(
                             obscureText:
@@ -212,8 +212,8 @@ void _handleSignup() async {
                               labelText: 'Confirm Password',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  color: const Color(0xFF003366),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF003366),
                                   width: 2.0,
                                 ),
                               ),
@@ -288,12 +288,12 @@ void _handleSignup() async {
                 // Header section with wave and icon
                 Container(
                   height: 200,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('lib/modules/Assets/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
-                    borderRadius: const BorderRadius.only(
+                    borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(100),
                     ),
                   ),
@@ -302,20 +302,20 @@ void _handleSignup() async {
                       // The image is still the background
                       Positioned.fill(
                         child: Container(
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             image: DecorationImage(
                               image:
                                   AssetImage('lib/modules/Assets/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
-                            borderRadius: const BorderRadius.only(
+                            borderRadius: BorderRadius.only(
                               bottomLeft: Radius.circular(100),
                             ),
                           ),
                         ),
                       ),
                       // Back button positioned above the image
-                      Positioned(
+                      const Positioned(
                         top:
                             150, // Adjust the top position to move the button up/down
                         left:
@@ -334,8 +334,8 @@ void _handleSignup() async {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           "Almost There!",
                           style: TextStyle(
                             fontSize: 30,
@@ -346,8 +346,8 @@ void _handleSignup() async {
                         ),
                       ),
                       const SizedBox(height: 5),
-                      Center(
-                        child: const Text(
+                      const Center(
+                        child: Text(
                           "Just a few more details",
                           style: TextStyle(
                             fontSize: 16,
@@ -358,7 +358,7 @@ void _handleSignup() async {
                       const SizedBox(height: 20),
                       // Full Name TextField
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 350.0,
                           child: TextField(
                             controller: _fullname,
@@ -368,8 +368,8 @@ void _handleSignup() async {
                               labelText: 'Full Name',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  color: const Color(0xFF003366),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF003366),
                                   width: 2.0,
                                 ),
                               ),
@@ -380,7 +380,7 @@ void _handleSignup() async {
                       const SizedBox(height: 15),
                       // Username TextField
                       Center(
-                        child: Container(
+                        child: SizedBox(
                           width: 350.0,
                           child: TextField(
                             controller: _username,
@@ -390,8 +390,8 @@ void _handleSignup() async {
                               labelText: 'Username',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(25),
-                                borderSide: BorderSide(
-                                  color: const Color(0xFF003366),
+                                borderSide: const BorderSide(
+                                  color: Color(0xFF003366),
                                   width: 2.0,
                                 ),
                               ),

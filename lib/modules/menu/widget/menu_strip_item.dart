@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../../../shared/constants/app_constants.dart';
-import '../../../shared/utils/custom_icon.dart';
 
 class StripMenuItem extends StatelessWidget {
   final Widget? iconWidget;
@@ -28,7 +26,6 @@ class StripMenuItem extends StatelessWidget {
           border: Border(top: BorderSide(color: ColorConstant.lightGrey))
       ),
       child: ListTile(
-        leading: iconWidget,
         title: Text(
           label,
           style: TextStyle(

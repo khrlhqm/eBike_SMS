@@ -2,8 +2,6 @@ import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/widget/history_strip_item.dart';
-import 'package:ebikesms/modules/menu/screen/menu.dart';
-import 'package:flutter_svg/svg.dart';
 
 class RideHistoryScreen extends StatelessWidget {
   const RideHistoryScreen({super.key});
