@@ -12,7 +12,7 @@ import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.da
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/settings.dart';
 import 'package:ebikesms/modules/learn/screen/learn.dart';
-import 'package:ebikesms/modules/menu/sub-menu/logout_modal.dart';
+import 'package:ebikesms/modules/menu/sub-menu/widget/logout_modal.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);

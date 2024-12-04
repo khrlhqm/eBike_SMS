@@ -1,5 +1,4 @@
-import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 
 Widget IconCard({
   required Widget iconWidget,
