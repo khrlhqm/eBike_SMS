@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage dependency
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:ebikesms/ip.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart';
+
 import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/settings.dart';
@@ -30,10 +30,10 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   void initState() {
     super.initState();
-    _loadUserData();
+    _fetchUserData();
   }
 
-  Future<void> _loadUserData() async {
+  Future<void> _fetchUserData() async {
     try {
       // Retrieve the user ID from secure storage
       String? userId = await _secureStorage.read(key: 'userId');
@@ -51,8 +51,7 @@ class _MenuScreenState extends State<MenuScreen> {
           if (responseBody['status'] == 'success') {
             // Set the user data
             setState(() {
-              _userData = responseBody[
-                  'data']; // Assuming the user data is in 'data' key
+              _userData = responseBody['data']; // Assuming the user data is in 'data' key
             });
           } else {
             throw Exception(
