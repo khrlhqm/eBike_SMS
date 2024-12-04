@@ -19,9 +19,9 @@ class BottomNavBar extends StatefulWidget {
   @override
   State<BottomNavBar> createState() {
     if(userType == 'Rider') {
-      return _BottomNavBarRider();
+      return _BottomNavBarRider();  // If it's 'rider', show rider state
     }
-    else { // If it's 'admin'
+    else { // If it's 'admin', show admin state
       return _BottomNavBarAdmin();
     }
   }
