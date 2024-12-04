@@ -12,22 +12,20 @@ Widget IconCard({
       decoration: BoxDecoration(
         color: ColorConstant.lightBlue,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: ColorConstant.shadow,
-            blurRadius: 5.5,
-            offset: Offset(0, 3),
-          ),
-        ],
+       
       ),
       child: Column(
         children: [
           iconWidget,
           const SizedBox(height: 5),
-          Text(label,
-              style: const TextStyle(
-                color: Colors.black,
-              )),
+          Text(
+            label,
+            style: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'Poppins',
+              
+            )
+          ),
         ],
       ),
     ),

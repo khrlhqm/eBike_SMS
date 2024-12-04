@@ -70,7 +70,7 @@ class _SignUpPageState extends State<SignupScreen> {
                   height: 200,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      image: AssetImage('assets/images/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: const BorderRadius.only(
@@ -85,7 +85,7 @@ class _SignUpPageState extends State<SignupScreen> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image:
-                                  AssetImage('lib/modules/Assets/Vector_3.png'),
+                                  AssetImage('assets/images/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: const BorderRadius.only(
@@ -287,7 +287,7 @@ class _SignUpPageState extends State<SignupScreen> {
                   height: 200,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      image: AssetImage('assets/images/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: const BorderRadius.only(
@@ -302,7 +302,7 @@ class _SignUpPageState extends State<SignupScreen> {
                           decoration: BoxDecoration(
                             image: DecorationImage(
                               image:
-                                  AssetImage('lib/modules/Assets/Vector_3.png'),
+                                  AssetImage('assets/images/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: const BorderRadius.only(

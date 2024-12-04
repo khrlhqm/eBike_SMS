@@ -48,7 +48,7 @@ class SignupController extends ChangeNotifier {
           body: json.encode({
             "matric_number": matricNumber,
             "password": password,
-            "username": username,
+            "user_name": username,
             "full_name": fullname,
           }),
         );

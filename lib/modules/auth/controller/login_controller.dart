@@ -17,7 +17,7 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("${ApiBase.baseUrl}/api.php");
+    final url = Uri.parse("${ApiBase.baseUrl}/login.php");
 
     try {
       final response = await http.post(
