@@ -15,7 +15,7 @@ import 'package:ebikesms/modules/learn/screen/learn.dart';
 import 'package:ebikesms/modules/menu/sub-menu/widget/logout_modal.dart';
 
 class MenuScreen extends StatefulWidget {
-  const MenuScreen({Key? key}) : super(key: key);
+  const MenuScreen({super.key});
 
   @override
   _MenuScreenState createState() => _MenuScreenState();

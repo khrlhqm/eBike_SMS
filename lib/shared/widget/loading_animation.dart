@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 
 class LoadingAnimation extends StatefulWidget {
   final double dimension;
-  const LoadingAnimation({required this.dimension});
+  const LoadingAnimation({super.key, required this.dimension});
 
   @override
   _LoadingAnimationState createState() => _LoadingAnimationState();
@@ -19,7 +19,7 @@ class _LoadingAnimationState extends State<LoadingAnimation>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 3), // Full rotation in 1 second
+      duration: const Duration(seconds: 3), // Full rotation in 1 second
     )..repeat();
   }
   

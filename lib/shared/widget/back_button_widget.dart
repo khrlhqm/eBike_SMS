@@ -5,10 +5,10 @@ class BackButtonWidget extends StatelessWidget {
   final double? iconSize;
 
   const BackButtonWidget({
-    Key? key,
+    super.key,
     this.buttonColor,
     this.iconSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

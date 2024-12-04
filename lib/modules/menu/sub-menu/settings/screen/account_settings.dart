@@ -1,5 +1,3 @@
-import 'package:ebikesms/modules/menu/screen/menu.dart';
-import 'package:ebikesms/modules/menu/sub-menu/settings/screen/settings.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import '../../../widget/menu_strip_item.dart';
 

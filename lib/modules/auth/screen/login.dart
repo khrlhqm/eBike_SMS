@@ -13,7 +13,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   bool _passwordVisible = false; // To toggle password visibility
-  bool _rememberMe = false; // To toggle "Remember Me" radio button
+  final bool _rememberMe = false; // To toggle "Remember Me" radio button
 
   void _handleLogin() {
     final username = _usernameController.text;
@@ -39,12 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
             // Header section with wave and icon
             Container(
               height: 200,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/Vector_3.png'),
                   fit: BoxFit.cover,
                 ),
-                borderRadius: const BorderRadius.only(
+                borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(100),
                 ),
               ),
@@ -55,8 +55,8 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: const Text(
+                  const Center(
+                    child: Text(
                       "Welcome back!",
                       style: TextStyle(
                         fontSize: 30,
@@ -70,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 25),
                   // Username TextField
                   Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 350.0,
                       child: TextField(
                         controller: _usernameController,
@@ -81,8 +81,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Username',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25),
-                              borderSide: BorderSide(
-                                color: const Color(
+                              borderSide: const BorderSide(
+                                color: Color(
                                     0xFF003366), // Change to your desired color
                                 width: 2.0,
                               )),
@@ -94,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 15),
                   // Password TextField with Show/Hide functionality
                   Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 350.0, // Set the width of the container
                       child: TextField(
                         obscureText: !_passwordVisible,
@@ -106,9 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Password',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25),
-                            borderSide: BorderSide(
+                            borderSide: const BorderSide(
                               color:
-                                  const Color(0xFF003366), // Blue border color
+                                  Color(0xFF003366), // Blue border color
                               width: 2.0,
                             ),
                           ),
@@ -132,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const SizedBox(height: 30),
                   // Login Button
                   Center(
-                    child: Container(
+                    child: SizedBox(
                       width: 350.0,
                       child: SizedBox(
                         width: double.infinity,
@@ -160,8 +160,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 15),
-                  Center(
-                    child: const Text(
+                  const Center(
+                    child: Text(
                       "Forgot Password?",
                       style: TextStyle(
                         color: Colors.blue,
@@ -184,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignupScreen()),
+                                  builder: (context) => const SignupScreen()),
                             );
                           },
                           child: const Text(

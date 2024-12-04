@@ -1,5 +1,4 @@
 import 'package:ebikesms/modules/global_import.dart';
-import '../../../shared/utils/custom_icon.dart';
 
 class StripMenuItem extends StatelessWidget {
   final Widget? iconWidget;
@@ -19,7 +18,7 @@ class StripMenuItem extends StatelessWidget {
     return Container(
       height: 60,
       alignment: Alignment.center,
-      padding: EdgeInsets.only(left: 20),
+      padding: const EdgeInsets.only(left: 20),
       decoration: const BoxDecoration(
           border: Border(top: BorderSide(color: ColorConstant.lightGrey))),
       child: ListTile(
