@@ -1,5 +1,4 @@
-import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 
 Widget IconCard({
   required Widget iconWidget,
@@ -13,13 +12,7 @@ Widget IconCard({
       decoration: BoxDecoration(
         color: ColorConstant.lightBlue,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: const [
-          BoxShadow(
-            color: ColorConstant.shadow,
-            blurRadius: 5.5,
-            offset: Offset(0, 3),
-          ),
-        ],
+       
       ),
       child: Column(
         children: [
@@ -29,6 +22,8 @@ Widget IconCard({
             label,
             style: const TextStyle(
               color: Colors.black,
+              fontFamily: 'Poppins',
+              
             )
           ),
         ],

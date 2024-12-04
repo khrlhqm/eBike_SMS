@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/signup_controller.dart';
-import 'package:ebikesms/shared/widget/back_button_widget.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -27,27 +26,26 @@ class _SignUpPageState extends State<SignupScreen> {
     );
   }
 
-void _handleSignup() async {
-  int result = await SignupController().registerUser(
-    context,
-    _matricnumber.text,
-    _password.text,
-    _repassword.text,
-    _fullname.text,
-    _username.text,
-  );
+  void _handleSignup() async {
+    int result = await SignupController().registerUser(
+      context,
+      _matricnumber.text,
+      _password.text,
+      _repassword.text,
+      _fullname.text,
+      _username.text,
+    );
 
-  if (result == 1) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Registration successful!')),
-    );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Registration failed. Please try again.')),
-    );
+    if (result == 1) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration successful!')),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Registration failed. Please try again.')),
+      );
+    }
   }
-}
-
 
   void _validatePasswords() {
     setState(() {
@@ -72,7 +70,7 @@ void _handleSignup() async {
                   height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      image: AssetImage('assets/images/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.only(
@@ -87,7 +85,7 @@ void _handleSignup() async {
                           decoration: const BoxDecoration(
                             image: DecorationImage(
                               image:
-                                  AssetImage('lib/modules/Assets/Vector_3.png'),
+                                  AssetImage('assets/images/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.only(
@@ -231,10 +229,9 @@ void _handleSignup() async {
                         width: double.infinity,
                         height: 60,
                         child: ElevatedButton(
-                          onPressed:
-                              _isPasswordMatch && _username.text.isEmpty
-                                  ? _nextPage
-                                  : null,
+                          onPressed: _isPasswordMatch && _username.text.isEmpty
+                              ? _nextPage
+                              : null,
                           // Disable button if passwords don't match or username is empty
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF003366),
@@ -290,7 +287,7 @@ void _handleSignup() async {
                   height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                      image: AssetImage('assets/images/Vector_3.png'),
                       fit: BoxFit.cover,
                     ),
                     borderRadius: BorderRadius.only(
@@ -305,7 +302,7 @@ void _handleSignup() async {
                           decoration: const BoxDecoration(
                             image: DecorationImage(
                               image:
-                                  AssetImage('lib/modules/Assets/Vector_3.png'),
+                                  AssetImage('assets/images/Vector_3.png'),
                               fit: BoxFit.cover,
                             ),
                             borderRadius: BorderRadius.only(

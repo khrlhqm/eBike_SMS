@@ -1,7 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:ebikesms/shared/constants/app_constants.dart';
-
-import '../../../shared/utils/custom_icon.dart';
+import 'package:ebikesms/modules/global_import.dart';
 
 class LearnScreen extends StatelessWidget {
   const LearnScreen({super.key});

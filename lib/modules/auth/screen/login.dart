@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/login_controller.dart';
 import 'package:ebikesms/modules/auth/screen/signup.dart';
 
@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 200,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/modules/Assets/Vector_3.png'),
+                  image: AssetImage('assets/images/Vector_3.png'),
                   fit: BoxFit.cover,
                 ),
                 borderRadius: BorderRadius.only(
