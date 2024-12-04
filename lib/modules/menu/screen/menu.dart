@@ -124,8 +124,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ],
                 ),
-                const Spacer(),
-                const Icon(Icons.arrow_forward_ios, size: 16),
+                
               ],
             ),
           ),
@@ -256,7 +255,7 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: IconCard(
                     iconWidget:
                         CustomIcon.learnColoured(50),
-                    label: 'Riding Guide',
+                    label: 'Learn how to use',
                     onTap: () {
                       Navigator.push(
                         context,
@@ -276,7 +275,11 @@ class _MenuScreenState extends State<MenuScreen> {
                 ListTile(
                   leading:
                       CustomIcon.settings(24, color: ColorConstant.darkBlue),
-                  title: const Text("Settings"),
+                  title: const Text("Settings",
+                  style: TextStyle(
+                    color: ColorConstant.black,
+                      fontFamily: 'Poppins'),
+                      ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
                     Navigator.push(
@@ -291,7 +294,9 @@ class _MenuScreenState extends State<MenuScreen> {
                   leading: CustomIcon.logout(24, color: ColorConstant.darkBlue),
                   title: const Text(
                     "Logout",
-                    style: TextStyle(color: Color.fromARGB(255, 0, 0, 0)),
+                    style: TextStyle(
+                      color: ColorConstant.black,
+                      fontFamily: 'Poppins'),
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                   onTap: () {
