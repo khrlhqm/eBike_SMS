@@ -32,7 +32,7 @@ class SignupController extends ChangeNotifier {
     // Navigate to BiometricAuthScreen and await its result
     int? authResult = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BiometricAuthScreen()),
+      MaterialPageRoute(builder: (context) => const BiometricAuthScreen()),
     );
 
     // Proceed based on biometric authentication result
@@ -64,7 +64,7 @@ class SignupController extends ChangeNotifier {
             // Navigate to login screen
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
             return 1; // Indicate success
           } else {

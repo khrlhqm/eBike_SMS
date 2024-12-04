@@ -1,8 +1,6 @@
-import 'package:ebikesms/modules/menu/widget/menu_strip_item.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class HistoryStripItem extends StatelessWidget {
   final String bikeId;

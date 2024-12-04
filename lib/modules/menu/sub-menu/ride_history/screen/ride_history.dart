@@ -6,13 +6,9 @@ import 'package:ebikesms/ip.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/widget/history_strip_item.dart';
-import 'package:ebikesms/modules/menu/screen/menu.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:ebikesms/modules/menu/widget/icon_card.dart';
-import 'package:ebikesms/shared/widget/loading_animation.dart';
 
 class RideHistoryScreen extends StatefulWidget {
-  const RideHistoryScreen({Key? key}) : super(key: key);
+  const RideHistoryScreen({super.key});
 
   @override
   _RideHistoryScreenState createState() => _RideHistoryScreenState();
@@ -24,7 +20,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
 
   int totalTrips = 0;
   double totalDistance = 0;
-  Duration totalRideTime = Duration();
+  Duration totalRideTime = const Duration();
 
   @override
   void initState() {
@@ -76,7 +72,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
     if (_userData != null) {
       totalTrips = _userData!.length; // Number of trips
       totalDistance = 0;
-      totalRideTime = Duration();
+      totalRideTime = const Duration();
 
       for (var ride in _userData!) {
         // Add the distance of each ride
@@ -119,22 +115,28 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
                   offset: Offset(0, 5),
                 ),
               ],
-              color: ColorConstant.lightBlue,
+              color: ColorConstant.hintBlue,
             ),
             child: Column(
               children: [
                 const Text(
                   'Your journey with us',
-                  style: TextStyle(color: ColorConstant.grey, fontSize: 14),
+                  style: TextStyle(
+                    color: ColorConstant.grey,
+                    fontSize: 14,
+                    fontFamily: 'Poppins',
+                      letterSpacing: 1.0,),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 1, 0, 10),
                   child: Text(
-                    '$totalTrips trips completed', // Display dynamic total trips
+                    '$totalTrips Trips Completed', // Display dynamic total trips
                     style: const TextStyle(
                       color: ColorConstant.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
+                      fontFamily: 'Poppins',
+                      letterSpacing: 1.0,
                     ),
                   ),
                 ),
@@ -164,7 +166,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
           // History strip items
           Expanded(
             child: _userData == null
-                ? Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     itemCount:
                         _userData!.length, // Use the length of fetched data
@@ -176,7 +178,7 @@ class _RideHistoryScreenState extends State<RideHistoryScreen> {
                         distance:
                             '${ride['distance']} km', // Format the distance
                         duration:
-                            '${_calculateDuration(ride['start_time'], ride['end_time'])}', // Format duration
+                            _calculateDuration(ride['start_time'], ride['end_time']), // Format duration
                         date: ride['start_time']
                             .split(' ')[0], // Extract date from the timestamp
                         time: ride['start_time']
