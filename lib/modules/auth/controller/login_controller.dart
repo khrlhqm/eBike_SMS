@@ -41,6 +41,11 @@ class LoginController extends ChangeNotifier {
           Navigator.push(
             context,
             MaterialPageRoute(
+              builder: (context) => BottomNavBar(
+                userId: userId,
+                userType: "Rider",
+              )
+            ), // Pass userId to the next screen
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

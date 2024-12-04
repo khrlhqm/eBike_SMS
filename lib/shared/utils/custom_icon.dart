@@ -194,6 +194,30 @@ class CustomIcon{
     );
   }
 
+  static Widget downArrow(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/down-arrow.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
+
+  static Widget qrScanner(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/qr-scanner.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
+
   // Coloured
   static Widget checkedColoured(
     double dimension,

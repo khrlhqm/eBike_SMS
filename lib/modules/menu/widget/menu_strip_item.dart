@@ -21,11 +21,14 @@ class StripMenuItem extends StatelessWidget {
     return Container(
       height: 60,
       alignment: Alignment.center,
-      padding: EdgeInsets.only(left: 20),
       decoration: const BoxDecoration(
           border: Border(top: BorderSide(color: ColorConstant.lightGrey))
       ),
       child: ListTile(
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: iconWidget
+        ),
         title: Text(
           label,
           style: TextStyle(
