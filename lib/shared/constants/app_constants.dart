@@ -31,3 +31,12 @@ class ColorConstant {
   static const Color yellow = Color(0xFFEED202); // #eed202
   static const Color shadow = Color(0x41000000); // #eed202
 }
+
+enum MarkerCardState {
+  loading,
+  scanBike,
+  confirmBike,
+  ridingBike,
+  warningBike,
+  location
+}

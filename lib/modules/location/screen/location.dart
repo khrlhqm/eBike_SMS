@@ -74,13 +74,13 @@ class _LocationState extends State<Location> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15),
-                      child: CustomIcon.crosshairColoured(30),
+                      child: CustomIcon.crosshairColoured(25),
                     )
                 ),
                 const SizedBox(height: 15),
                 Container(
-                  width: 59,
-                  height: 60,
+                  width: 54,
+                  height: 55,
                   decoration: BoxDecoration(
                     color: ColorConstant.white,
                     borderRadius: BorderRadius.circular(15),
@@ -99,10 +99,7 @@ class _LocationState extends State<Location> {
                         shadowColor: ColorConstant.black, // Box shadow color
                         elevation: 5,
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: CustomIcon.learnColoured(40),
-                      )
+                      child: CustomIcon.learnColoured(30)
                   ),
                 )
               ],
