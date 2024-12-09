@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
 
 class TextConstant {
   static const String appName = "eBike Student Mobility Solutions";
@@ -39,4 +40,8 @@ enum MarkerCardState {
   ridingBike,
   warningBike,
   location
+}
+
+class LocationConstant{
+  static const LatLng initialCenter = LatLng(2.31125, 102.32025);
 }

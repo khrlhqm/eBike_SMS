@@ -107,10 +107,10 @@ class _TimeTopUpScreenState extends State<TimeTopUpScreen> {
           Column(
             children: [
               const Text("Rate: ${TextConstant.priceRateLabel}",
-                style: TextStyle(fontSize: 16),
+                style: TextStyle(fontSize: 14),
               ),
               Container(
-                margin: const EdgeInsets.fromLTRB(40, 10, 40, 40),
+                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
                 child: RectangleButton(
                   label: "Confirm",
                   onPressed: () {

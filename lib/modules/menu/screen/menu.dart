@@ -72,21 +72,21 @@ class _MenuScreenState extends State<MenuScreen> {
   @override
   Widget build(BuildContext context) {
     // Ensure _userData is available before building the UI
-    if (_userData == null) {
-      return const Scaffold(
-        backgroundColor: ColorConstant.hintBlue,
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              LoadingAnimation(dimension: 80.0),
-              SizedBox(height: 20),
-              Text("Loading", style: TextStyle(fontSize: 16)),
-            ],
-          ),
-        ),
-      );
-    }
+    // if (_userData == null) {
+    //   return const Scaffold(
+    //     backgroundColor: ColorConstant.hintBlue,
+    //     body: Center(
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         children: [
+    //           LoadingAnimation(dimension: 80.0),
+    //           SizedBox(height: 20),
+    //           Text("Loading", style: TextStyle(fontSize: 16)),
+    //         ],
+    //       ),
+    //     ),
+    //   );
+    // }
 
     return Scaffold(
       backgroundColor: ColorConstant.white,

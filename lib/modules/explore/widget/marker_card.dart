@@ -1,12 +1,12 @@
 import 'package:ebikesms/shared/widget/rectangle_button.dart';
 
-import '../../modules/global_import.dart';
-import '../../modules/location/screen/nav_destination.dart';
+import '../../global_import.dart';
+import '../sub-screen/navigation/screen/nav_destination.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
 class MarkerCard extends StatefulWidget {
   final MarkerCardState markerCardState;
-  final bool isNavigating;
+  final bool navigationButtonEnable;
   final String bikeStatus;
   final String bikeId;
   final String currentTotalDistance;
@@ -19,7 +19,7 @@ class MarkerCard extends StatefulWidget {
   const MarkerCard({
     super.key,
     required this.markerCardState,
-    required this.isNavigating,
+    required this.navigationButtonEnable,
     // For bike marker cards:
     this.bikeStatus = "",
     this.bikeId = "",
@@ -96,7 +96,7 @@ class _MarkerCardState extends State<MarkerCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 20, 0),
               child: CustomIcon.bicycle(70, color: ColorConstant.black),
             ),
             Expanded(
@@ -141,18 +141,18 @@ class _MarkerCardState extends State<MarkerCard> {
                   Row(
                     children: [
                       Expanded(
-                          child: RectangleButton(
-                              height: 35,
-                              label: "Ring",
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              backgroundColor: ColorConstant.white,
-                              foregroundColor: ColorConstant.darkBlue,
-                              borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
-                              onPressed: () {
-                                // TODO: Ring the bike (make buzzer sound)
-                              }
-                          )
+                        child: RectangleButton(
+                          height: 35,
+                          label: "Ring",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          backgroundColor: ColorConstant.white,
+                          foregroundColor: ColorConstant.darkBlue,
+                          borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
+                          onPressed: () {
+                            // TODO: Ring the bike (make buzzer sound)
+                          }
+                        )
                       ),
                     ],
                   )
@@ -194,7 +194,7 @@ class _MarkerCardState extends State<MarkerCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 20, 0),
               child: CustomIcon.bicycle(70, color: ColorConstant.black),
             ),
             Expanded(
@@ -306,7 +306,7 @@ class _MarkerCardState extends State<MarkerCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 20, 0),
               child: CustomIcon.bicycle(70, color: ColorConstant.black),
             ),
             Expanded(
@@ -340,16 +340,16 @@ class _MarkerCardState extends State<MarkerCard> {
                   const SizedBox(height: 5),
                   RectangleButton(
                     height: 35,
-                    label: (widget.isNavigating) ? "End Navigation" : "Start Navigation",
+                    label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
                     fontSize: 12,
                     fontWeight: FontWeight.w600,
-                    backgroundColor: (widget.isNavigating) ? ColorConstant.white : ColorConstant.darkBlue,
-                    foregroundColor: (widget.isNavigating) ? ColorConstant.darkBlue : ColorConstant.white,
-                    borderSide: (widget.isNavigating)
+                    backgroundColor: (widget.navigationButtonEnable) ? ColorConstant.white : ColorConstant.darkBlue,
+                    foregroundColor: (widget.navigationButtonEnable) ? ColorConstant.darkBlue : ColorConstant.white,
+                    borderSide: (widget.navigationButtonEnable)
                         ? const BorderSide(width: 3, color: ColorConstant.darkBlue)
                         : BorderSide.none,
                     onPressed: () {
-                      if(widget.isNavigating){
+                      if(widget.navigationButtonEnable){
                         // TODO: End the navigation
                       }
                       else {
@@ -446,7 +446,7 @@ class _MarkerCardState extends State<MarkerCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 20, 0),
               child: CustomIcon.bicycle(70, color: ColorConstant.black),
             ),
             Expanded(
@@ -480,16 +480,16 @@ class _MarkerCardState extends State<MarkerCard> {
                     const SizedBox(height: 5),
                     RectangleButton(
                         height: 35,
-                        label: (widget.isNavigating) ? "End Navigation" : "Start Navigation",
+                        label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        backgroundColor: (widget.isNavigating) ? ColorConstant.white : ColorConstant.darkBlue,
-                        foregroundColor: (widget.isNavigating) ? ColorConstant.darkBlue : ColorConstant.white,
-                        borderSide: (widget.isNavigating)
+                        backgroundColor: (widget.navigationButtonEnable) ? ColorConstant.white : ColorConstant.darkBlue,
+                        foregroundColor: (widget.navigationButtonEnable) ? ColorConstant.darkBlue : ColorConstant.white,
+                        borderSide: (widget.navigationButtonEnable)
                             ? const BorderSide(width: 3, color: ColorConstant.darkBlue)
                             : BorderSide.none,
                         onPressed: () {
-                          if(widget.isNavigating){
+                          if(widget.navigationButtonEnable){
                             // TODO: End the navigation
                           }
                           else {
