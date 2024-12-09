@@ -43,7 +43,7 @@ class RectangleButton extends StatelessWidget {
           disabledBackgroundColor: ColorConstant.lightGrey,
           disabledForegroundColor: ColorConstant.grey,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(borderRadius)),
-          minimumSize: const Size(double.infinity, 55),
+          minimumSize: const Size(double.infinity, 50),
           side: borderSide
         ),
         child: Text(

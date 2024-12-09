@@ -1,10 +1,11 @@
-import 'package:ebikesms/shared/widget/marker_card.dart';
+import 'package:ebikesms/modules/explore/widget/marker_card.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
-import '../../modules/location/screen/location.dart';
+import '../../modules/explore/screen/explore.dart';
 import '../../modules/menu/screen/menu.dart';
 import '../utils/custom_icon.dart';
+import '../utils/shared_state.dart';
 
 
 class BottomNavBar extends StatefulWidget {
@@ -33,35 +34,12 @@ class BottomNavBar extends StatefulWidget {
 // User type: Rider
 // User type: Rider
 class _BottomNavBarRider extends State<BottomNavBar> {
-  late final PageController _pageController = PageController();
-  late double _labelSize;
+  final PageController _pageController = PageController();
+  final SharedState _sharedState = SharedState();
+  late double _labelSize = 11;
   late double _navBarWidth;
-  late double _navBarHeight;
-  late bool _isMarkerCardVisible;
-  late bool _isNavigating;
-  late MarkerCardState _markerCardState;
+  late double _navBarHeight = 60;
   int _selectedNavIndex = 0;
-
-  late String bikeStatus = "Available";
-  late String bikeId = "#999";
-  late String currentTotalDistance = "999 km";
-  late String currentRideTime = "999 mins";
-
-  late String locationNameMalay = "Fakulti Belum Dapat dan Technology Maklumat (FBDTM)";
-  late String locationNameEnglish = "Faculty of Have Not Completed and Information Teknologi";
-  late String locationType = "Faculty";
-  late String address = "Block A, Jalan Belum Buat, 54100 California, Malaysia";
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _navBarHeight = 60;
-    _labelSize = 11;
-    _isMarkerCardVisible = true; // Alter this to get marker types
-    _isNavigating = false; // Alter this to get marker types
-    _markerCardState = MarkerCardState.location; // Alter this variable to get marker types
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,22 +51,48 @@ class _BottomNavBarRider extends State<BottomNavBar> {
           alignment: Alignment.bottomCenter,
           children: [
             bottomNavChildrenWidget().elementAt(_selectedNavIndex),
-            Visibility(
-              visible: _isMarkerCardVisible,
-              child: MarkerCard(
-                markerCardState: _markerCardState,
-                isNavigating: _isNavigating,
-                // Bike marker cards:
-                bikeStatus: bikeStatus,
-                bikeId: bikeId,
-                currentTotalDistance: currentTotalDistance,
-                currentRideTime: currentRideTime,
-                // Location marker cards:
-                locationNameMalay: locationNameMalay,
-                locationNameEnglish: locationNameEnglish,
-                locationType: locationType,
-                address: address,
-              )
+            ValueListenableBuilder<bool>(
+              valueListenable: _sharedState.markerCardVisibility,
+              builder: (context, visible, _) {
+                return Visibility(
+                  visible: visible,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TextButton(
+                        onPressed: (){ _sharedState.markerCardVisibility.value = false; },
+                        child: Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: const BoxDecoration(
+                            color: ColorConstant.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [BoxShadow(
+                              color: ColorConstant.shadow,
+                              offset: Offset(0, 0),
+                              blurRadius: 2
+                            )]
+                          ),
+                          child: CustomIcon.close(10, color: ColorConstant.grey)
+                        )
+                      ),
+                      MarkerCard(
+                        markerCardState: _sharedState.markerCardState.value,
+                        navigationButtonEnable: _sharedState.navigationButtonEnable.value,
+                        // Bike marker cards:
+                        bikeStatus: _sharedState.bikeStatus.value,
+                        bikeId: _sharedState.bikeId.value,
+                        currentTotalDistance: _sharedState.currentTotalDistance.value,
+                        currentRideTime: _sharedState.currentRideTime.value,
+                        // Location marker cards:
+                        locationNameMalay: _sharedState.locationNameMalay.value,
+                        locationNameEnglish: _sharedState.locationNameEnglish.value,
+                        locationType: _sharedState.locationType.value,
+                        address: _sharedState.address.value,
+                      ),
+                    ],
+                  )
+                );
+              }
             ),
             Stack(
               alignment: AlignmentDirectional.bottomCenter,
@@ -133,11 +137,11 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                     TextButton(
                       style: TextButton.styleFrom(padding: EdgeInsets.zero),
                       onPressed: () {
-                        // Handle Scan button press
+                        // TODO: Handle Scan button press
                       },
                       child: Builder(
                         builder: (context) {
-                          switch(_markerCardState) {
+                          switch(_sharedState.markerCardState.value) {
                             case MarkerCardState.ridingBike:
                               return Container(
                                   padding: const EdgeInsets.all(15),
@@ -178,7 +182,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                       width: 120,
                       child: Builder(
                         builder: (context) {
-                          switch(_markerCardState) {
+                          switch(_sharedState.markerCardState.value) {
                             case MarkerCardState.warningBike:
                               return SizedBox(height: _labelSize + 4);
                             case MarkerCardState.ridingBike:
@@ -212,10 +216,12 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     if (index != _selectedNavIndex) {
       setState(() {
         _selectedNavIndex = index;
+        _sharedState.markerCardVisibility.value = index == 0; //TODO: Make it dissapear when in mnenu
       });
       _pageController.jumpToPage(index);
     }
   }
+
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
@@ -250,9 +256,10 @@ class _BottomNavBarRider extends State<BottomNavBar> {
 
   List<Widget> bottomNavChildrenWidget() {
     return [
-      const Location(),
+      ExploreScreen(_sharedState),
       const Center(child: Text("QR Code Dummy")),
       const MenuScreen(),
+      // MenuScreen(_sharedState), // TODO: Uncomment this and delete the line above
     ];
   }
 }
@@ -264,7 +271,6 @@ class _BottomNavBarRider extends State<BottomNavBar> {
 class _BottomNavBarAdmin extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    throw UnimplementedError(); // TODO: implement build
   }
 }
