@@ -12,13 +12,13 @@ class TransactionController extends ChangeNotifier{
     required int userId,
   }) async {
 
-    // TODO: Make it dynamic
+    // Define URL with URI
     final url = Uri.parse("${ApiBase.baseUrl}/time_top_up.php");
 
     try {
       debugPrint("Starting HTTP POST request to URL: $url");
 
-      // Make a json file
+      // (Try) make a json file and post to url
       final response = await http.post(
         url,
         headers: {"Content-Type": "application/json"},
@@ -31,7 +31,7 @@ class TransactionController extends ChangeNotifier{
       );
       debugPrint("HTTP POST request completed. Status code: ${response.statusCode}");
 
-      // Check if server is not responding
+      // Check if server is not responding after post
       if (response.statusCode != 200) {
         debugPrint("Server is not responding. Received status code: ${response.statusCode}");
         return {
@@ -40,26 +40,28 @@ class TransactionController extends ChangeNotifier{
         };
       }
 
+      // (Try) decode the response body
       try {
         // Check indication if server reply was an error
         final responseBody = json.decode(response.body);
         debugPrint("Response body received: $responseBody");
 
-        if (responseBody['status'] != 'success') {
+        // (Try) to check if response contained success
+        if (responseBody['status'] == 'error') {
           debugPrint("Payment failed. Response status: ${responseBody['status']}");
           return {
             'status': 0,
             'message': "Payment failed. Please try again later."
           };
         }
-      } catch (e) {
+      } catch (e) { // Catch if parsing/decoding response fails
         debugPrint("Error parsing response body: $e");
         return {
           'status': 0,
           'message': "Invalid server response. Please try again later."
         };
       }
-    } catch (e) { // Catch if unexpected error occurs
+    } catch (e) { // Catch if unexpected error occurs during HTTP Post
       debugPrint("Unexpected error occurred during HTTP POST request: $e");
       return {
         'status': 0,

@@ -1,3 +1,4 @@
+import 'package:ebikesms/modules/global_import.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -194,6 +195,30 @@ class CustomIcon{
     );
   }
 
+  static Widget downArrow(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/down-arrow.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
+
+  static Widget qrScanner(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/qr-scanner.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
+
   // Coloured
   static Widget checkedColoured(
     double dimension,
@@ -230,6 +255,79 @@ class CustomIcon{
   ) {
     return SvgPicture.asset(
       'assets/icons/user-coloured.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+  static Widget locationMarker(
+      double dimension,
+      String locationType,
+      ) {
+    String markerName;
+
+    switch (locationType) {
+      case "Cafeteria":
+        markerName = "cafeteria-marker";
+        break;
+      case "Coffee Shop":
+        markerName = "coffee-shop-marker";
+        break;
+      case "Faculty":
+        markerName = "faculty-marker";
+        break;
+      case "General Facility":
+        markerName = "general-facility-marker";
+        break;
+      case "Hostel":
+        markerName = "hostel-marker";
+        break;
+      case "Library":
+        markerName = "library-marker";
+        break;
+      case "Mosque":
+        markerName = "mosque-marker";
+        break;
+      case "Sport Facility":
+        markerName = "sport-facility-marker";
+        break;
+      default:
+        markerName = "default-marker"; // For unknown types
+        break;
+    }
+
+    // Return the marker as an SVG picture
+    return SvgPicture.asset(
+      'assets/icons/markers/$markerName.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+  static Widget bikeStatus(
+      double dimension,
+      String bikeStatus,
+      ) {
+    String iconName;
+
+    switch (bikeStatus) {
+      case "Available":
+        iconName = "available-status";
+        break;
+      case "Disabled":
+        iconName = "disabled-status";
+        break;
+      case "Riding":
+        iconName = "riding-status";
+        break;
+      default:
+        iconName = "disabled-status"; // For unknown types
+        break;
+    }
+
+    // Return the marker as an SVG picture
+    return SvgPicture.asset(
+      'assets/icons/statuses/$iconName.svg',
       width: dimension,
       height: dimension,
     );

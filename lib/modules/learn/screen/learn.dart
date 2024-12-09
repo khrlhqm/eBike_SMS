@@ -1,4 +1,3 @@
-import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:ebikesms/modules/global_import.dart';
 
 class LearnScreen extends StatelessWidget {

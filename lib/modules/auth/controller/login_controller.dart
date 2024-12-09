@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../../shared/utils/navigationBar.dart';
+import '../../../shared/widget/bottom_nav_bar.dart';
 import 'user_storage_service.dart'; // Adjust the path as needed
 import 'package:ebikesms/ip.dart';
 
@@ -41,8 +41,11 @@ class LoginController extends ChangeNotifier {
           Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => BottomNavSmoothTransitionApp(
-                    userId: userId)), // Pass userId to the next screen
+              builder: (context) => BottomNavBar(
+                userId: userId,
+                userType: "Rider",
+              )
+            ), // Pass userId to the next screen
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

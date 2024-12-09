@@ -22,7 +22,7 @@ class _LocationState extends State<Location> {
     );
   }
 
-  void _navigateToProfile() {
+  void _navigateToGuide() {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -31,7 +31,12 @@ class _LocationState extends State<Location> {
     );
   }
 
-  Widget content() {
+  TileLayer get _getOpenStreetMap => TileLayer(
+    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+  );
+
+  Widget _displayMap() {
     return FlutterMap(
       mapController: _mapController,
       options: const MapOptions(
@@ -40,7 +45,7 @@ class _LocationState extends State<Location> {
         interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
       ),
       children: [
-        openStreetMap,
+        _getOpenStreetMap,
         MarkerLayer(markers: buildMarkers(context)),
       ],
     );
@@ -50,67 +55,60 @@ class _LocationState extends State<Location> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(
+        alignment: Alignment.centerRight,
         children: [
-          content(),
-          Positioned(
-            bottom: 20,
-            right: 20,
+          _displayMap(),
+          Padding(
+            padding: const EdgeInsets.all(15),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: ColorConstant.black,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.lightbulb,
-                        color: ColorConstant.yellow),
-                    onPressed: _navigateToProfile,
-                    splashRadius: 25,
-                  ),
-                ),
-                const SizedBox(height: 10), // Space between buttons
-
-                Container(
-                  height: 50,
-                  width: 50,
-                  decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: ColorConstant.black,
-                        blurRadius: 5,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: IconButton(
-                    icon: const Icon(Icons.gps_fixed,
-                        color: ColorConstant.darkBlue),
+                ElevatedButton(
                     onPressed: _getCurrentLocation,
-                    splashRadius: 25,
-                  ),
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: EdgeInsets.zero,
+                      backgroundColor: ColorConstant.white, // Background color
+                      shadowColor: ColorConstant.black, // Box shadow color
+                      elevation: 5,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: CustomIcon.crosshairColoured(25),
+                    )
                 ),
+                const SizedBox(height: 15),
+                Container(
+                  width: 54,
+                  height: 55,
+                  decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    borderRadius: BorderRadius.circular(15),
+                    boxShadow: const [BoxShadow(
+                        color: ColorConstant.shadow, blurRadius: 10, offset: Offset(0, 1)
+                    )],
+                  ),
+                  child: ElevatedButton(
+                      onPressed: _navigateToGuide,
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        padding: EdgeInsets.zero,
+                        backgroundColor: ColorConstant.white, // Background color
+                        shadowColor: ColorConstant.black, // Box shadow color
+                        elevation: 5,
+                      ),
+                      child: CustomIcon.learnColoured(30)
+                  ),
+                )
               ],
             ),
-          ),
+          )
         ],
       ),
     );
   }
 }
 
-TileLayer get openStreetMap => TileLayer(
-      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-      userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-    );
+

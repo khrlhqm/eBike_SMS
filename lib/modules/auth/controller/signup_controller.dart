@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ebikesms/modules/auth/screen/login.dart';
-import 'package:ebikesms/modules/auth/screen/autentication.dart'; // Import biometric screen
+import 'package:ebikesms/modules/auth/screen/authentication.dart'; // Import biometric screen
 import 'package:ebikesms/ip.dart';
 
 class SignupController extends ChangeNotifier {
@@ -32,7 +32,7 @@ class SignupController extends ChangeNotifier {
     // Navigate to BiometricAuthScreen and await its result
     int? authResult = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BiometricAuthScreen()),
+      MaterialPageRoute(builder: (context) => const BiometricAuthScreen()),
     );
 
     // Proceed based on biometric authentication result
@@ -64,7 +64,7 @@ class SignupController extends ChangeNotifier {
             // Navigate to login screen
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
             );
             return 1; // Indicate success
           } else {
