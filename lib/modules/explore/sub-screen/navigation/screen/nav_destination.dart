@@ -1,11 +1,11 @@
 import 'package:ebikesms/shared/widget/loading_animation.dart';
 import 'package:flutter/material.dart';
 
-import '../../../shared/constants/app_constants.dart';
-import '../../../shared/utils/custom_icon.dart';
+import '../../../../../shared/constants/app_constants.dart';
+import '../../../../../shared/utils/custom_icon.dart';
 import '../widget/destination_card.dart';
 import 'nav_confirm_pinpoint.dart';
-import '../location_controller.dart';
+import '../../../controller/location_controller.dart';
 
 enum DataState { loading, hasResult, failure, noResult }
 
@@ -21,7 +21,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
   late List<dynamic> _allLocations;
   late List<dynamic> _displayingLocations;
   bool _isSearchHasText = false;
-  DataState _dataState = DataState.loading; // To display loading animation
+  DataState _dataState = DataState.noResult; // To display loading animation
 
   void _fetchLocations() async {
     var results = await LocationController.getLocations();
@@ -111,7 +111,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                   Text(
                     "Let's begin navigating",
                     style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold,
                         color: ColorConstant.darkBlue
                     ),
@@ -172,8 +172,9 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                       child: Text(
                         "To",
                         style: TextStyle(
-                            color: ColorConstant.darkBlue,
-                            fontSize: 14
+                          color: ColorConstant.darkBlue,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold
                         ),
                       ),
                     ),
@@ -216,7 +217,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
               (_isSearchHasText) ? "Search results" : "Recommendations",
               style: const TextStyle(
                 color: ColorConstant.darkBlue,
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -226,10 +227,10 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
               builder: (context) {
                 switch (_dataState) {
                   case DataState.loading:
-                    return const Center(child: LoadingAnimation(dimension: 70));
+                    return const Center(child: LoadingAnimation(dimension: 50));
                   case DataState.failure:
                     return const Center(child: Text(
-                      "It appears there are\nno locations in the system yet.",
+                      "An unexpected failure occurred",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16),)
                     );
@@ -256,16 +257,16 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         const Text(
-                                          "Try pinpointing it on the map.",
+                                          "Try pinpointing it on the map",
                                           textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 13,
                                               color: ColorConstant.darkBlue,
                                               fontWeight: FontWeight.bold
                                           ),
                                         ),
                                         Padding(
-                                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 20),
+                                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                                           child: CustomIcon.downArrow(25, color: ColorConstant.darkBlue),
                                         )
                                       ],
@@ -320,10 +321,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             ),
             onPressed: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const NavConfirmPinpoint())
-              );
+              // TODO: Navigate to pinpoint destination
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -332,7 +330,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                 const SizedBox(width: 10),
                 const Text(
                   "Choose on map", // Editable
-                  style: TextStyle(fontSize: 14), // Editable
+                  style: TextStyle(fontSize: 13), // Editable
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(width: 4),

@@ -1,6 +1,4 @@
 import 'package:ebikesms/modules/global_import.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class CustomIcon{
   static Widget back(
@@ -260,6 +258,16 @@ class CustomIcon{
     );
   }
 
+  static Widget userMarker(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/markers/user-marker.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget locationMarker(
       double dimension,
       String locationType,
@@ -295,7 +303,6 @@ class CustomIcon{
         markerName = "default-marker"; // For unknown types
         break;
     }
-
     // Return the marker as an SVG picture
     return SvgPicture.asset(
       'assets/icons/markers/$markerName.svg',
@@ -324,7 +331,6 @@ class CustomIcon{
         iconName = "disabled-status"; // For unknown types
         break;
     }
-
     // Return the marker as an SVG picture
     return SvgPicture.asset(
       'assets/icons/statuses/$iconName.svg',
