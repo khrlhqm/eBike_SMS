@@ -32,7 +32,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor:
-          const Color.fromARGB(255, 243, 245, 252), // Light blue background
+          ColorConstant.hintBlue, // Light blue background
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           filled: true,
                           fillColor: Colors
                               .white, // White background for the text field
-                          labelText: 'Username',
+                          labelText: 'Matric Number',
                           border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(25),
                               borderSide: const BorderSide(
