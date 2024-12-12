@@ -6,8 +6,8 @@ import 'user_storage_service.dart'; // Adjust the path as needed
 import 'package:ebikesms/ip.dart';
 
 class LoginController extends ChangeNotifier {
-   final UserStorageService _userStorageService = UserStorageService();
-   
+  final UserStorageService _userStorageService = UserStorageService();
+
   Future<void> loginValidation(
       BuildContext context, String username, String password) async {
     if (username.isEmpty || password.isEmpty) {
@@ -17,7 +17,7 @@ class LoginController extends ChangeNotifier {
       return; // Stop execution if validation fails
     }
 
-    final url = Uri.parse("${ApiBase.baseUrl}/login.php");
+    final url = Uri.parse("${ApiBase.baseUrl}/api.php");
 
     try {
       final response = await http.post(
@@ -32,7 +32,8 @@ class LoginController extends ChangeNotifier {
 
         if (responseBody['status'] == 'success') {
           // Store the user_id locally or pass it to the next screen
-          int userId = responseBody['user_id']; // Now this will work since user_id is part of the response
+          int userId = responseBody[
+              'user_id']; // Now this will work since user_id is part of the response
           await _userStorageService.saveUserId(userId);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful')),

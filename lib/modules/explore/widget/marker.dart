@@ -1,17 +1,9 @@
 import 'package:ebikesms/modules/explore/controller/location_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../../../shared/utils/custom_icon.dart';
-import '../../../shared/widget/bottom_nav_bar.dart';
-import '../screen/explore.dart';
-
-
-
+import 'package:ebikesms/modules/global_import.dart';
 
 List<Marker> buildMarkers(BuildContext context) {
-      return [
+  return [
     //FTMK
     Marker(
         width: 80.0,
@@ -322,8 +314,7 @@ List<Marker> buildMarkers(BuildContext context) {
             onTap: () {
               _onMarkerTap(const LatLng(2.3168, 102.3207), context);
             },
-            child: CustomIcon.locationMarker(1, "Library")
-        )),
+            child: CustomIcon.locationMarker(1, "Library"))),
     //Stadium
     Marker(
         width: 80.0,
@@ -447,6 +438,27 @@ List<Marker> buildMarkers(BuildContext context) {
   ];
 }
 
+List<LatLng> selectedMarkers = []; //store marker for route
+
+List<Marker> locationMarkers(BuildContext context, LatLng points) {
+  return [
+    Marker(
+      width: 80.0,
+      height: 80.0,
+      point: const LatLng(2.3082, 102.3193),
+      child: GestureDetector(
+        onTap: () {
+          _onMarkerTap(const LatLng(2.3082, 102.3193), context);
+        },
+        child: const Icon(
+          Icons.location_on,
+          color: Colors.blue,
+          size: 40,
+        ),
+      ),
+    ),
+  ];
+}
 
 void _onMarkerTap(LatLng latlng, BuildContext context) {
   showModalBottomSheet(
@@ -465,15 +477,14 @@ void _onMarkerTap(LatLng latlng, BuildContext context) {
           builder: (context, scrollController) {
             return SingleChildScrollView(
               controller:
-              scrollController, // Attach the controller for scroll behavior
+                  scrollController, // Attach the controller for scroll behavior
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
                     ListTile(
                       title: const Text('Information about the place'),
-                      subtitle:
-                      Text('Details about the location at'),
+                      subtitle: Text('Details about the location at'),
                     ),
                     ElevatedButton(
                       onPressed: () {
