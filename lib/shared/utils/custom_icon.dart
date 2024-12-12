@@ -13,6 +13,7 @@ class CustomIcon{
     );
   }
 
+
   static Widget bicycle(
     double dimension,
       {Color color = Colors.white}

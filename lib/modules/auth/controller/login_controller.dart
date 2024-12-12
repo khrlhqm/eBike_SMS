@@ -56,13 +56,14 @@ class LoginController extends ChangeNotifier {
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-              content: Text('Server error. Please try again later.')),
+              content: Text('Server error.')),
         );
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $e')),
       );
+      
     }
   }
 }

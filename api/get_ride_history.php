@@ -33,14 +33,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             r.start_time, 
             r.end_time, 
             r.distance, 
-            b.bike_name, 
-            rt.route_name
+            b.bike_name
         FROM 
             ride r
         INNER JOIN 
             bike b ON r.bike_id = b.bike_id
-        INNER JOIN 
-            route rt ON r.route_id = rt.route_id
         WHERE 
             r.user_id = ?
         ORDER BY 
