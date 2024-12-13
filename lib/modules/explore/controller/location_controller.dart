@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class LocationController extends ChangeNotifier {
   static Future<Map<String, dynamic>> getLocations() async {
     // Define the API URL
-    final url = Uri.parse("${ApiBase.baseUrl}/get_locations.php");
+    final url = Uri.parse("${ApiBase.baseUrl}/get_locations.php"); // TODO: Remember to run the host first
     debugPrint("Starting HTTP POST request to URL: $url");
 
     try {
@@ -19,6 +19,7 @@ class LocationController extends ChangeNotifier {
       if (response.statusCode != 200) {
         return {
           'status': 0, // Indicate failure
+          'message': "HTTP response indicates failure",
         };
       }
 
@@ -31,6 +32,7 @@ class LocationController extends ChangeNotifier {
         debugPrint("Get location failed. Response status: ${responseBody['status']}");
         return {
           'status': 0, // Indicate failure
+          'message': responseBody['message'],
         };
       }
 
@@ -39,6 +41,7 @@ class LocationController extends ChangeNotifier {
         debugPrint("Get location successful. Response status: ${responseBody['status']}");
         return {
           'status': 1, // Indicate success
+          'message': responseBody['message'],
           'data': responseBody['data'],
         };
       }
@@ -47,18 +50,21 @@ class LocationController extends ChangeNotifier {
       debugPrint("Unexpected status in response body: ${responseBody['status']}");
       return {
         'status': 0, // Indicate failure
+        'message': responseBody['message'],
       };
 
     } on FormatException catch (e) { // Catch decoding/parsing error of json
       debugPrint("Error decoding response body: $e");
       return {
         'status': 0, // Indicate failure
+        'message': e.toString()
       };
 
     } catch (e) { // Catch other unexpected errors
       debugPrint("Unexpected error occurred during HTTP POST request: $e");
       return {
         'status': 0, // Indicate failure
+        'message': e.toString()
       };
     }
   }
