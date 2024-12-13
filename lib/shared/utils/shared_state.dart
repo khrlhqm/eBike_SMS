@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../constants/app_constants.dart';
 
 class SharedState {
-
   // TODO: Declare user login ValueNotifiers
 
   ValueNotifier<bool> markerCardVisibility = ValueNotifier(false);
