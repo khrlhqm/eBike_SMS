@@ -17,14 +17,22 @@
 
     // Get the posted JSON data
     $data = json_decode(file_get_contents("php://input"), true);
-
-    $query = "SELECT 
-        location_id, 
-        location_name_malay, 
-        location_name_english, 
-        location_type, 
-        address 
-        FROM location";
+    
+    $query = "SELECT
+                l.location_id,
+                l.location_name_malay,
+                l.location_name_english,
+                l.location_type,
+                l.address,
+                w.latitude,
+                w.longitude
+            FROM
+                location AS l
+            LEFT JOIN waypoint AS W
+            ON
+                l.location_id = w.location_id
+            WHERE
+                w.latitude IS NOT NULL AND w.latitude IS NOT NULL;";
 
     // Execute query
     $result = $conn->query($query);
@@ -45,7 +53,9 @@
                 "location_name_malay" => $row['location_name_malay'],
                 "location_name_english" => $row['location_name_english'],
                 "location_type" => $row['location_type'],
-                "address" => $row['address']
+                "address" => $row['address'],
+                "latitude" => $row['latitude'],
+                "longitude" => $row['longitude'],
             ]; 
         }
         echo json_encode([
