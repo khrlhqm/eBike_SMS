@@ -8,6 +8,7 @@ import 'package:ebikesms/ip.dart';
 class SignupController extends ChangeNotifier {
   Future<int> registerUser(
     BuildContext context,
+    String userEmail,
     String matricNumber,
     String password,
     String confirmPassword,
@@ -46,6 +47,7 @@ class SignupController extends ChangeNotifier {
           url,
           headers: {"Content-Type": "application/json"},
           body: json.encode({
+            "user_email": userEmail,
             "matric_number": matricNumber,
             "password": password,
             "user_name": username,

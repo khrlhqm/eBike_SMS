@@ -16,6 +16,7 @@ if ($conn->connect_error) {
 $data = json_decode(file_get_contents("php://input"), true);
 
 if (isset($data['matric_number']) && isset($data['password'])) {
+    $user_email = $conn->real_escape_string($data['user_email']);
     $matric_number = $conn->real_escape_string($data['matric_number']);
     $password = password_hash($data['password'], PASSWORD_BCRYPT); // Hash the password for security
     $username = $conn->real_escape_string($data['user_name']);
@@ -29,7 +30,7 @@ if (isset($data['matric_number']) && isset($data['password'])) {
         echo json_encode(["status" => "error", "message" => "Matric number already registered"]);
     } else {
         // Insert new user into the database
-        $query = "INSERT INTO user (matric_number,password,user_name,full_name) VALUES ('$matric_number', '$password', '$username','$full_name')";
+        $query = "INSERT INTO user (user_email,matric_number,password,user_name,full_name) VALUES ('$user_email','$matric_number', '$password', '$username','$full_name')";
         if ($conn->query($query) === TRUE) {
             echo json_encode(["status" => "success", "message" => "Registration successful"]);
         } else {

@@ -27,8 +27,7 @@ class _VerificationPageState extends State<VerificationPage> {
     storedOtp = generateOtp(); // Generate OTP
     print("sent to email:" + widget.userEmail);
     print("OTP:" + storedOtp);
-    EmailVerification()
-        .sentOtpToEmail(_apiKey, widget.userEmail, storedOtp, context);
+    
   }
 
   String generateOtp() {
