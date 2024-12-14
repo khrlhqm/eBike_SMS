@@ -48,7 +48,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
           if (_allLocations.isNotEmpty) {
             for (int i = 0; i < _allLocations.length; i++) {
               final location = _allLocations[i];
-              if (location['latitude'] != null && location['longitude'] != null) {
+              if (location['latitude'] != null &&
+                  location['longitude'] != null) {
                 double parsedLat = double.parse(location['latitude']);
                 double parsedLong = double.parse(location['longitude']);
                 _allMarkers.add(
@@ -58,7 +59,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     point: LatLng(parsedLat, parsedLong),
                     child: GestureDetector(
                       onTap: () => _onLocationMarkerTap(i),
-                      child: CustomIcon.locationMarker(1, location['location_type']),
+                      child: CustomIcon.locationMarker(
+                          1, location['location_type']),
                     ),
                   ),
                 );
@@ -68,7 +70,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
           break;
 
         case "Bike":
-        // TODO: Fetch bike markers and add to _allMarkers
+          // TODO: Fetch bike markers and add to _allMarkers
           break;
 
         case "User":
@@ -77,7 +79,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
               Marker(
                 width: 20,
                 height: 20,
-                point: LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
+                point: LatLng(_currentUserLocation.latitude,
+                    _currentUserLocation.longitude),
                 child: CustomIcon.userMarker(1),
               ),
             );
@@ -96,14 +99,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void _fetchLocations() async {
     var results = await LocationController.getLocations();
-    if(results['status'] == 0) { // Failed
+    if (results['status'] == 0) {
+      // Failed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Status: ${results['status']}, Message: ${results['message']}")),
+        SnackBar(
+            content: Text(
+                "Status: ${results['status']}, Message: ${results['message']}")),
       );
-    }
-    else {
+    } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Status: ${results['status']}, Message: ${results['message']}")),
+        SnackBar(
+            content: Text(
+                "Status: ${results['status']}, Message: ${results['message']}")),
       );
     }
     _allLocations = results['data'];
@@ -132,11 +139,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Location permissions are permanently denied, we cannot request permissions.')),
+        const SnackBar(
+            content: Text(
+                'Location permissions are permanently denied, we cannot request permissions.')),
       );
     }
     try {
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
       _currentUserLocation = position;
       _buildMarkers("User");
     } catch (e) {
@@ -145,20 +155,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
       );
     }
   }
-  
+
   void _pointToUserLocation() async {
     setState(() {
-      _mapController.move(LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude), 16.0);
+      _mapController.move(
+          LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
+          16.0);
     });
   }
-  
+
   void _onLocationMarkerTap(int index) {
     // Update these values to make marker card visible and it's details
     widget.sharedState.markerCardState.value = MarkerCardState.location;
     widget.sharedState.markerCardVisibility.value = true;
-    widget.sharedState.locationNameMalay.value = _allLocations[index]['location_name_malay'];
-    widget.sharedState.locationNameEnglish.value = _allLocations[index]['location_name_english'];
-    widget.sharedState.locationType.value = _allLocations[index]['location_type'];
+    widget.sharedState.locationNameMalay.value =
+        _allLocations[index]['location_name_malay'];
+    widget.sharedState.locationNameEnglish.value =
+        _allLocations[index]['location_name_english'];
+    widget.sharedState.locationType.value =
+        _allLocations[index]['location_type'];
     widget.sharedState.address.value = _allLocations[index]['address'];
     // widget.sharedState.latitude.value = _allLocations[index]['latitude'];
     // widget.sharedState.longitude.value = _allLocations[index]['longitude'];
@@ -168,7 +183,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   void _onBikeMarkerTap(int index) {
     // TODO: Update these values to make marker card visible and it's details
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -186,26 +201,23 @@ class _ExploreScreenState extends State<ExploreScreen> {
           _displayMap(),
           // Loading Animation
           Visibility(
-            visible: !_isMarkersLoaded,
-            child: Center(
-              child: Container(
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: ColorConstant.white,
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: ColorConstant.shadow, // Shadow color
-                    offset: Offset(0, 2),                 // Shadow position
-                    blurRadius: 10.0,                      // Spread of the shadow
-                    spreadRadius: 0.0                     // Additional spread
-                  )
-                ]
-              ),
-              child: const LoadingAnimation(dimension: 30),
-              )
-            )
-          ),
+              visible: !_isMarkersLoaded,
+              child: Center(
+                  child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                    color: ColorConstant.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: ColorConstant.shadow, // Shadow color
+                          offset: Offset(0, 2), // Shadow position
+                          blurRadius: 10.0, // Spread of the shadow
+                          spreadRadius: 0.0 // Additional spread
+                          )
+                    ]),
+                child: const LoadingAnimation(dimension: 30),
+              ))),
           // Pinpoint-user and learn buttons
           Padding(
             padding: const EdgeInsets.all(15),
@@ -213,19 +225,18 @@ class _ExploreScreenState extends State<ExploreScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: _pointToUserLocation,
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: ColorConstant.white, // Background color
-                    shadowColor: ColorConstant.black, // Box shadow color
-                    elevation: 5,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: CustomIcon.crosshairColoured(25),
-                  )
-                ),
+                    onPressed: _pointToUserLocation,
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: EdgeInsets.zero,
+                      backgroundColor: ColorConstant.white, // Background color
+                      shadowColor: ColorConstant.black, // Box shadow color
+                      elevation: 5,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: CustomIcon.crosshairColoured(25),
+                    )),
                 const SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {
@@ -256,5 +267,3 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 }
-
-
