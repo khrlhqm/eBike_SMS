@@ -26,14 +26,17 @@ class DestinationCard extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              locationNameMalay,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: ColorConstant.black,
-              ),
+            Flexible(
+              child: Text(
+                locationNameMalay,
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.fade,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: ColorConstant.black,
+                ),
+              )
             ),
             Text(
               locationType,

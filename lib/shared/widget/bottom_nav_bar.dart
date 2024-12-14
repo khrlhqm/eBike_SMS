@@ -55,7 +55,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
               valueListenable: _sharedState.markerCardVisibility,
               builder: (context, visible, _) {
                 return Visibility(
-                  visible: visible,
+                  visible: _sharedState.markerCardVisibility.value,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -67,7 +67,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                             color: ColorConstant.white,
                             shape: BoxShape.circle,
                             boxShadow: [BoxShadow(
-                              color: ColorConstant.shadow,
+                              color: ColorConstant.grey,
                               offset: Offset(0, 0),
                               blurRadius: 2
                             )]
@@ -212,11 +212,18 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     );
   }
 
+  bool temp = false;
   void _onItemTapped(int index) {
     if (index != _selectedNavIndex) {
       setState(() {
         _selectedNavIndex = index;
-        _sharedState.markerCardVisibility.value = index == 0; //TODO: Make it dissapear when in mnenu
+        if(index != 0) {
+          temp = _sharedState.markerCardVisibility.value;
+          _sharedState.markerCardVisibility.value = false;
+        }
+        else {
+          _sharedState.markerCardVisibility.value = temp;
+        }
       });
       _pageController.jumpToPage(index);
     }

@@ -229,6 +229,16 @@ class CustomIcon{
     );
   }
 
+  static Widget compassColoured(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/compass.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget crosshairColoured(
     double dimension,
   ) {
@@ -259,6 +269,16 @@ class CustomIcon{
     );
   }
 
+  static Widget pinpointColoured(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/pinpoint.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget userMarker(
     double dimension,
   ) {
@@ -269,6 +289,7 @@ class CustomIcon{
     );
   }
 
+  // Dynamic Icons
   static Widget locationMarker(
       double dimension,
       String locationType,
@@ -311,6 +332,39 @@ class CustomIcon{
       height: dimension,
     );
   }
+
+  static Widget bikeMarker(
+      double dimension,
+      String bikeStatus,
+      ) {
+    String markerName;
+
+    switch (bikeStatus) {
+      case "Available":
+        markerName = "bike-selected-marker";
+        break;
+      case "Riding":
+        markerName = "bike-riding-marker";
+        break;
+      case "Selected":
+        markerName = "bike-selected-marker";
+        break;
+      case "Unavailable":
+        markerName = "bike-unavailable-marker";
+        break;
+      default:
+        markerName = "default-marker"; // For unknown types
+        break;
+    }
+    // Return the marker as an SVG picture
+    return SvgPicture.asset(
+      'assets/icons/markers/$markerName.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+
 
   static Widget bikeStatus(
       double dimension,
