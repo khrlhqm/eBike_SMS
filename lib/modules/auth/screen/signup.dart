@@ -1,7 +1,6 @@
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/signup_controller.dart';
 import 'package:ebikesms/modules/auth/controller/email_verification.dart';
-import 'package:ebikesms/modules/auth/screen/verification.dart';
 import 'dart:math';
 
 class SignupScreen extends StatefulWidget {
