@@ -6,6 +6,7 @@ import '../../../../../shared/utils/custom_icon.dart';
 import '../widget/destination_card.dart';
 import 'nav_confirm_pinpoint.dart';
 import '../../../controller/location_controller.dart';
+import 'nav_confirm_selected.dart';
 
 enum DataState { loading, hasResult, failure, noResult }
 
@@ -25,7 +26,6 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
 
   void _fetchLocations() async {
     var results = await LocationController.getLocations();
-
     if(results['status'] == 0) { // Failed
       _allLocations = results['data'];
       setState(() {
@@ -71,7 +71,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
         }
       });
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -235,83 +235,15 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                       style: TextStyle(fontSize: 16),)
                     );
                   case DataState.noResult:
-                    return Expanded(
-                        child: Center(
-                            child: SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    const Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            "We couldn't find the location you provided.",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                        )
-                                    ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Text(
-                                          "Try pinpointing it on the map",
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(
-                                              fontSize: 13,
-                                              color: ColorConstant.darkBlue,
-                                              fontWeight: FontWeight.bold
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                                          child: CustomIcon.downArrow(25, color: ColorConstant.darkBlue),
-                                        )
-                                      ],
-                                    )
-                                  ],
-                                )
-                            )
-                        )
-                    );
+                    return displayLocationNotFound();
                   case DataState.hasResult:
-                    return CustomScrollView(
-                      slivers: [
-                        SliverToBoxAdapter(
-                          child: GridView.builder(
-                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                            shrinkWrap: true, // Make sure the GridView fits inside the CustomScrollView
-                            physics: const NeverScrollableScrollPhysics(), // Prevent grid from scrolling independently
-                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, // Number of columns
-                              crossAxisSpacing: 15, // Horizontal space between grid items
-                              mainAxisSpacing: 15, // Vertical space between grid items
-                              childAspectRatio: 0.7, // Ratio of width to height of each grid item (the lesser, the longer)
-                            ),
-                            itemCount: _displayingLocations.length, // Total number of items
-                            itemBuilder: (BuildContext context, int index) {
-                              //return Container(color: ColorConstant.black);
-                              return DestinationCard(
-                                locationNameMalay: _displayingLocations[index]['location_name_malay'],
-                                locationNameEnglish: _displayingLocations[index]['location_name_english'],
-                                locationType: _displayingLocations[index]['location_type']
-                                // id
-                                // address
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                  );
+                    return displayDestinationCards();
                   default:
                     return const Center(child: Text("Unknown state"));
                 }
               },
             )
           ),
-
           // Pin point button
           TextButton(
             style: ElevatedButton.styleFrom(
@@ -321,7 +253,12 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
               shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
             ),
             onPressed: (){
-              // TODO: Navigate to pinpoint destination
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => NavConfirmPinpointScreen(
+                    allLocations: _allLocations,
+                  ))
+              );
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -339,6 +276,88 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget displayLocationNotFound() {
+    return Expanded(
+        child: Center(
+            child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const Expanded(
+                        child: Center(
+                          child: Text(
+                            "We couldn't find the location you provided.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
+                        )
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text(
+                          "Try pinpointing it on the map",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: ColorConstant.darkBlue,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+                          child: CustomIcon.downArrow(25, color: ColorConstant.darkBlue),
+                        )
+                      ],
+                    )
+                  ],
+                )
+            )
+        )
+    );
+  }
+
+  Widget displayDestinationCards() {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: GridView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            shrinkWrap: true, // Make sure the GridView fits inside the CustomScrollView
+            physics: const NeverScrollableScrollPhysics(), // Prevent grid from scrolling independently
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // Number of columns
+              crossAxisSpacing: 15, // Horizontal space between grid items
+              mainAxisSpacing: 15, // Vertical space between grid items
+              childAspectRatio: 0.7, // Ratio of width to height of each grid item (the lesser, the longer)
+            ),
+            itemCount: _displayingLocations.length, // Total number of items
+            itemBuilder: (BuildContext context, int index) {
+              //return Container(color: ColorConstant.black);
+              return DestinationCard(
+                locationNameMalay: _displayingLocations[index]['location_name_malay'],
+                locationNameEnglish: _displayingLocations[index]['location_name_english'],
+                locationType: _displayingLocations[index]['location_type'],
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => NavConfirmSelectedScreen(
+                      //allLocations: _allLocations,
+                      selectedLocation: _displayingLocations[index],
+                    ))
+                  );
+                },
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

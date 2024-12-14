@@ -18,10 +18,9 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final MapController _mapController = MapController();
   late List<dynamic> _allLocations;
   late List<dynamic> _allBikes;
-  late Position _currentUserLocation;
+  late LatLng _currentUserLocation;
   List<Marker> _allMarkers = [];
   bool _isMarkersLoaded = false;
-
 
   Widget _displayMap() {
     _allMarkers.length;
@@ -171,7 +170,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     // Fetch initial location
     try {
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      _currentUserLocation = position;
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLocation = currentLatLng;
       _buildMarkers("User");
       _updateUserRealTime();
     }
@@ -189,7 +189,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
         distanceFilter: 5, // Minimum movement to trigger an update
       ),
     ).listen((Position position) {
-      _currentUserLocation = position;
+      LatLng _currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLocation = _currentLatLng;
       _updateUserMarker();
     }, onError: (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -257,7 +258,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
     // This is not redundant code. (Though it can be improved)
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -276,25 +276,25 @@ class _ExploreScreenState extends State<ExploreScreen> {
           _displayMap(),
           // Loading Animation
           Visibility(
-              visible: !_isMarkersLoaded,
-              child: Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(15),
-                    decoration: const BoxDecoration(
-                        color: ColorConstant.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: ColorConstant.shadow, // Shadow color
-                              offset: Offset(0, 2),                 // Shadow position
-                              blurRadius: 10.0,                      // Spread of the shadow
-                              spreadRadius: 0.0                     // Additional spread
-                          )
-                        ]
-                    ),
-                    child: const LoadingAnimation(dimension: 30),
-                  )
+            visible: !_isMarkersLoaded,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                    color: ColorConstant.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                          color: ColorConstant.shadow, // Shadow color
+                          offset: Offset(0, 2),                 // Shadow position
+                          blurRadius: 10.0,                      // Spread of the shadow
+                          spreadRadius: 0.0                     // Additional spread
+                      )
+                    ]
+                ),
+                child: const LoadingAnimation(dimension: 30),
               )
+            )
           ),
           // Pinpoint-user and learn buttons
           Padding(

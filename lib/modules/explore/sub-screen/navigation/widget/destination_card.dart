@@ -5,13 +5,13 @@ class DestinationCard extends StatelessWidget {
   final String locationNameMalay;
   final String locationNameEnglish;
   final String locationType;
-  //final String onPressed;
+  final VoidCallback onPressed;
   const DestinationCard({
     super.key,
     required this.locationNameMalay,
     required this.locationNameEnglish,
     required this.locationType,
-    //required this.onPressed
+    required this.onPressed
   });
 
   @override
@@ -22,7 +22,7 @@ class DestinationCard extends StatelessWidget {
           backgroundColor: ColorConstant.lightBlue, // Set the background color
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20))
         ),
-        onPressed: () {},
+        onPressed: onPressed,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
