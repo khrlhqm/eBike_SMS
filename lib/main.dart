@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           displayMedium: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      home: const BottomNavBar(userId: 888, userType: 'Rider'),
+      home: const BottomNavBar(userId: 1, userType: 'Rider'),
     );
   }
 }
