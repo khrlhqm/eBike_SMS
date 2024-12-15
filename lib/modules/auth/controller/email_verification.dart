@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:ebikesms/ip.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http; // For API calls
 import 'dart:math';
@@ -36,7 +37,7 @@ class EmailVerification {
     
     try {
       final Uri url = Uri.parse("https://api.sendgrid.com/v3/mail/send");
-      final String APIkey ="my";
+      final String APIkey = ApiBase.sendGridApiKey;
 
       final response = await http.post(
         url,
