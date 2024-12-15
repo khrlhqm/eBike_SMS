@@ -37,7 +37,7 @@ class EmailVerification {
     
     try {
       final Uri url = Uri.parse("https://api.sendgrid.com/v3/mail/send");
-      final String APIkey = ApiBase.sendGridApiKey;
+      final String APIkey = "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"; 
 
       final response = await http.post(
         url,

@@ -1,5 +1,3 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 class ApiBase {
   // Static URLs for local development
   static String amir = "http://192.168.0.31/e-bike";
@@ -7,14 +5,8 @@ class ApiBase {
   static String iman = "http://192.168.1.119/e-bike";
 
   // Base URL
-  static String get baseUrl => dotenv.env['BASE_URL'] ?? amir;
+  static String get baseUrl => amir;
 
   // SendGrid API Key
-  static String get sendGridApiKey {
-    final apiKey = dotenv.env['SENDGRID_API_KEY'];
-    if (apiKey == null || apiKey.isEmpty) {
-      throw Exception("SendGrid API key not found in environment variables.");
-    }
-    return apiKey;
-  }
+  static const String sendGridApiKey = "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"; 
 }

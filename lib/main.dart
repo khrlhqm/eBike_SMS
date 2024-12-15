@@ -18,8 +18,6 @@ void main() async {
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
   
   String? userId = await secureStorage.read(key: 'userId');
-
-  await dotenv.load(fileName: ".env");
   
   runApp(MyApp(isLoggedIn: userId != null));
 }
