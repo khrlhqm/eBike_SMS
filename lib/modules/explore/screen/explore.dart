@@ -22,7 +22,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   List<Marker> _allMarkers = [];
   bool _isMarkersLoaded = false;
 
-
   Widget _displayMap() {
     _allMarkers.length;
     return FlutterMap(
@@ -49,31 +48,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
         case "Location":
           if (_allLocations.isNotEmpty) {
             for (int i = 0; i < _allLocations.length; i++) {
-<<<<<<< HEAD
-              final location = _allLocations[i];
-              if (location['latitude'] != null &&
-                  location['longitude'] != null) {
-                double parsedLat = double.parse(location['latitude']);
-                double parsedLong = double.parse(location['longitude']);
-=======
-              if (_allLocations[i]['latitude'] != null && _allLocations[i]['longitude'] != null) {
+              if (_allLocations[i]['latitude'] != null &&
+                  _allLocations[i]['longitude'] != null) {
                 double parsedLat = double.parse(_allLocations[i]['latitude']);
                 double parsedLong = double.parse(_allLocations[i]['longitude']);
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
                 _allMarkers.add(
                   Marker(
                     width: 40,
                     height: 40,
                     point: LatLng(parsedLat, parsedLong),
                     child: GestureDetector(
-<<<<<<< HEAD
-                      onTap: () => _onLocationMarkerTap(i),
-                      child: CustomIcon.locationMarker(
-                          1, location['location_type']),
-=======
                       onTap: () => _onTapLocationMarker(i),
-                      child: CustomIcon.locationMarker(1, _allLocations[i]['location_type']),
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
+                      child: CustomIcon.locationMarker(
+                          1, _allLocations[i]['location_type']),
                     ),
                   ),
                 );
@@ -83,28 +70,14 @@ class _ExploreScreenState extends State<ExploreScreen> {
           break;
 
         case "Bike":
-<<<<<<< HEAD
-          // TODO: Fetch bike markers and add to _allMarkers
-          break;
-
-        case "User":
-          if (_currentUserLocation != null) {
-            _allMarkers.add(
-              Marker(
-                width: 20,
-                height: 20,
-                point: LatLng(_currentUserLocation.latitude,
-                    _currentUserLocation.longitude),
-                child: CustomIcon.userMarker(1),
-              ),
-            );
-          }
-=======
           if (_allBikes.isNotEmpty) {
             for (int i = 0; i < _allBikes.length; i++) {
-              if (_allBikes[i]['current_latitude'] != null && _allBikes[i]['current_longitude'] != null) {
-                double parsedLat = double.parse(_allBikes[i]['current_latitude']);
-                double parsedLong = double.parse(_allBikes[i]['current_longitude']);
+              if (_allBikes[i]['current_latitude'] != null &&
+                  _allBikes[i]['current_longitude'] != null) {
+                double parsedLat =
+                    double.parse(_allBikes[i]['current_latitude']);
+                double parsedLong =
+                    double.parse(_allBikes[i]['current_longitude']);
                 _allMarkers.add(
                   Marker(
                     width: 40,
@@ -127,11 +100,11 @@ class _ExploreScreenState extends State<ExploreScreen> {
               key: const ValueKey("user_marker"),
               width: 20,
               height: 20,
-              point: LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
+              point: LatLng(_currentUserLocation.latitude,
+                  _currentUserLocation.longitude),
               child: CustomIcon.userMarker(1),
             ),
           );
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
           break;
         default:
           break;
@@ -153,15 +126,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
             content: Text(
                 "Status: ${results['status']}, Message: ${results['message']}")),
       );
-<<<<<<< HEAD
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(
-                "Status: ${results['status']}, Message: ${results['message']}")),
-      );
-=======
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
     }
     _allLocations = results['data'];
     _buildMarkers("Location");
@@ -169,9 +133,12 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void _fetchBikes() async {
     var results = await BikeDataController.getBikes();
-    if(results['status'] == 0) { // Failed
+    if (results['status'] == 0) {
+      // Failed
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Status: ${results['status']}, Message: ${results['message']}")),
+        SnackBar(
+            content: Text(
+                "Status: ${results['status']}, Message: ${results['message']}")),
       );
     }
     _allBikes = results['data'];
@@ -202,13 +169,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     }
     if (permission == LocationPermission.deniedForever) {
       ScaffoldMessenger.of(context).showSnackBar(
-<<<<<<< HEAD
         const SnackBar(
-            content: Text(
-                'Location permissions are permanently denied, we cannot request permissions.')),
-=======
-        const SnackBar(content: Text('Location permissions are permanently denied.')),
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
+            content: Text('Location permissions are permanently denied.')),
       );
       return false;
     }
@@ -216,7 +178,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   void _fetchCurrentUserLocation() async {
-    if(getLocationPermission() == false) return;
+    if (getLocationPermission() == false) return;
 
     // Fetch initial location
     try {
@@ -225,17 +187,13 @@ class _ExploreScreenState extends State<ExploreScreen> {
       _currentUserLocation = position;
       _buildMarkers("User");
       _updateUserRealTime();
-    }
-    catch (e) {
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to fetch location: $e')),
       );
     }
   }
 
-<<<<<<< HEAD
-  void _pointToUserLocation() async {
-=======
   void _updateUserRealTime() {
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -255,14 +213,16 @@ class _ExploreScreenState extends State<ExploreScreen> {
   void _updateUserMarker() {
     setState(() {
       // Remove the old User marker
-      _allMarkers.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
+      _allMarkers
+          .removeWhere((marker) => marker.key == const ValueKey("user_marker"));
 
       // Add the updated User marker
       _allMarkers.add(
         Marker(
           width: 20,
           height: 20,
-          point: LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
+          point: LatLng(
+              _currentUserLocation.latitude, _currentUserLocation.longitude),
           child: CustomIcon.userMarker(1),
         ),
       );
@@ -270,7 +230,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
   }
 
   void _pointToUserLocation() {
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
     setState(() {
       _mapController.move(
           LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
@@ -278,18 +237,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
     });
   }
 
-<<<<<<< HEAD
-  void _onLocationMarkerTap(int index) {
-    // Update these values to make marker card visible and it's details
-    widget.sharedState.markerCardState.value = MarkerCardState.location;
-    widget.sharedState.markerCardVisibility.value = true;
-    widget.sharedState.locationNameMalay.value =
-        _allLocations[index]['location_name_malay'];
-    widget.sharedState.locationNameEnglish.value =
-        _allLocations[index]['location_name_english'];
-    widget.sharedState.locationType.value =
-        _allLocations[index]['location_type'];
-=======
   void _alignMapLocation() {
     setState(() {
       _mapController.rotate(0.0);
@@ -299,13 +246,17 @@ class _ExploreScreenState extends State<ExploreScreen> {
   void _onTapLocationMarker(int index) {
     // Update these values to make marker card visible and it's details
     widget.sharedState.markerCardState.value = MarkerCardState.location;
-    widget.sharedState.locationNameMalay.value = _allLocations[index]['location_name_malay'];
-    widget.sharedState.locationNameEnglish.value = _allLocations[index]['location_name_english'];
-    widget.sharedState.locationType.value = _allLocations[index]['location_type'];
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
+    widget.sharedState.locationNameMalay.value =
+        _allLocations[index]['location_name_malay'];
+    widget.sharedState.locationNameEnglish.value =
+        _allLocations[index]['location_name_english'];
+    widget.sharedState.locationType.value =
+        _allLocations[index]['location_type'];
     widget.sharedState.address.value = _allLocations[index]['address'];
-    widget.sharedState.locationLatitude.value = double.parse(_allLocations[index]['latitude']);
-    widget.sharedState.locationLongitude.value = double.parse(_allLocations[index]['longitude']);
+    widget.sharedState.locationLatitude.value =
+        double.parse(_allLocations[index]['latitude']);
+    widget.sharedState.locationLongitude.value =
+        double.parse(_allLocations[index]['longitude']);
 
     // Must set to false first, then true again to make sure ValueListenableBuilder of MarkerCard listens
     widget.sharedState.markerCardVisibility.value = false;
@@ -318,8 +269,10 @@ class _ExploreScreenState extends State<ExploreScreen> {
     widget.sharedState.markerCardState.value = MarkerCardState.scanBike;
     widget.sharedState.bikeId.value = _allBikes[index]['bike_id'];
     widget.sharedState.bikeStatus.value = _allBikes[index]['status'];
-    widget.sharedState.bikeCurrentLatitude.value = double.parse(_allBikes[index]['current_latitude']) ;
-    widget.sharedState.bikeCurrentLongitude.value = double.parse(_allBikes[index]['current_longitude']);
+    widget.sharedState.bikeCurrentLatitude.value =
+        double.parse(_allBikes[index]['current_latitude']);
+    widget.sharedState.bikeCurrentLongitude.value =
+        double.parse(_allBikes[index]['current_longitude']);
 
     // Must set to false first, then true again to make sure ValueListenableBuilder of MarkerCard listens
     widget.sharedState.markerCardVisibility.value = false;
@@ -327,10 +280,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
     // This is not redundant code. (Though it can be improved)
   }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
   @override
   void initState() {
     super.initState();
@@ -352,7 +301,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               visible: !_isMarkersLoaded,
               child: Center(
                   child: Container(
-<<<<<<< HEAD
                 padding: const EdgeInsets.all(15),
                 decoration: const BoxDecoration(
                     color: ColorConstant.white,
@@ -367,25 +315,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
                     ]),
                 child: const LoadingAnimation(dimension: 30),
               ))),
-=======
-                    padding: const EdgeInsets.all(15),
-                    decoration: const BoxDecoration(
-                        color: ColorConstant.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                              color: ColorConstant.shadow, // Shadow color
-                              offset: Offset(0, 2),                 // Shadow position
-                              blurRadius: 10.0,                      // Spread of the shadow
-                              spreadRadius: 0.0                     // Additional spread
-                          )
-                        ]
-                    ),
-                    child: const LoadingAnimation(dimension: 30),
-                  )
-              )
-          ),
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
           // Pinpoint-user and learn buttons
           Padding(
             padding: const EdgeInsets.all(15),
@@ -393,21 +322,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-<<<<<<< HEAD
-                    onPressed: _pointToUserLocation,
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: ColorConstant.white, // Background color
-                      shadowColor: ColorConstant.black, // Box shadow color
-                      elevation: 5,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: CustomIcon.crosshairColoured(25),
-                    )),
-                const SizedBox(height: 15),
-=======
                   onPressed: _alignMapLocation,
                   style: ElevatedButton.styleFrom(
                     shape: const CircleBorder(),
@@ -423,21 +337,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
                 ),
                 const SizedBox(height: 13),
                 ElevatedButton(
-                  onPressed: _pointToUserLocation,
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: ColorConstant.white, // Background color
-                    shadowColor: ColorConstant.lightGrey, // Box shadow color
-                    elevation: 2,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(13),
-                    child: CustomIcon.crosshairColoured(25),
-                  )
-                ),
+                    onPressed: _pointToUserLocation,
+                    style: ElevatedButton.styleFrom(
+                      shape: const CircleBorder(),
+                      padding: EdgeInsets.zero,
+                      backgroundColor: ColorConstant.white, // Background color
+                      shadowColor: ColorConstant.lightGrey, // Box shadow color
+                      elevation: 2,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(13),
+                      child: CustomIcon.crosshairColoured(25),
+                    )),
                 const SizedBox(height: 13),
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -467,7 +379,3 @@ class _ExploreScreenState extends State<ExploreScreen> {
     );
   }
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 4883be73eb416f5f10132f25bc99fb44605e4e89
