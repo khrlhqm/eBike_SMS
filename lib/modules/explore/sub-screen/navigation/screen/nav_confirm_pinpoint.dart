@@ -18,8 +18,8 @@ class NavConfirmPinpointScreen extends StatefulWidget {
 
 class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
   final MapController _mapController = MapController();
-  List<Marker> _allMarkers = [];
-  ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(LocationConstant.initialCenter); // Initialize with default value
+  final List<Marker> _allMarkers = [];
+  final ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(LocationConstant.initialCenter); // Initialize with default value
   bool _isMarkersLoaded = false;
 
   Widget _displayMap() {
