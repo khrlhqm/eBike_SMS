@@ -63,9 +63,15 @@ class _ScannerScreenState extends State<ScannerScreen> {
               setState(() {
                 eBikeId = result.text ?? ''; // Update the eBike ID with the scanned result
               });
-              _saveBikeId(eBikeId);  // Save the bike ID to local storage
-              // Redirect to another screen after scanning
-              _redirectToNextModule(context);
+
+              // Check if the result matches the expected bike ID format
+              if (_isValidBikeId(eBikeId)) {
+                _saveBikeId(eBikeId);  // Save the bike ID to local storage
+                _redirectToNextModule(context); // Redirect to another screen after scanning
+              } else {
+                // Show error if the bike ID is invalid
+                _showErrorDialog(context);
+              }
             },
             resolutionPreset: QRCodeDartScanResolutionPreset.high,
           ),
@@ -118,7 +124,7 @@ class _ScannerScreenState extends State<ScannerScreen> {
               },
             ),
           ),
-
+          
           // Flashlight (Torch) button at the bottom
           Positioned(
             bottom: 50,
@@ -129,8 +135,34 @@ class _ScannerScreenState extends State<ScannerScreen> {
                 color: Colors.white,
                 size: 40,
               ),
-              onPressed: _toggleFlashlight, // Toggle flashlight functionality here
+              onPressed: _toggleFlashlight,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Method to check if the scanned QR code matches the bike ID pattern
+  bool _isValidBikeId(String id) {
+    // Regex to match a bike ID that starts with 'B125' followed by 2 random digits
+    final regex = RegExp(r'^B125\d{2}$');
+    return regex.hasMatch(id);
+  }
+
+  // Method to show an error dialog if the bike ID is invalid
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Error'),
+        content: const Text('Invalid QR code. Please scan a valid bike ID.'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('OK'),
           ),
         ],
       ),
@@ -156,7 +188,6 @@ class _ScannerScreenState extends State<ScannerScreen> {
 
 class NextModuleScreen extends StatelessWidget {
   final String bikeId;
-
   NextModuleScreen({required this.bikeId});
 
   @override
@@ -166,10 +197,7 @@ class NextModuleScreen extends StatelessWidget {
         title: const Text('E-Bike Details'),
       ),
       body: Center(
-        child: Text(
-          'E-Bike ID: $bikeId',
-          style: TextStyle(fontSize: 20),
-        ),
+        child: Text('E-Bike ID: $bikeId'),
       ),
     );
   }
