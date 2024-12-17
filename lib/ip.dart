@@ -1,3 +1,5 @@
+import 'package:latlong2/latlong.dart';
+
 class ApiBase {
   static String amir = "http://192.168.0.26/e-bike";
   static String king = "http://192.168.1.109/e-bike";
@@ -10,18 +12,20 @@ class ApiBase {
 }
 
 class MapApi {
-  String generateOSRMUrl(
-      double startLat, double startLng, double endLat, double endLng,
-      {int zoom = 15}) {
-    final double centerLat = (startLat + endLat) / 2;
-    final double centerLng = (startLng + endLng) / 2;
+  String generateOSRMMultiLocationUrl({
+    required List<LatLng> locations,
+  }) {
+    const String baseUrl = 'https://map.project-osrm.org/?z=17';
+    final List<String> locParams =
+        locations.map((loc) => 'loc=${loc.latitude},${loc.longitude}').toList();
 
-    return 'https://map.project-osrm.org/?z=$zoom'
-        '&center=$centerLat,$centerLng'
-        '&hl=en'
-        '&alt=0'
-        '&srv=1'
-        '&src=$startLat,$startLng'
-        '&dst=$endLat,$endLng';
+    final String centerLat =
+        (locations.map((e) => e.latitude).reduce((a, b) => a + b) /
+            locations.length) as String;
+    final String centerLng =
+        (locations.map((e) => e.longitude).reduce((a, b) => a + b) /
+            locations.length) as String;
+
+    return '$baseUrl&center=$centerLat,$centerLng&${locParams.join('&')}&hl=en&alt=0&srv=1';
   }
 }

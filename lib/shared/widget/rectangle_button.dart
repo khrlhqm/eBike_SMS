@@ -23,7 +23,7 @@ class RectangleButton extends StatelessWidget {
     this.backgroundColor = ColorConstant.darkBlue,
     this.foregroundColor = ColorConstant.white,
     this.width = double.infinity,
-    this.height = 55.0,
+    this.height = 50.0,
     this.borderRadius = 8,
     this.fontSize = 16,
     this.fontWeight = FontWeight.normal,

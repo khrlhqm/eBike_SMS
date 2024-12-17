@@ -18,7 +18,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   final MapController _mapController = MapController();
   late List<dynamic> _allLocations;
   late List<dynamic> _allBikes;
-  late Position _currentUserLocation;
+  late LatLng _currentUserLocation;
   List<Marker> _allMarkers = [];
   bool _isMarkersLoaded = false;
 
@@ -184,7 +184,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
     try {
       Position position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
-      _currentUserLocation = position;
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLocation = currentLatLng;
       _buildMarkers("User");
       _updateUserRealTime();
     } catch (e) {
@@ -201,7 +202,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
         distanceFilter: 5, // Minimum movement to trigger an update
       ),
     ).listen((Position position) {
-      _currentUserLocation = position;
+      LatLng _currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLocation = _currentLatLng;
       _updateUserMarker();
     }, onError: (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -266,7 +268,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
 
   void _onTapBikeMarker(int index) {
     // Update these values to make marker card visible and it's details
-    widget.sharedState.markerCardState.value = MarkerCardState.scanBike;
+    widget.sharedState.markerCardState.value = MarkerCardState.confirmBike;
     widget.sharedState.bikeId.value = _allBikes[index]['bike_id'];
     widget.sharedState.bikeStatus.value = _allBikes[index]['status'];
     widget.sharedState.bikeCurrentLatitude.value =
