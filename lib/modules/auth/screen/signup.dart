@@ -419,7 +419,7 @@ class _SignUpPageState extends State<SignupScreen> {
                                   try {
                                     otp = generateOtp();
                                     result = await EmailVerification()
-                                        .sentOtpToEmail(_email.text, otp, context);
+                                        .sendOtpToBackend(_email.text, otp);
 
                                     if (result == 1) {
                                       setState(() {

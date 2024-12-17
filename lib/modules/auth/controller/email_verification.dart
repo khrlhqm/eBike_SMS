@@ -32,60 +32,24 @@ class EmailVerification {
     return otp;
   }
 
-  Future<int> sentOtpToEmail(
-      String email,String OTP, BuildContext context) async {
-    
-    try {
-      final Uri url = Uri.parse("https://api.sendgrid.com/v3/mail/send");
-      final String APIkey = ApiBase.sendGridApiKey;
+ Future<int> sendOtpToBackend(String email, String OTP) async {
+  final response = await http.post(
+    Uri.parse('${ApiBase.baseUrl}/sent_otp.php'),
+    body: {
+      'email': email,
+      'otp': OTP,
+    },
+  );
 
-      final response = await http.post(
-        url,
-        headers: {
-          "Authorization": "Bearer $APIkey",
-          "Content-Type": "application/json",
-        },
-        body: jsonEncode({
-          "personalizations": [
-            {
-              "to": [
-                {"email": email}
-              ],
-              "subject": "Your Verification Code"
-            }
-          ],
-          "from": {
-            "email": "amirhmzh02@gmail.com"
-          }, // Replace with your verified email
-          "content": [
-            {"type": "text/plain", "value": "Your verification code is: $OTP"}
-          ]
-        }),
-      );
-
-      if (response.statusCode == 202) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Verification email sent!'),
-          ),
-        );
-        return 1; // Success
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content:
-                Text('Failed to send verification email: ${response.body}'),
-          ),
-        );
-        return 0; // Failure
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $e'),
-        ),
-      );
-    }
+  if (response.statusCode == 200) {
+    // Handle success
+    print("OTP sent successfully.");
+    return 1;
+  } else {
+    // Handle error
+    print("Failed to send OTP.");
     return 0;
   }
+}
+
 }
