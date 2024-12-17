@@ -1,5 +1,4 @@
 import 'package:ebikesms/modules/menu/widget/icon_card.dart';
-import 'package:ebikesms/shared/widget/loading_animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage dependency
 import 'package:http/http.dart' as http;
@@ -10,7 +9,6 @@ import 'package:ebikesms/shared/utils/custom_icon.dart';
 
 import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
-import 'package:ebikesms/modules/menu/sub-menu/settings/screen/account_settings.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/policy.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/about.dart';
 import 'package:ebikesms/modules/learn/screen/learn.dart';

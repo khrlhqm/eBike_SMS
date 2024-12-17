@@ -21,8 +21,8 @@ class NavConfirmSelectedScreen extends StatefulWidget {
 
 class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
   final MapController _mapController = MapController();
-  List<Marker> _allMarkers = [];
-  ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(LatLng(0.0, 0.0)); // Initialize with default value
+  final List<Marker> _allMarkers = [];
+  final ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(const LatLng(0.0, 0.0)); // Initialize with default value
   bool _isMarkersLoaded = false;
 
   Widget _displayMap() {

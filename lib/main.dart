@@ -20,7 +20,7 @@ void main() { //async {
   //
   // runApp(MyApp(isLoggedIn: userId != null));
 
-  runApp(MyApp(isLoggedIn: true));
+  runApp(const MyApp(isLoggedIn: true));
 }
 
 class MyApp extends StatelessWidget {

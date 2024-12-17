@@ -19,7 +19,7 @@ class _ExploreScreenState extends State<ExploreScreen> {
   late List<dynamic> _allLocations;
   late List<dynamic> _allBikes;
   late LatLng _currentUserLocation;
-  List<Marker> _allMarkers = [];
+  final List<Marker> _allMarkers = [];
   bool _isMarkersLoaded = false;
 
   Widget _displayMap() {
@@ -189,8 +189,8 @@ class _ExploreScreenState extends State<ExploreScreen> {
         distanceFilter: 5, // Minimum movement to trigger an update
       ),
     ).listen((Position position) {
-      LatLng _currentLatLng = LatLng(position.latitude, position.longitude);
-      _currentUserLocation = _currentLatLng;
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLocation = currentLatLng;
       _updateUserMarker();
     }, onError: (e) {
       ScaffoldMessenger.of(context).showSnackBar(
