@@ -470,8 +470,8 @@ void _onMarkerTap(LatLng latlng, BuildContext context) {
                 padding: const EdgeInsets.all(16.0),
                 child: Column(
                   children: [
-                    ListTile(
-                      title: const Text('Information about the place'),
+                    const ListTile(
+                      title: Text('Information about the place'),
                       subtitle:
                       Text('Details about the location at'),
                     ),

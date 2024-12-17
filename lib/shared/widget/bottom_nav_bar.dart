@@ -1,4 +1,5 @@
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
+import 'package:ebikesms/modules/qr_scanner/screen/scanner_page.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
@@ -36,9 +37,9 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarRider extends State<BottomNavBar> {
   final PageController _pageController = PageController();
   final SharedState _sharedState = SharedState();
-  late double _labelSize = 11;
+  late final double _labelSize = 11;
   late double _navBarWidth;
-  late double _navBarHeight = 60;
+  late final double _navBarHeight = 60;
   int _selectedNavIndex = 0;
 
   @override
@@ -55,7 +56,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
               valueListenable: _sharedState.markerCardVisibility,
               builder: (context, visible, _) {
                 return Visibility(
-                  visible: visible,
+                  visible: _sharedState.markerCardVisibility.value,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -67,7 +68,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                             color: ColorConstant.white,
                             shape: BoxShape.circle,
                             boxShadow: [BoxShadow(
-                              color: ColorConstant.shadow,
+                              color: ColorConstant.grey,
                               offset: Offset(0, 0),
                               blurRadius: 2
                             )]
@@ -137,7 +138,10 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                     TextButton(
                       style: TextButton.styleFrom(padding: EdgeInsets.zero),
                       onPressed: () {
-                        // TODO: Handle Scan button press
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(builder: (context)=> ScannerScreen())
+                          );
                       },
                       child: Builder(
                         builder: (context) {
@@ -212,11 +216,18 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     );
   }
 
+  bool temp = false;
   void _onItemTapped(int index) {
     if (index != _selectedNavIndex) {
       setState(() {
         _selectedNavIndex = index;
-        _sharedState.markerCardVisibility.value = index == 0; //TODO: Make it dissapear when in mnenu
+        if(index != 0) {
+          temp = _sharedState.markerCardVisibility.value;
+          _sharedState.markerCardVisibility.value = false;
+        }
+        else {
+          _sharedState.markerCardVisibility.value = temp;
+        }
       });
       _pageController.jumpToPage(index);
     }
@@ -257,7 +268,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
   List<Widget> bottomNavChildrenWidget() {
     return [
       ExploreScreen(_sharedState),
-      const Center(child: Text("QR Code Dummy")),
+      ScannerScreen(),
       const MenuScreen(),
       // MenuScreen(_sharedState), // TODO: Uncomment this and delete the line above
     ];

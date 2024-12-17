@@ -15,7 +15,7 @@ class AboutScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top banner section with image and back button
-            Container(
+            SizedBox(
               height: 200,
               child: Stack(
                 children: [
@@ -50,7 +50,7 @@ class AboutScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     "Welcome to",
                     style: TextStyle(
                       fontSize: 24,
@@ -59,7 +59,7 @@ class AboutScreen extends StatelessWidget {
                     ),
                   ),
 
-                  Row(
+                  const Row(
                     children: [
                       Text(
                         "eBikeSMS",
@@ -81,7 +81,7 @@ class AboutScreen extends StatelessWidget {
                     ],
                   ),
 
-                  SizedBox(height: 20), // Space between the text and the boxes
+                  const SizedBox(height: 20), // Space between the text and the boxes
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +111,7 @@ class AboutScreen extends StatelessWidget {
                                   color: ColorConstant.lightBlue,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: Column(
+                                child: const Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -132,7 +132,7 @@ class AboutScreen extends StatelessWidget {
                       ),
 
                       // Spacer between the columns
-                      SizedBox(width: 20),
+                      const SizedBox(width: 20),
 
                       // Column 2: Two stacked boxes
                       Column(
@@ -161,7 +161,7 @@ class AboutScreen extends StatelessWidget {
                                     color: ColorConstant.lightBlue,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -180,7 +180,7 @@ class AboutScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                               height:
                                   20), // Space between the two boxes in Column 2
                           // Second box in column 2
@@ -206,7 +206,7 @@ class AboutScreen extends StatelessWidget {
                                     color: ColorConstant.lightBlue,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: Column(
+                                  child: const Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
@@ -258,7 +258,7 @@ class AboutScreen extends StatelessWidget {
                         color: ColorConstant.darkBlue,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment:
                             MainAxisAlignment.start, // Aligning to start (left)
                         crossAxisAlignment: CrossAxisAlignment
