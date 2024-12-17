@@ -1,3 +1,4 @@
+import 'package:ebikesms/modules/auth/screen/signup.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
@@ -7,31 +8,29 @@ import 'package:ebikesms/shared/widget/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 import 'modules/auth/screen/login.dart'; // Adjust the path as needed
 import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Add dependency in pubspec.yaml
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add dependency in pubspec.yaml
 
-void main() { //async {
-  // WidgetsFlutterBinding.ensureInitialized();
-  //
-  // // Initialize secure storage
-  // const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  //
-  // // Check if user ID exists in storage
-  // String? userId = await secureStorage.read(key: 'userId');
-  //
-  // runApp(MyApp(isLoggedIn: userId != null));
 
-  runApp(MyApp(isLoggedIn: true));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  const FlutterSecureStorage secureStorage = FlutterSecureStorage();
+  
+  String? userId = await secureStorage.read(key: 'userId');
+  
+  runApp(MyApp(isLoggedIn: userId != null));
 }
 
 class MyApp extends StatelessWidget {
   final bool isLoggedIn;
-  const MyApp({
-    super.key,
-    required this.isLoggedIn
-  });
+
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
+    final PageController pageController = PageController();
+
     return MaterialApp(
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: ColorConstant.darkBlue),
@@ -44,8 +43,10 @@ class MyApp extends StatelessWidget {
           displayMedium: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      home: const BottomNavBar(userId: 1, userType: 'Rider'),
+      home: SignupScreen(pageController: pageController),  // Pass the PageController here
     );
   }
 }
+
+
 

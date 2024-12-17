@@ -51,6 +51,9 @@
     <string>We need your location to provide better services.</string>
     <key>NSLocationAlwaysUsageDescription</key>
     <string>We need your location to provide better services.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We need camera access for scanning QR codes</string>
+
 
 </dict>
 </plist>
