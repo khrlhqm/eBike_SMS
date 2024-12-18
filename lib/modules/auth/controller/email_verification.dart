@@ -52,4 +52,41 @@ class EmailVerification {
   }
 }
 
+
+Future<int> checkEmailExistence(String email) async {
+  final url = Uri.parse('${ApiBase.baseUrl}/check_email.php');  // Replace with your actual API URL
+
+  // Prepare the data to be sent in the request body
+  final Map<String, dynamic> data = {'user_email': email};
+
+  // Send the POST request to the PHP API
+  try {
+    final response = await http.post(
+      url,
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      // If the API returns a success status code (200)
+      final responseData = json.decode(response.body);
+
+      if (responseData['status'] == 'error') {
+        print('Email already exists: ${responseData['message']}');
+        return 1;
+      } else {
+        print('Email does not exist: ${responseData['message']}');
+        return 0;
+      }
+    } else {
+      print('Failed to check email. Status code: ${response.statusCode}');
+      return 0;
+    }
+  } catch (error) {
+    print('Error occurred: $error');
+    return 0;
+  }
+}
+
+
 }

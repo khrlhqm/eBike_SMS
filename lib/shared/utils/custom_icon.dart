@@ -278,6 +278,36 @@ class CustomIcon{
     );
   }
 
+  static Widget forgetpassword(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/resetpassword.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+  static Widget email(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/email.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+   static Widget newpass(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/newpass.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget userMarker(
     double dimension,
   ) {
