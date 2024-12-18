@@ -26,13 +26,14 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
 
   void _fetchLocations() async {
     var results = await LocationController.getLocations();
-    if(results['status'] == 0) { // Failed
+    if (results['status'] == 0) {
+      // Failed
       _allLocations = results['data'];
       setState(() {
         _dataState = DataState.failure; // To display if fetch had a failure
       });
-    }
-    else if(results['status'] == 1) { // hasResultful
+    } else if (results['status'] == 1) {
+      // hasResultful
       _allLocations = results['data'];
       _displayingLocations = _allLocations;
       setState(() {
@@ -40,36 +41,36 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
       });
     }
   }
-  
-  void _searchBarListener () {
-      setState(() {
-        // Setting the flag for UI behavior
-        _isSearchHasText = _controller.text.isNotEmpty;
 
-        // Setting displaying locations based on search query
-        if(_isSearchHasText) {
-          _displayingLocations.clear();
-          String query = _controller.text.toLowerCase();
-          _displayingLocations =
-              _allLocations.where((location) { // This "where" method acts similarly to an SQL where clause
-                return location['location_name_malay'].toLowerCase().contains(query) ||
-                    location['location_name_english'].toLowerCase().contains(query) ||
-                    location['location_type'].toLowerCase().contains(query) ||
-                    location['address'].toLowerCase().contains(query);
-              }).toList();
+  void _searchBarListener() {
+    setState(() {
+      // Setting the flag for UI behavior
+      _isSearchHasText = _controller.text.isNotEmpty;
 
-          if(_displayingLocations.isEmpty) {
-            _dataState = DataState.noResult;
-          }
-          else {
-            _dataState = DataState.hasResult;
-          }
-        }
-        else {
-          _displayingLocations = _allLocations.toList();
+      // Setting displaying locations based on search query
+      if (_isSearchHasText) {
+        _displayingLocations.clear();
+        String query = _controller.text.toLowerCase();
+        _displayingLocations = _allLocations.where((location) {
+          // This "where" method acts similarly to an SQL where clause
+          return location['location_name_malay']
+                  .toLowerCase()
+                  .contains(query) ||
+              location['location_name_english'].toLowerCase().contains(query) ||
+              location['location_type'].toLowerCase().contains(query) ||
+              location['address'].toLowerCase().contains(query);
+        }).toList();
+
+        if (_displayingLocations.isEmpty) {
+          _dataState = DataState.noResult;
+        } else {
           _dataState = DataState.hasResult;
         }
-      });
+      } else {
+        _displayingLocations = _allLocations.toList();
+        _dataState = DataState.hasResult;
+      }
+    });
   }
 
   @override
@@ -78,7 +79,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
     _fetchLocations();
     _controller.addListener(_searchBarListener);
   }
-  
+
   @override
   void dispose() {
     super.dispose();
@@ -91,9 +92,10 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
       appBar: AppBar(
         forceMaterialTransparency: true,
         leading: IconButton(
-            onPressed: () { Navigator.pop(context); },
-            icon: CustomIcon.close(20, color: ColorConstant.black)
-        ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: CustomIcon.close(20, color: ColorConstant.black)),
       ),
       resizeToAvoidBottomInset: false,
       body: Column(
@@ -104,7 +106,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
           Visibility(
             visible: (_isSearchHasText) ? false : true,
             child: const Padding(
-              padding:  EdgeInsets.fromLTRB(30, 0, 30, 20),
+              padding: EdgeInsets.fromLTRB(30, 0, 30, 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -113,16 +115,14 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                     style: TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
-                        color: ColorConstant.darkBlue
-                    ),
+                        color: ColorConstant.darkBlue),
                   ),
                   Text(
                     "Choose your destination",
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.normal,
-                        color: ColorConstant.black
-                    ),
+                        color: ColorConstant.black),
                   ),
                 ],
               ),
@@ -140,7 +140,8 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const SizedBox(width: 4),
-                      CustomIcon.locationCurrent(20, color: ColorConstant.black),
+                      CustomIcon.locationCurrent(20,
+                          color: ColorConstant.black),
                       const SizedBox(width: 18),
                       const Text(
                         "From your location",
@@ -160,47 +161,39 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                         BoxShadow(
                             color: ColorConstant.shadow,
                             offset: Offset(0, 2),
-                            blurRadius: 2
-                        )
-                      ]
-                  ),
+                            blurRadius: 2)
+                      ]),
                   child: ListTile(
-                    dense: true,
-                    visualDensity: const VisualDensity(vertical: -4),
-                    leading: const Padding(
-                      padding: EdgeInsets.only(left: 5),
-                      child: Text(
-                        "To",
-                        style: TextStyle(
-                          color: ColorConstant.darkBlue,
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold
+                      dense: true,
+                      visualDensity: const VisualDensity(vertical: -4),
+                      leading: const Padding(
+                        padding: EdgeInsets.only(left: 5),
+                        child: Text(
+                          "To",
+                          style: TextStyle(
+                              color: ColorConstant.darkBlue,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold),
                         ),
                       ),
-                    ),
-                    title: SizedBox(
-                      height: 35,
-                      child: TextField(
-                        keyboardType: TextInputType.text,
-                        controller: _controller,
-                        maxLines: 1,
-                        style: const TextStyle(
-                            color: ColorConstant.black,
-                            fontSize: 14
-                        ),
-                        decoration: const InputDecoration(
-                          hintText: "Search destination",
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(
-                              color: ColorConstant.grey,
-                              fontSize: 14
-                          ),
-                          contentPadding: EdgeInsets.only(bottom: 11.5)
+                      title: SizedBox(
+                        height: 35,
+                        child: TextField(
+                          keyboardType: TextInputType.text,
+                          controller: _controller,
+                          maxLines: 1,
+                          style: const TextStyle(
+                              color: ColorConstant.black, fontSize: 14),
+                          decoration: const InputDecoration(
+                              hintText: "Search destination",
+                              border: InputBorder.none,
+                              hintStyle: TextStyle(
+                                  color: ColorConstant.grey, fontSize: 14),
+                              contentPadding: EdgeInsets.only(bottom: 11.5)),
                         ),
                       ),
-                    ),
-                    trailing: CustomIcon.search(14, color: ColorConstant.black)
-                  ),
+                      trailing:
+                          CustomIcon.search(14, color: ColorConstant.black)),
                 )
               ],
             ),
@@ -210,9 +203,10 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
           Container(
             padding: const EdgeInsets.fromLTRB(30, 20, 30, 10),
             decoration: const BoxDecoration(
-              border: Border(bottom: BorderSide(color: ColorConstant.lightGrey))
-            ),
-            alignment: (_isSearchHasText) ? Alignment.center : Alignment.centerLeft,
+                border:
+                    Border(bottom: BorderSide(color: ColorConstant.lightGrey))),
+            alignment:
+                (_isSearchHasText) ? Alignment.center : Alignment.centerLeft,
             child: Text(
               (_isSearchHasText) ? "Search results" : "Recommendations",
               style: const TextStyle(
@@ -222,58 +216,57 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
               ),
             ),
           ),
-          Expanded(
-            child: Builder(
-              builder: (context) {
-                switch (_dataState) {
-                  case DataState.loading:
-                    return const Center(child: LoadingAnimation(dimension: 50));
-                  case DataState.failure:
-                    return const Center(child: Text(
-                      "An unexpected failure occurred",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),)
-                    );
-                  case DataState.noResult:
-                    return displayLocationNotFound();
-                  case DataState.hasResult:
-                    return displayDestinationCards();
-                  default:
-                    return const Center(child: Text("Unknown state"));
-                }
-              },
-            )
-          ),
+          Expanded(child: Builder(
+            builder: (context) {
+              switch (_dataState) {
+                case DataState.loading:
+                  return const Center(child: LoadingAnimation(dimension: 50));
+                case DataState.failure:
+                  return const Center(
+                      child: Text(
+                    "An unexpected failure occurred",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 16),
+                  ));
+                case DataState.noResult:
+                  return displayLocationNotFound();
+                case DataState.hasResult:
+                  return displayDestinationCards();
+                default:
+                  return const Center(child: Text("Unknown state"));
+              }
+            },
+          )),
           // Pin point button
           TextButton(
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              backgroundColor: ColorConstant.darkBlue,
-              foregroundColor: ColorConstant.white,
-              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
-            ),
-            onPressed: (){
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => NavConfirmPinpointScreen(
-                    allLocations: _allLocations,
-                  ))
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CustomIcon.location(16, color: ColorConstant.white),
-                const SizedBox(width: 10),
-                const Text(
-                  "Choose on map", // Editable
-                  style: TextStyle(fontSize: 13), // Editable
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(width: 4),
-              ],
-            )
-          ),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: ColorConstant.darkBlue,
+                foregroundColor: ColorConstant.white,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.zero),
+              ),
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NavConfirmPinpointScreen(
+                              allLocations: _allLocations,
+                            )));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomIcon.location(16, color: ColorConstant.white),
+                  const SizedBox(width: 10),
+                  const Text(
+                    "Choose on map", // Editable
+                    style: TextStyle(fontSize: 13), // Editable
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(width: 4),
+                ],
+              )),
         ],
       ),
     );
@@ -289,15 +282,14 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                   children: [
                     const Expanded(
                         child: Center(
-                          child: Text(
-                            "We couldn't find the location you provided.",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 16,
-                            ),
-                          ),
-                        )
-                    ),
+                      child: Text(
+                        "We couldn't find the location you provided.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    )),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
@@ -307,20 +299,17 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                           style: TextStyle(
                               fontSize: 13,
                               color: ColorConstant.darkBlue,
-                              fontWeight: FontWeight.bold
-                          ),
+                              fontWeight: FontWeight.bold),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
-                          child: CustomIcon.downArrow(25, color: ColorConstant.darkBlue),
+                          child: CustomIcon.downArrow(25,
+                              color: ColorConstant.darkBlue),
                         )
                       ],
                     )
                   ],
-                )
-            )
-        )
-    );
+                ))));
   }
 
   Widget displayDestinationCards() {
@@ -329,29 +318,34 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
         SliverToBoxAdapter(
           child: GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            shrinkWrap: true, // Make sure the GridView fits inside the CustomScrollView
-            physics: const NeverScrollableScrollPhysics(), // Prevent grid from scrolling independently
+            shrinkWrap:
+                true, // Make sure the GridView fits inside the CustomScrollView
+            physics:
+                const NeverScrollableScrollPhysics(), // Prevent grid from scrolling independently
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2, // Number of columns
               crossAxisSpacing: 15, // Horizontal space between grid items
               mainAxisSpacing: 15, // Vertical space between grid items
-              childAspectRatio: 0.7, // Ratio of width to height of each grid item (the lesser, the longer)
+              childAspectRatio:
+                  0.7, // Ratio of width to height of each grid item (the lesser, the longer)
             ),
             itemCount: _displayingLocations.length, // Total number of items
             itemBuilder: (BuildContext context, int index) {
               //return Container(color: ColorConstant.black);
               return DestinationCard(
-                locationNameMalay: _displayingLocations[index]['location_name_malay'],
-                locationNameEnglish: _displayingLocations[index]['location_name_english'],
+                locationNameMalay: _displayingLocations[index]
+                    ['location_name_malay'],
+                locationNameEnglish: _displayingLocations[index]
+                    ['location_name_english'],
                 locationType: _displayingLocations[index]['location_type'],
                 onPressed: () {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NavConfirmSelectedScreen(
-                      //allLocations: _allLocations,
-                      selectedLocation: _displayingLocations[index],
-                    ))
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => NavConfirmSelectedScreen(
+                                //allLocations: _allLocations,
+                                selectedLocation: _displayingLocations[index],
+                              )));
                 },
               );
             },

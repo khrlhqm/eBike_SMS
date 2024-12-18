@@ -84,7 +84,7 @@ class _BiometricAuthScreenState extends State<BiometricAuthScreen> {
                 Positioned(
                   top: 150,
                   left: 20,
-                  child: BackButtonWidget(
+                  child: CustomBackButton(
                     buttonColor: Colors.blue,
                     iconSize: 30.0,
                   ),

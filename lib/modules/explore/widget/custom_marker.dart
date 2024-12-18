@@ -1,15 +1,80 @@
-import 'package:ebikesms/modules/explore/controller/location_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../shared/utils/custom_icon.dart';
-import '../../../shared/widget/bottom_nav_bar.dart';
-import '../screen/explore.dart';
+
+class CustomMarker {
+
+  static Marker user({
+    required double latitude,
+    required double longitude})
+  {
+    return Marker(
+      key: const ValueKey("user_marker"),
+      width: 20,
+      height: 20,
+      point: LatLng(latitude, longitude),
+      child: CustomIcon.userMarker(1),
+    );
+  }
+
+  static Marker riding({
+    required double latitude,
+    required double longitude,
+    VoidCallback? onTap})
+  {
+    return Marker(
+      width: 20,
+      height: 20,
+      point: LatLng(latitude, longitude),
+      child: CustomIcon.ridingMarker(1),
+    );
+  }
+
+  static location({
+    required double latitude,
+    required double longitude,
+    required locationType,
+    VoidCallback? onTap,
+    double dimension = 35})
+  {
+    return Marker(
+      width: dimension,
+      height: dimension,
+      point: LatLng(latitude, longitude),
+      child: GestureDetector(
+        onTap: onTap,
+        child: CustomIcon.locationMarker(1, locationType),
+      ),
+    );
+  }
+
+  static Marker bike({
+    required double latitude,
+    required double longitude,
+    required String bikeStatus,
+    VoidCallback? onTap})
+  {
+    return Marker(
+      width: 38,
+      height: 38,
+      point: LatLng(latitude, longitude),
+      child: GestureDetector(
+        onTap: onTap,
+        child: CustomIcon.bikeMarker(1, bikeStatus),
+      ),
+    );
+  }
+}
 
 
 
-
+////////////////
+////////////////
+// TODO: Remove the code below once no longer will be used.
+////////////////
+////////////////
 List<Marker> buildMarkers(BuildContext context) {
       return [
     //FTMK

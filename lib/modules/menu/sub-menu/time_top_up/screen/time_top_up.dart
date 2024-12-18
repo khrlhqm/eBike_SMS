@@ -1,10 +1,11 @@
-import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up_validation.dart';
+import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up_process.dart';
 import 'package:ebikesms/shared/utils/calculation.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:ebikesms/shared/constants/app_constants.dart';
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
+import '../../../../../shared/widget/custom_buttons.dart';
 
 class TimeTopUpScreen extends StatefulWidget {
   const TimeTopUpScreen({super.key});
@@ -111,13 +112,14 @@ class _TimeTopUpScreenState extends State<TimeTopUpScreen> {
               ),
               Container(
                 margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
-                child: RectangleButton(
+                child: CustomRectangleButton(
                   label: "Confirm",
                   onPressed: () {
                     int value = int.parse(_controller.text);
                     Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context)=> TimeTopUpValidationScreen(keyedTotal: value)
+                        // TODO: Write user id from sharedState (assigned to amir)
+                        MaterialPageRoute(builder: (context)=> TimeTopUpProcessScreen(userId: 1, keyedTotal: value)
                     ));
                   },
                   enable: isValidAmount ? true : false,

@@ -12,8 +12,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add dependency in pubspec.yaml
 import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/email_exist_otp.dart';
 
-import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/set_new_password.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   

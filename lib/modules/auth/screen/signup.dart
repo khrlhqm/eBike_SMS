@@ -143,7 +143,7 @@ class _SignUpPageState extends State<SignupScreen> {
                             150, // Adjust the top position to move the button up/down
                         left:
                             20, // Adjust the left position for horizontal alignment
-                        child: BackButtonWidget(
+                        child: CustomBackButton(
                           buttonColor: Colors.blue, // Optional custom color
                           iconSize: 30.0, // Optional custom icon size
                         ),
@@ -329,7 +329,7 @@ class _SignUpPageState extends State<SignupScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 200,
               child: Stack(
                 children: [
@@ -349,7 +349,7 @@ class _SignUpPageState extends State<SignupScreen> {
                   const Positioned(
                     top: 150,
                     left: 20,
-                    child: BackButtonWidget(
+                    child: CustomBackButton(
                       buttonColor: Colors.blue,
                       iconSize: 30.0,
                     ),
@@ -471,7 +471,7 @@ class _SignUpPageState extends State<SignupScreen> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
+            SizedBox(
               height: 200,
               child: Stack(
                 children: [
@@ -491,7 +491,7 @@ class _SignUpPageState extends State<SignupScreen> {
                   const Positioned(
                     top: 150,
                     left: 20,
-                    child: BackButtonWidget(
+                    child: CustomBackButton(
                       buttonColor: Colors.blue,
                       iconSize: 30.0,
                     ),
@@ -553,7 +553,7 @@ class _SignUpPageState extends State<SignupScreen> {
                           width: 350.0,
                           child: ElevatedButton(
                             onPressed: () async {
-                              bool result = await varifyOTP(otp, _OTP.text);
+                              bool result = varifyOTP(otp, _OTP.text);
                               if (result == true) {
                                 setState(() {
                                   showOtpField = false;
@@ -620,7 +620,7 @@ class _SignUpPageState extends State<SignupScreen> {
                   const Positioned(
                     top: 150,
                     left: 20,
-                    child: BackButtonWidget(
+                    child: CustomBackButton(
                       buttonColor: Colors.blue,
                       iconSize: 30.0,
                     ),
