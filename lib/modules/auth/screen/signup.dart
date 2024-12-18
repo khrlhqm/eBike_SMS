@@ -100,7 +100,7 @@ class _SignUpPageState extends State<SignupScreen> {
                             150, // Adjust the top position to move the button up/down
                         left:
                             20, // Adjust the left position for horizontal alignment
-                        child: BackButtonWidget(
+                        child: CustomBackButton(
                           buttonColor: Colors.blue, // Optional custom color
                           iconSize: 30.0, // Optional custom icon size
                         ),
@@ -317,7 +317,7 @@ class _SignUpPageState extends State<SignupScreen> {
                             150, // Adjust the top position to move the button up/down
                         left:
                             20, // Adjust the left position for horizontal alignment
-                        child: BackButtonWidget(
+                        child: CustomBackButton(
                           buttonColor: Colors.blue, // Optional custom color
                           iconSize: 30.0, // Optional custom icon size
                         ),

@@ -1,5 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:ebikesms/modules/menu/widget/icon_card.dart';
-import 'package:ebikesms/shared/widget/loading_animation.dart';
+import 'package:ebikesms/modules/menu/widget/menu_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Secure storage dependency
 import 'package:http/http.dart' as http;
@@ -10,11 +11,10 @@ import 'package:ebikesms/shared/utils/custom_icon.dart';
 
 import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
-import 'package:ebikesms/modules/menu/sub-menu/settings/screen/account_settings.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/policy.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/about.dart';
 import 'package:ebikesms/modules/learn/screen/learn.dart';
-import 'package:ebikesms/modules/menu/sub-menu/widget/logout_modal.dart';
+import 'package:ebikesms/modules/menu/widget/logout_modal.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -25,10 +25,8 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
-  Map<String, dynamic>? _userData;
-
   late String totalRideTime = ""; // TODO: Fetch from database
-  bool _settingsExpanded = false; // Manage dropdown state
+  Map<String, dynamic>? _userData;
 
   @override
   void initState() {
@@ -78,9 +76,12 @@ class _MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       backgroundColor: ColorConstant.hintBlue,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          SizedBox(height: MediaQuery.of(context).padding.top),
           Padding(
-            padding: const EdgeInsets.all(20.0),
+            padding: const EdgeInsets.all(20),
             child: Row(
               children: [
                 CircleAvatar(
@@ -113,7 +114,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           // Available Ride Time Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -123,18 +124,19 @@ class _MenuScreenState extends State<MenuScreen> {
                 // Bottom larger box
                 Container(
                   width: double.infinity,
-                  height: 195,
+                  height: 185,
                   decoration: BoxDecoration(
                     color: ColorConstant.shadowdarkBlue, // Darker blue color
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
+
+                // Positioned Button ("+ Add More")
                 Positioned(
-                  top: 140,
+                  top: 135,
                   left: 0,
                   right: 0,
-                  child: Container(
-                    alignment: Alignment.center,
+                  child: Center(
                     child: TextButton(
                       onPressed: () {
                         Navigator.push(
@@ -148,7 +150,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         "+ Add More",
                         style: TextStyle(
                           color: ColorConstant.white,
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: FontWeight.w700,
                           fontFamily: 'Poppins',
                         ),
@@ -156,12 +158,14 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
                 ),
+
+                // Top card with ride time information
                 Positioned(
                   top: -10,
                   left: 0,
                   right: 0,
                   child: Container(
-                    height: 150,
+                    height: 145,
                     padding: const EdgeInsets.all(15),
                     decoration: BoxDecoration(
                       color: ColorConstant.darkBlue,
@@ -169,10 +173,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        // Ride Time Header
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CustomIcon.clock(20, color: ColorConstant.white),
                             const SizedBox(width: 10),
@@ -182,30 +185,35 @@ class _MenuScreenState extends State<MenuScreen> {
                                 color: ColorConstant.white,
                                 fontFamily: 'Poppins',
                                 letterSpacing: 1.0,
-                                fontSize: 14,
+                                fontSize: 12,
                               ),
                             ),
                           ],
                         ),
-                        Text(
-                          (totalRideTime.isEmpty)
-                              ? "Empty Balance"
-                              : totalRideTime,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            letterSpacing: 1.0,
-                            color: ColorConstant.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
+                        const Spacer(),
+                        // Ride Time Value
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: AutoSizeText(
+                            totalRideTime.isEmpty ? "Empty Balance" : totalRideTime,
+                            maxFontSize: 28,
+                            minFontSize: 24,
+                            maxLines: 1,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              letterSpacing: 1.0,
+                              fontWeight: FontWeight.bold,
+                              color: ColorConstant.white,
+                            ),
                           ),
                         ),
-                        const SizedBox(width: 10),
+                        const Spacer(),
                       ],
                     ),
                   ),
                 ),
               ],
-            ),
+            )
           ),
           const SizedBox(height: 20),
           Padding(
@@ -215,8 +223,7 @@ class _MenuScreenState extends State<MenuScreen> {
               children: [
                 Expanded(
                   child: IconCard(
-                    iconWidget:
-                        CustomIcon.bicycle(50, color: ColorConstant.black),
+                    iconWidget: CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
                     onTap: () {
                       Navigator.push(
@@ -227,7 +234,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 10), // Add spacing between cards
+                const SizedBox(width: 15), // Add spacing between cards
                 Expanded(
                   child: IconCard(
                     iconWidget: CustomIcon.learnColoured(50),
@@ -244,93 +251,66 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 15),
           Expanded(
             child: ListView(
+              padding: EdgeInsets.zero,
               children: [
-                ExpansionTile(
-                  leading:
-                      CustomIcon.settings(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Settings",
-                    style: TextStyle(
-                      color: ColorConstant.black,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                  trailing: Icon(
-                    _settingsExpanded
-                        ? Icons.expand_more
-                        : Icons.arrow_forward_ios,
-                    color: ColorConstant.darkBlue,
-                    size: 20.0, // Set a consistent size for both icons
-                  ),
-                  onExpansionChanged: (bool expanded) {
-                    setState(() {
-                      _settingsExpanded = expanded;
-                    });
-                  },
+                ExpansionMenuTile(
+                  label: "Settings",
+                  iconWidget: CustomIcon.settings(24, color: ColorConstant.darkBlue),
+                  enableForwardArrow: true,
                   children: [
-                    // ListTile(
-                    //   title: const Text(
-                    //     "Account",
-                    //     style: TextStyle(
-                    //       color: ColorConstant.grey,
-                    //     ),
-                    //   ),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => const AccountSettingsScreen(),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    ListTile(
-                      title: const Text(
-                        "Policy",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
+                      // ListTile(
+                      //   title: const Text(
+                      //     "Account",
+                      //     style: TextStyle(
+                      //       color: ColorConstant.grey,
+                      //     ),
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const AccountSettingsScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      MenuTile(
+                        label: "Policy",
+                        labelColor: ColorConstant.grey,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PolicyScreen(),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PolicyScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        "About",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
+                      MenuTile(
+                        label: "About",
+                        labelColor: ColorConstant.grey,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutScreen(),
+                            ),
+                          );
+                        },
                       ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
+                    ]
                 ),
-                ListTile(
-                  leading: CustomIcon.logout(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: ColorConstant.black, fontFamily: 'Poppins'),
-                  ),
+                MenuTile(
+                  label: "Log out",
+                  labelColor: ColorConstant.red,
+                  iconWidget: CustomIcon.logout(22, color: ColorConstant.red),
                   onTap: () {
                     logoutModal(context);
                   },
-                ),
+                )
               ],
             ),
           ),

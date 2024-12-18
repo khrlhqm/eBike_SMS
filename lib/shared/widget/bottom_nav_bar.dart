@@ -36,9 +36,9 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarRider extends State<BottomNavBar> {
   final PageController _pageController = PageController();
   final SharedState _sharedState = SharedState();
-  late double _labelSize = 11;
+  late final double _labelSize = 11;
   late double _navBarWidth;
-  late double _navBarHeight = 60;
+  late final double _navBarHeight = 60;
   int _selectedNavIndex = 0;
 
   @override

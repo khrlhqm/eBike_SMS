@@ -1,7 +1,7 @@
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/account_settings.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
-import '../../../widget/menu_strip_item.dart';
+import '../../../widget/menu_tile.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,8 +12,7 @@ class SettingsScreen extends StatelessWidget {
       appBar: AppBar(
         leading: TextButton(
           onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MenuScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => const MenuScreen()));
           },
           child: CustomIcon.back(30),
         ),
@@ -25,9 +24,9 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          StripMenuItem(
+          MenuTile(
             label: "Account",
-            textColor: ColorConstant.black,
+            labelColor: ColorConstant.black,
             onTap: () {
               Navigator.push(
                   context,
@@ -35,9 +34,9 @@ class SettingsScreen extends StatelessWidget {
                       builder: (context) => const AccountSettingsScreen()));
             },
           ),
-          StripMenuItem(
+          MenuTile(
             label: "Policy",
-            textColor: ColorConstant.black,
+            labelColor: ColorConstant.black,
             onTap: () {
               Navigator.push(
                   context,
@@ -45,9 +44,9 @@ class SettingsScreen extends StatelessWidget {
                       builder: (context) => const AccountSettingsScreen()));
             },
           ),
-          StripMenuItem(
+          MenuTile(
             label: "About",
-            textColor: ColorConstant.black,
+            labelColor: ColorConstant.black,
             onTap: () {
               Navigator.push(
                   context,

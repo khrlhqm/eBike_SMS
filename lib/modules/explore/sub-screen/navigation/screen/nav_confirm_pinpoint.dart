@@ -1,5 +1,7 @@
 import 'package:ebikesms/modules/explore/sub-screen/navigation/screen/nav_route.dart';
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
+import 'package:ebikesms/modules/explore/widget/custom_marker.dart';
+import 'package:ebikesms/modules/explore/widget/custom_map.dart';
+import 'package:ebikesms/modules/explore/widget/map_side_buttons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -18,84 +20,56 @@ class NavConfirmPinpointScreen extends StatefulWidget {
 
 class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
   final MapController _mapController = MapController();
-  List<Marker> _allMarkers = [];
-  ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(LocationConstant.initialCenter); // Initialize with default value
+  final List<Marker> _allMarkers = [];
+  final ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(MapConstant.initCenterPoint); // Initialize with default value
   bool _isMarkersLoaded = false;
 
-  Widget _displayMap() {
-    return ValueListenableBuilder<LatLng>(
-      valueListenable: _currentUserLatLng, // Listen to the ValueNotifier
-      builder: (context, latlng, widget) {
-        return FlutterMap(
-          mapController: _mapController,
-          options: MapOptions(
-            initialCenter: latlng,
-            initialZoom: 16.0,
-          ),
-          children: [
-            _getOpenStreetMap,
-            MarkerLayer(markers: _allMarkers),
-          ],
-        );
-      },
+  void _buildUserMarker() {
+    _allMarkers.add(
+      CustomMarker.user(
+        latitude: _currentUserLatLng.value.latitude,
+        longitude: _currentUserLatLng.value.longitude,
+      ),
     );
+    setState(() {
+      _isMarkersLoaded = true;
+    });
   }
 
-  TileLayer get _getOpenStreetMap => TileLayer(
-    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-  );
-
-  void _buildMarkers(String type) {
-    try {
-      switch (type) {
-        case "User":
+  void _buildLocationMarkers() {
+    if (widget.allLocations.isNotEmpty) {
+      for (int i = 0; i < widget.allLocations.length; i++) {
+        if (widget.allLocations[i]['latitude'] != null && widget.allLocations[i]['longitude'] != null) {
+          double parsedLat = double.parse(widget.allLocations[i]['latitude']);
+          double parsedLong = double.parse(widget.allLocations[i]['longitude']);
           _allMarkers.add(
-            Marker(
-              key: const ValueKey("user_marker"),
-              width: 20,
-              height: 20,
-              point: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
-              child: CustomIcon.userMarker(1),
+            CustomMarker.location(
+              latitude: parsedLat,
+              longitude: parsedLong,
+              locationType: widget.allLocations[i]['location_type'],
             ),
           );
-          break;
-        case "Location":
-          if (widget.allLocations.isNotEmpty) {
-            for (int i = 0; i < widget.allLocations.length; i++) {
-              if (widget.allLocations[i]['latitude'] != null && widget.allLocations[i]['longitude'] != null) {
-                double parsedLat = double.parse(widget.allLocations[i]['latitude']);
-                double parsedLong = double.parse(widget.allLocations[i]['longitude']);
-                _allMarkers.add(
-                  Marker(
-                    width: 40,
-                    height: 40,
-                    point: LatLng(parsedLat, parsedLong),
-                    child: CustomIcon.locationMarker(1, widget.allLocations[i]['location_type']
-                    ),
-                  ),
-                );
-              }
-            }
-          }
-        default:
-          break;
+        }
       }
-    } catch (e) {
-      print("Error building markers: $e");
     }
-    setState(() {});
+    setState(() {
+      _isMarkersLoaded = true;
+    });
   }
 
-  void _loadMarkers() async {
+  void _fetchCurrentUserLocation() async {
     if(getLocationPermission() == false) return;
+
     // Fetch initial location
     try {
-      Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      _currentUserLatLng.value = LatLng(pos.latitude, pos.longitude);
-      _buildMarkers("User");
-      _buildMarkers("Location");
-      _isMarkersLoaded = true;
+      setState(() {
+        _isMarkersLoaded = false;
+      });
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLatLng.value = currentLatLng;
+      _buildUserMarker();
+      _updateUserRealTime();
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -135,97 +109,40 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
     return true;
   }
 
-  void _pointToUserLocation() {
-    setState(() {
-      _mapController.move(LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude), 16.0);
+  void _updateUserRealTime() {
+    Geolocator.getPositionStream(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 5, // Minimum movement to trigger an update
+      ),
+    ).listen((Position position) {
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLatLng.value = currentLatLng;
+      setState(() {
+        // Remove the old User marker
+        _allMarkers.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
+
+        // Add the updated User marker
+        _allMarkers.add(
+            CustomMarker.user(
+                latitude: _currentUserLatLng.value.latitude,
+                longitude: _currentUserLatLng.value.longitude
+            )
+        );
+      });
+    }, onError: (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error receiving location updates: $e')),
+      );
     });
   }
 
-  void _alignMapLocation() {
-    setState(() {
-      _mapController.rotate(0.0);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadMarkers();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          _displayMap(),
-          _displayBackButton(),
-          _displayMarkersOrLoading(),
-          _displayMapButtons(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
-                child: RectangleButton(
-                  label: "Confirm",
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context)=> NavRouteScreen(
-                          startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
-                          endWaypoint: _mapController.camera.center
-                        )
-                      )
-                    );
-                  },
-                )
-              )
-            ],
-          ),
-      ])
-    );
-  }
-
-  Widget _displayBackButton() {
-    return Expanded(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                  child: ElevatedButton(
-                    onPressed: () { Navigator.pop(context); },
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: ColorConstant.white, // Background color
-                      shadowColor: ColorConstant.lightGrey, // Box shadow color
-                      elevation: 3,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CustomIcon.back(25, color: ColorConstant.black),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        )
-    );
-  }
-
-  Widget _displayMarkersOrLoading() {
+  Widget _displayPinpointOrLoading(bool hasMarkersLoaded) {
     return Center(
-        child: (_isMarkersLoaded)
+        child: (hasMarkersLoaded)
             ? Padding(
           padding: const EdgeInsets.only(bottom: 35),
-          child: CustomIcon.pinpointColoured(40),
+          child: CustomIcon.pinpointColoured(35),
         )
             : Container(
           padding: const EdgeInsets.all(15),
@@ -246,51 +163,83 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
     );
   }
 
-  Widget _displayMapButtons() {
-    return Expanded(
-      child:
-      Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
+  @override
+  void initState() {
+    super.initState();
+    _buildLocationMarkers();
+    _fetchCurrentUserLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          // Custom map display
+          ValueListenableBuilder<LatLng>(
+            valueListenable: _currentUserLatLng, // Listen to the ValueNotifier
+            builder: (context, latlng, widget) {
+              return CustomMap(
+                mapController: _mapController,
+                allMarkers: _allMarkers,
+                initialCenter: MapConstant.initCenterPoint,
+                enableInteraction: true,
+              );
+            },
+          ),
+
+          // Back button
+          const Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: _alignMapLocation,
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: ColorConstant.white, // Background color
-                      shadowColor: ColorConstant.lightGrey, // Box shadow color
-                      elevation: 2,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CustomIcon.compassColoured(30),
-                    ),
-                  ),
-                  const SizedBox(height: 13),
-                  ElevatedButton(
-                      onPressed: _pointToUserLocation,
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: EdgeInsets.zero,
-                        backgroundColor: ColorConstant.white, // Background color
-                        shadowColor: ColorConstant.lightGrey, // Box shadow color
-                        elevation: 2,
+                  Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                          child: CustomCircularBackButton()
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(13),
-                        child: CustomIcon.crosshairColoured(25),
-                      )
+                    ],
                   ),
                 ],
-              ),
-            ),
-          ]
-      ),
+              )
+          ),
+
+          // Map Side Buttons
+          MapSideButtons(
+              mapController: _mapController,
+              currentUserLocation: _currentUserLatLng.value,
+              showGuideButton: false
+          ),
+
+          // Markers on the map (using the same
+          _displayPinpointOrLoading(_isMarkersLoaded),
+
+          // Confirm button
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
+                child: CustomRectangleButton(
+                  label: "Confirm",
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)=> NavRouteScreen(
+                          startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
+                          endWaypoint: _mapController.camera.center
+                        )
+                      )
+                    );
+                  },
+                )
+              )
+            ],
+          ),
+      ])
     );
   }
 }

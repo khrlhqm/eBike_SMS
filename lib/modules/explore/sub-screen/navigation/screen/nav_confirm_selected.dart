@@ -1,10 +1,12 @@
 import 'package:ebikesms/modules/explore/sub-screen/navigation/screen/nav_route.dart';
+import 'package:ebikesms/modules/explore/widget/custom_map.dart';
+import 'package:ebikesms/modules/explore/widget/custom_marker.dart';
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../../../../global_import.dart';
+import '../../../widget/map_side_buttons.dart';
 
 class NavConfirmSelectedScreen extends StatefulWidget {
   //final List<dynamic> allLocations;
@@ -21,64 +23,36 @@ class NavConfirmSelectedScreen extends StatefulWidget {
 
 class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
   final MapController _mapController = MapController();
-  List<Marker> _allMarkers = [];
-  ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(LatLng(0.0, 0.0)); // Initialize with default value
+  final List<Marker> _allMarkers = [];
+  final ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(const LatLng(0.0, 0.0)); // Initialize with default value
   bool _isMarkersLoaded = false;
 
-  Widget _displayMap() {
-    double initLat = double.parse(widget.selectedLocation['latitude']);
-    double initLong = double.parse(widget.selectedLocation['longitude']);
-    return FlutterMap(
-      mapController: _mapController,
-      options: MapOptions(
-        initialCenter: LatLng(initLat, initLong),
-        initialZoom: 16.0,
-      ),
-      children: [
-        _getOpenStreetMap,
-        MarkerLayer(markers: _allMarkers),
-      ],
+  void _buildUserMarker() {
+    _allMarkers.add(
+      CustomMarker.user(
+        latitude: _currentUserLatLng.value.latitude,
+        longitude: _currentUserLatLng.value.longitude
+      )
     );
+    setState(() {
+      _isMarkersLoaded = true;
+    });
   }
 
-  TileLayer get _getOpenStreetMap => TileLayer(
-    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-  );
-
-  void _buildMarkers(String type) {
-    try {
-      switch (type) {
-        case "User":
-          _allMarkers.add(
-            Marker(
-              key: const ValueKey("user_marker"),
-              width: 20,
-              height: 20,
-              point: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
-              child: CustomIcon.userMarker(1),
-            ),
-          );
-          break;
-        case "Location":
-          double parsedLat = double.parse(widget.selectedLocation['latitude']);
-          double parsedLong = double.parse(widget.selectedLocation['longitude']);
-          debugPrint("widget.selectedLocation['longitude']: ${widget.selectedLocation['longitude']}");
-          _allMarkers.add(
-            Marker(
-              width: 40,
-              height: 40,
-              point: LatLng(parsedLat, parsedLong),
-              child: CustomIcon.locationMarker(1, widget.selectedLocation['location_type']),
-            ),
-          );
-        default:
-          break;
-      }
-    } catch (e) {
-      print("Error building markers: $e");
-    }
-    setState(() {});
+  void _buildSelectedLocationMarker() {
+    double parsedLat = double.parse(widget.selectedLocation['latitude']);
+    double parsedLong = double.parse(widget.selectedLocation['longitude']);
+    debugPrint("widget.selectedLocation['longitude']: ${widget.selectedLocation['longitude']}");
+    _allMarkers.add(
+        CustomMarker.location(
+            latitude: parsedLat,
+            longitude: parsedLong,
+            locationType: widget.selectedLocation['location_type']
+        )
+    );
+    setState(() {
+      _isMarkersLoaded = true;
+    });
   }
 
   void _fetchCurrentUserLocation() async {
@@ -87,8 +61,7 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
     try {
       Position pos = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       _currentUserLatLng.value = LatLng(pos.latitude, pos.longitude);
-      _buildMarkers("User");
-      _buildMarkers("Location");
+      _buildUserMarker();
       _isMarkersLoaded = true;
     }
     catch (e) {
@@ -129,164 +102,111 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
     return true;
   }
 
-  void _pointToUserLocation() {
-    setState(() {
-      _mapController.move(LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude), 16.0);
-    });
-  }
-
-  void _alignMapLocation() {
-    setState(() {
-      _mapController.rotate(0.0);
-    });
-  }
-
   @override
   void initState() {
     super.initState();
+    _buildSelectedLocationMarker();
     _fetchCurrentUserLocation();
   }
 
   @override
   Widget build(BuildContext context) {
+    double selectedLat = double.parse(widget.selectedLocation['latitude']);
+    double selectedLong = double.parse(widget.selectedLocation['longitude']);
     return Scaffold(
         body: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-              _displayMap(),
-              _displayBackButton(),
-              _displayLoading(),
-              _displayMapButtons(),
-              MarkerCard(
-                markerCardState: MarkerCardState.location,
-                navigationButtonEnable: false,
-                locationNameMalay: widget.selectedLocation['location_name_malay'],
-                locationNameEnglish: widget.selectedLocation['location_name_english'],
-                locationType: widget.selectedLocation['location_type'],
-                address: widget.selectedLocation['address'],
-              ),
-              Container(
-                width: MediaQuery.of(context).size.width * 0.7,
-                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
-                child: RectangleButton(
-                  label: "Confirm",
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context)=> NavRouteScreen(
-                            startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
-                            endWaypoint: _mapController.camera.center
-                        )
-                      )
-                    );
-                  },
-                )
-              )
-            ]
-        )
-    );
-  }
-
-  Widget _displayBackButton() {
-    return Expanded(
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                  child: ElevatedButton(
-                    onPressed: () { Navigator.pop(context); },
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: ColorConstant.white, // Background color
-                      shadowColor: ColorConstant.lightGrey, // Box shadow color
-                      elevation: 3,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CustomIcon.back(25, color: ColorConstant.black),
-                    ),
-                  ),
-                ),
-              ],
+            CustomMap(
+              mapController: _mapController,
+              allMarkers: _allMarkers,
+              initialCenter: LatLng(selectedLat, selectedLong),
+              enableInteraction: false,
             ),
-          ],
-        )
-    );
-  }
 
-  Widget _displayLoading() {
-    return Visibility(
-      visible: !_isMarkersLoaded,
-      child: Center(
-        child: Container(
-          padding: const EdgeInsets.all(15),
-          decoration: const BoxDecoration(
-              color: ColorConstant.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                    color: ColorConstant.shadow, // Shadow color
-                    offset: Offset(0, 2),                 // Shadow position
-                    blurRadius: 10.0,                      // Spread of the shadow
-                    spreadRadius: 0.0                     // Additional spread
-                )
-              ]
-          ),
-          child: const LoadingAnimation(dimension: 30),
-        )
-      ),
-    );
-  }
-
-  Widget _displayMapButtons() {
-    return Expanded(
-      child:
-        Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
+            // Back Button
+            Expanded(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                    onPressed: _alignMapLocation,
-                    style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      padding: EdgeInsets.zero,
-                      backgroundColor: ColorConstant.white, // Background color
-                      shadowColor: ColorConstant.lightGrey, // Box shadow color
-                      elevation: 2,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10),
-                      child: CustomIcon.compassColoured(30),
-                    ),
-                  ),
-                  const SizedBox(height: 13),
-                  ElevatedButton(
-                      onPressed: _pointToUserLocation,
-                      style: ElevatedButton.styleFrom(
-                        shape: const CircleBorder(),
-                        padding: EdgeInsets.zero,
-                        backgroundColor: ColorConstant.white, // Background color
-                        shadowColor: ColorConstant.lightGrey, // Box shadow color
-                        elevation: 2,
+                  Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                        child: ElevatedButton(
+                          onPressed: () { Navigator.pop(context); },
+                          style: ElevatedButton.styleFrom(
+                            shape: const CircleBorder(),
+                            padding: EdgeInsets.zero,
+                            backgroundColor: ColorConstant.white, // Background color
+                            shadowColor: ColorConstant.lightGrey, // Box shadow color
+                            elevation: 3,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: CustomIcon.back(25, color: ColorConstant.black),
+                          ),
+                        ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(13),
-                        child: CustomIcon.crosshairColoured(25),
-                      )
+                    ],
                   ),
                 ],
+              )
+            ),
+
+            // Loading Animation (if markers is not loaded yet)
+            Visibility(
+              visible: !_isMarkersLoaded,
+              child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                        color: ColorConstant.white,
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                              color: ColorConstant.shadow, // Shadow color
+                              offset: Offset(0, 2),                 // Shadow position
+                              blurRadius: 10.0,                      // Spread of the shadow
+                              spreadRadius: 0.0                     // Additional spread
+                          )
+                        ]
+                    ),
+                    child: const LoadingAnimation(dimension: 30),
+                  )
               ),
             ),
-          ]
-        ),
+
+            // Location Marker Card
+            MarkerCard(
+              markerCardState: MarkerCardState.location,
+              navigationButtonEnable: false,
+              locationNameMalay: widget.selectedLocation['location_name_malay'],
+              locationNameEnglish: widget.selectedLocation['location_name_english'],
+              locationType: widget.selectedLocation['location_type'],
+              address: widget.selectedLocation['address'],
+            ),
+
+            // Confirm Button
+            Container(
+              width: MediaQuery.of(context).size.width * 0.7,
+              margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
+              child: CustomRectangleButton(
+                label: "Confirm",
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context)=> NavRouteScreen(
+                          startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
+                          endWaypoint: _mapController.camera.center
+                      )
+                    )
+                  );
+                },
+              )
+            )
+            ]
+        )
     );
   }
 }

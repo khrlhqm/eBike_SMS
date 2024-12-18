@@ -27,11 +27,11 @@ class _NavRouteScreenState extends State<NavRouteScreen> {
         children: [
           Text(
               "Starting point at: ${widget.startWaypoint}",
-              style: TextStyle(fontSize: 16, color: ColorConstant.darkBlue)
+              style: const TextStyle(fontSize: 16, color: ColorConstant.darkBlue)
           ),
           Text(
               "Pinpointing at: ${widget.endWaypoint}",
-              style: TextStyle(fontSize: 16, color: ColorConstant.darkBlue)
+              style: const TextStyle(fontSize: 16, color: ColorConstant.darkBlue)
           ),
         ],
       ),

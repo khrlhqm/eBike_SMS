@@ -333,6 +333,16 @@ class CustomIcon{
     );
   }
 
+  static Widget ridingMarker(
+      double dimension,
+    ) {
+    return SvgPicture.asset(
+      'assets/icons/markers/riding-marker.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget bikeMarker(
       double dimension,
       String bikeStatus,
@@ -341,16 +351,16 @@ class CustomIcon{
 
     switch (bikeStatus) {
       case "Available":
-        markerName = "bike-selected-marker";
+        markerName = "bike-available-marker";
         break;
-      case "Riding":
-        markerName = "bike-riding-marker";
-        break;
-      case "Selected":
-        markerName = "bike-selected-marker";
+      case "Available-Selected":
+        markerName = "bike-available-selected-marker";
         break;
       case "Unavailable":
         markerName = "bike-unavailable-marker";
+        break;
+      case "Unavailable-Selected":
+        markerName = "bike-unavailable-selected-marker";
         break;
       default:
         markerName = "default-marker"; // For unknown types

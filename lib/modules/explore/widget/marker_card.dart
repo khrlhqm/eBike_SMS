@@ -1,5 +1,3 @@
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
-
 import '../../global_import.dart';
 import '../sub-screen/navigation/screen/nav_destination.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -127,12 +125,15 @@ class _MarkerCardState extends State<MarkerCard> {
 
                       ),
                       const Spacer(),
-                      const AutoSizeText(
-                        TextConstant.priceRateLabel,
-                        maxFontSize: 12,
-                        minFontSize: 11,
-                        style: TextStyle(
-                          fontSize: 13,
+                      Visibility(
+                        visible: (widget.bikeStatus == "Available"),
+                        child: const AutoSizeText(
+                          TextConstant.priceRateLabel,
+                          maxFontSize: 12,
+                          minFontSize: 11,
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
                         ),
                       )
                     ],
@@ -141,14 +142,18 @@ class _MarkerCardState extends State<MarkerCard> {
                   Row(
                     children: [
                       Expanded(
-                        child: RectangleButton(
+                        child: CustomRectangleButton(
                           height: 35,
                           label: "Ring",
                           fontSize: 12,
+                          enable: (widget.bikeStatus == "Available"),
                           fontWeight: FontWeight.w600,
                           backgroundColor: ColorConstant.white,
                           foregroundColor: ColorConstant.darkBlue,
-                          borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
+                          borderSide: BorderSide(
+                            width: 2,
+                            color: (widget.bikeStatus == "Available") ? ColorConstant.darkBlue : ColorConstant.shadow
+                          ),
                           onPressed: () {
                             // TODO: Ring the bike (make buzzer sound)
                           }
@@ -162,22 +167,23 @@ class _MarkerCardState extends State<MarkerCard> {
           ],
         ),
         const Spacer(flex: 1),
-        const Column(
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Get near the bike",
+              (widget.bikeStatus == "Available") ? "Get near the bike" : "Bike is unavailable",
               style: TextStyle(
-                  fontSize: 12
+                fontSize: 12,
+                color: (widget.bikeStatus == "Available") ? ColorConstant.black : ColorConstant.red,
               ),
             ),
             Text(
-              "Scan to start",
+              (widget.bikeStatus == "Available") ? "Scan the bike" : "Look for another bike",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: ColorConstant.darkBlue,
+                color: (widget.bikeStatus == "Available") ? ColorConstant.darkBlue : ColorConstant.grey,
               ),
             ),
           ],
@@ -263,7 +269,7 @@ class _MarkerCardState extends State<MarkerCard> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Expanded(
-                      child: RectangleButton(
+                      child: CustomRectangleButton(
                           height: 45,
                           label: "Cancel",
                           fontSize: 12,
@@ -278,7 +284,7 @@ class _MarkerCardState extends State<MarkerCard> {
                   ),
                   const SizedBox(width: 15), // The gap between buttons
                   Expanded(
-                    child: RectangleButton(
+                    child: CustomRectangleButton(
                         height: 45,
                         label: "Confirm",
                         fontSize: 12,
@@ -338,7 +344,7 @@ class _MarkerCardState extends State<MarkerCard> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  RectangleButton(
+                  CustomRectangleButton(
                     height: 35,
                     label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
                     fontSize: 12,
@@ -478,7 +484,7 @@ class _MarkerCardState extends State<MarkerCard> {
                       ],
                     ),
                     const SizedBox(height: 5),
-                    RectangleButton(
+                    CustomRectangleButton(
                         height: 35,
                         label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
                         fontSize: 12,
