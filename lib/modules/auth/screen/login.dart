@@ -180,13 +180,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           style: TextStyle(fontFamily: 'Poppins'),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const SignupScreen()),
-                            );
-                          },
+                          // onTap: () {
+                          //   Navigator.push(
+                          //     context,
+                          //     MaterialPageRoute(
+                          //         builder: (context) => const SignupScreen()),
+                          //   );
+                          // },
                           child: const Text(
                             "Sign up",
                             style: TextStyle(
