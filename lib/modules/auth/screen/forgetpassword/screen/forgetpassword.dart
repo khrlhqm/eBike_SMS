@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart'; // Import CustomIcon
 import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/email_exist_otp.dart';
 import 'package:ebikesms/modules/auth/controller/email_verification.dart';
-import 'package:qr_code_dart_scan/qr_code_dart_scan.dart';
-import 'dart:math';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});

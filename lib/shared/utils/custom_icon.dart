@@ -308,6 +308,16 @@ class CustomIcon{
     );
   }
 
+  static Widget report(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/report.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget userMarker(
     double dimension,
   ) {
