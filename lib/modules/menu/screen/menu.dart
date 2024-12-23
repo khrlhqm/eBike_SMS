@@ -15,6 +15,7 @@ import 'package:ebikesms/modules/menu/sub-menu/settings/screen/policy.dart';
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/about.dart';
 import 'package:ebikesms/modules/learn/screen/learn.dart';
 import 'package:ebikesms/modules/menu/widget/logout_modal.dart';
+import 'package:ebikesms/modules/menu/sub-menu/user_report/user_report.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -302,6 +303,19 @@ class _MenuScreenState extends State<MenuScreen> {
                         },
                       ),
                     ]
+                ),
+                MenuTile(
+                  label: "Report",
+                  iconWidget: CustomIcon.report(22,),
+                  onTap: () {
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const UserReportScreen(),
+                            ),
+                          );
+                    
+                  },
                 ),
                 MenuTile(
                   label: "Log out",
