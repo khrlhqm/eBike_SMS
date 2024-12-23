@@ -1,6 +1,6 @@
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/login_controller.dart';
-import 'package:ebikesms/modules/auth/screen/signup.dart';
+import 'package:ebikesms/modules/auth/screen/signup/matric_number_screen.dart';
 import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/forgetpassword.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -197,8 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SignupScreen(
-                                      pageController: pageController)),
+                                  builder: (context) => MatricPasswordScreen()),
                             );
                           },
                           child: const Text(

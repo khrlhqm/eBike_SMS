@@ -8,5 +8,5 @@ class ApiBase {
   static String iman = "http://192.168.0.30/e-bike";
 
   // Alternatively, if you just need the base URL as a string
-  static String get baseUrl => iman;
+  static String get baseUrl => amir;
 }
