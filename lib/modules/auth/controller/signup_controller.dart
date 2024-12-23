@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ebikesms/modules/auth/screen/login.dart';
-import 'package:ebikesms/modules/auth/screen/authentication.dart'; // Import biometric screen
+import 'package:ebikesms/modules/auth/screen/signup/authentication.dart'; // Import biometric screen
 import 'package:ebikesms/ip.dart';
 
 class SignupController extends ChangeNotifier {
@@ -11,24 +11,10 @@ class SignupController extends ChangeNotifier {
     String userEmail,
     String matricNumber,
     String password,
-    String confirmPassword,
     String fullname,
     String username,
   ) async {
-    // Validation: check for empty fields and matching passwords
-    if (matricNumber.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All fields are required')),
-      );
-      return 0;
-    }
-
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
-      return 0;
-    }
+    
 
     // Navigate to BiometricAuthScreen and await its result
     int? authResult = await Navigator.push(

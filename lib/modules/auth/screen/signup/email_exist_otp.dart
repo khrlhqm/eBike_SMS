@@ -1,13 +1,16 @@
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/shared/utils/custom_icon.dart'; // Import CustomIcon
-import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/set_new_password.dart';
+import 'package:ebikesms/modules/auth/screen/signup/username_screen.dart';
 
 
 class EmailExistScreen extends StatefulWidget {
   final String otpSent;
   final String email;
-  const EmailExistScreen({super.key, required this.email , required this.otpSent});
+  final String matricnumber;
+  final String password;
+
+  const EmailExistScreen({super.key, required this.email ,required this.matricnumber, required this.password, required this.otpSent});
 
   @override
   _EmailExistScreenState createState() => _EmailExistScreenState();
@@ -168,7 +171,17 @@ class _EmailExistScreenState extends State<EmailExistScreen> {
                          bool result = varifyOTP(otpsent, userInput);
 
                           if (result == true){
-                            //pergi full name
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      FullNameUsernameScreen(
+                                        email: email,
+                                        matricnumber: widget.matricnumber,
+                                        password: widget.password,
+                                        )
+                                ),
+                              );
                           }
                         
                       },
