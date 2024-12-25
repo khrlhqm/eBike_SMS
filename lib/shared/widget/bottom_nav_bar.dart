@@ -14,7 +14,7 @@ import '../utils/shared_state.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int userId;
-  final int userType;
+  final String userType;
 
   const BottomNavBar({
     super.key,
