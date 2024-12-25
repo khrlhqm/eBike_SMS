@@ -1,16 +1,13 @@
-import 'package:ebikesms/modules/global_import.dart';
-import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
+import 'package:http/http.dart' as http;
+import '../../../../global_import.dart';
 
 class NavRouteScreen extends StatefulWidget {
   final LatLng startWaypoint;
   final LatLng endWaypoint;
 
-  const NavRouteScreen({
-    super.key,
-    required this.startWaypoint,
-    required this.endWaypoint,
-  });
+  const NavRouteScreen(
+      {super.key, required this.startWaypoint, required this.endWaypoint});
 
   @override
   State<NavRouteScreen> createState() => _NavRouteScreenState();
@@ -90,101 +87,20 @@ class _NavRouteScreenState extends State<NavRouteScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Navigation Route'),
+    return Container(
+      color: ColorConstant.hintBlue,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Starting point at: ${widget.startWaypoint}",
+              style:
+                  const TextStyle(fontSize: 16, color: ColorConstant.darkBlue)),
+          Text("Pinpointing at: ${widget.endWaypoint}",
+              style:
+                  const TextStyle(fontSize: 16, color: ColorConstant.darkBlue)),
+        ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                FlutterMap(
-                  options: MapOptions(
-                    initialCenter: LatLng(
-                      (widget.startWaypoint.latitude +
-                              widget.endWaypoint.latitude) /
-                          2,
-                      (widget.startWaypoint.longitude +
-                              widget.endWaypoint.longitude) /
-                          2,
-                    ),
-                    initialZoom: 13,
-                  ),
-                  children: [
-                    TileLayer(
-                      urlTemplate:
-                          'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                      subdomains: ['a', 'b', 'c'],
-                    ),
-                    PolylineLayer(
-                      polylines: [
-                        Polyline(
-                          points: routePoints,
-                          strokeWidth: 4.0,
-                          color: Colors.blue,
-                        ),
-                      ],
-                    ),
-                    MarkerLayer(
-                      markers: [
-                        Marker(
-                          point: widget.startWaypoint,
-                          width: 80,
-                          height: 80,
-                          child: const Icon(
-                            Icons.location_on,
-                            color: Colors.green,
-                            size: 40,
-                          ),
-                        ),
-                        Marker(
-                          point: widget.endWaypoint,
-                          width: 80,
-                          height: 80,
-                          child: const Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                            size: 40,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      final routeUrl = _generateRouteUrl();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('OSRM URL: $routeUrl')),
-                      );
-                    },
-                    child: const Text('Generate OSRM Route URL'),
-                  ),
-                ),
-              ],
-            ),
     );
-  }
-
-  /// Generate the OSRM map URL
-  String _generateRouteUrl() {
-    if (routePoints.isEmpty) {
-      throw ArgumentError("Route points cannot be empty");
-    }
-
-    // Construct the loc parameters
-    final String locParams = routePoints
-        .map((latLng) => "loc=${latLng.latitude}%2C${latLng.longitude}")
-        .join("&");
-
-    // Center the map on the first point
-    final LatLng center = routePoints.first;
-
-    // Build the final URL
-    return "https://map.project-osrm.org/?z=14&center=${center.latitude}%2C${center.longitude}&$locParams&hl=en&alt=0&srv=1";
   }
 }

@@ -5,21 +5,23 @@ import 'package:ebikesms/modules/menu/sub-menu/time_top_up/controller/transactio
 import 'package:ebikesms/shared/utils/custom_icon.dart';
 import 'package:ebikesms/shared/utils/calculation.dart';
 import 'package:ebikesms/shared/widget/loading_animation.dart';
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
+import '../../../../../shared/widget/custom_buttons.dart';
 
 
-class TimeTopUpValidationScreen extends StatefulWidget {
+class TimeTopUpProcessScreen extends StatefulWidget {
+  final int userId;
   final int keyedTotal;
-  const TimeTopUpValidationScreen({
+  const TimeTopUpProcessScreen({
     super.key,
+    required this.userId,
     required this.keyedTotal
   });
 
   @override
-  State<TimeTopUpValidationScreen> createState() => _TimeTopUpValidationScreenState();
+  State<TimeTopUpProcessScreen> createState() => _TimeTopUpProcessScreenState();
 }
 
-class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
+class _TimeTopUpProcessScreenState extends State<TimeTopUpProcessScreen> {
   late String transactionDate;
   late int transactionTotal;
   late int obtainedRideTime;
@@ -46,7 +48,9 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
         },
             icon: CustomIcon.close(20, color: ColorConstant.black)
         ),
-        title: const Text("Processing Payment"),
+        title: const Text(
+          "Processing Payment"
+        ),
         centerTitle: true,
       ),
       body: isSuccessful ?
@@ -67,7 +71,7 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
             "Processing...",
             textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 32,
+              fontSize: 24,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -79,7 +83,7 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
                 "Please do not exit this page while it's processing. It may take a few seconds",
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.normal,
                 ),
               ),
@@ -104,10 +108,10 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
                 const Padding(
                   padding: EdgeInsets.fromLTRB(50, 40, 50, 10),
                   child: Text(
-                    "Payment Successful",
+                    "Payment was\nSuccessful",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 32,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -117,14 +121,9 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
           ),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 35, vertical: 40),
-            child: RectangleButton(
+            child: CustomRectangleButton(
               label: "Back to menu",
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context)=> const MenuScreen())
-                );
-              },
+              onPressed: () { Navigator.pop(context); },
             ),
           ),
         ]
@@ -143,7 +142,7 @@ class _TimeTopUpValidationScreenState extends State<TimeTopUpValidationScreen> {
       transactionDate = dateTime;
       transactionTotal = widget.keyedTotal;
       obtainedRideTime = Calculation.countRideTimeMinutes(transactionTotal);
-      userId = 111; // Get from login
+      userId = widget.userId; // Get from login
     });
   }
 

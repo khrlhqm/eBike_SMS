@@ -1,4 +1,3 @@
-import 'package:ebikesms/modules/auth/screen/signup.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
 import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.dart';
@@ -9,6 +8,9 @@ import 'modules/auth/screen/login.dart'; // Adjust the path as needed
 import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add dependency in pubspec.yaml
+import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/email_exist_otp.dart';
+import 'package:ebikesms/modules/auth/screen/signup/matric_number_screen.dart';
+import 'package:ebikesms/modules/auth/screen/signup/username_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,9 +43,7 @@ class MyApp extends StatelessWidget {
           displayMedium: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      home: LoginScreen(),
-      //home: SignupScreen(
-      //pageController: pageController), // Pass the PageController here
+      home: LoginScreen(), // Pass the PageController here
     );
   }
 }
