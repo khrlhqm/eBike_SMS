@@ -7,7 +7,7 @@ import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/shared/utils/shared_state.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import '../controller/location_controller.dart';
+import '../controller/landmark_controller.dart';
 import '../widget/custom_map.dart';
 
 class ExploreScreen extends StatefulWidget {
@@ -18,7 +18,6 @@ class ExploreScreen extends StatefulWidget {
 }
 
 class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateMixin {
-  final MapController _mapController = MapController();
   late List<dynamic> _allLocations;
   late List<dynamic> _allBikes;
   late ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(MapConstant.initCenterPoint);
@@ -44,9 +43,10 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
             valueListenable: SharedState.isRiding,
             builder: (context, isRiding, widget) {
               return CustomMap(
-                mapController: _mapController,
+                mapController: SharedState.mapController.value,
                 allMarkers: SharedState.visibleMarkers,
                 initialCenter: MapConstant.initCenterPoint,
+                initialZoom: MapConstant.initZoomLevel,
                 enableInteraction: true,
               );
             }
@@ -61,7 +61,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
                 animateRotation(0.0);
               }
               return MapSideButtons(
-                  mapController: _mapController,
+                  mapController: SharedState.mapController.value,
                   locationToPinpoint: (isRiding)
                       ? LatLng(SharedState.bikeCurrentLatitude.value, SharedState.bikeCurrentLongitude.value)
                       : _currentUserLatLng.value,
@@ -105,11 +105,11 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
           double parsedLat = double.parse(_allLocations[i]['latitude']);
           double parsedLong = double.parse(_allLocations[i]['longitude']);
           SharedState.visibleMarkers.value.add(
-            CustomMarker.location(
+            CustomMarker.landmark(
               index: i,
               latitude: parsedLat,
               longitude: parsedLong,
-              locationType: _allLocations[i]['location_type'],
+              landmarkType: _allLocations[i]['landmark_type'],
               onTap: () => _onTapLocationMarker(i),
             ),
           );
@@ -190,7 +190,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
   void _fetchCurrentUserLocation() async {
     if(getLocationPermission() == false) return;
 
-    // Fetch initial location
+    // Fetch user's initial location
     try {
       setState(() {
         _isMarkersLoaded = false;
@@ -203,7 +203,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch location: $e')),
+        SnackBar(content: Text('Failed to fetch user location: $e')),
       );
     }
   }
@@ -269,13 +269,13 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
 
   void _onTapLocationMarker(int index) {
     // Update these values to make marker card visible and it's details
-    SharedState.markerCardContent.value = MarkerCardContent.location;
-    SharedState.locationNameMalay.value = _allLocations[index]['location_name_malay'];
-    SharedState.locationNameEnglish.value = _allLocations[index]['location_name_english'];
-    SharedState.locationType.value = _allLocations[index]['location_type'];
-    SharedState.address.value = _allLocations[index]['address'];
-    SharedState.locationLatitude.value = double.parse(_allLocations[index]['latitude']);
-    SharedState.locationLongitude.value = double.parse(_allLocations[index]['longitude']);
+    SharedState.markerCardContent.value = MarkerCardContent.landmark;
+    SharedState.landmarkNameMalay.value = _allLocations[index]['landmark_name_malay'];
+    SharedState.landmarkNameEnglish.value = _allLocations[index]['landmark_name_english'];
+    SharedState.landmarkType.value = _allLocations[index]['landmark_type'];
+    SharedState.landmarkAddress.value = _allLocations[index]['address'];
+    SharedState.landmarkLatitude.value = double.parse(_allLocations[index]['latitude']);
+    SharedState.landmarkLongitude.value = double.parse(_allLocations[index]['longitude']);
 
     // Must set to false first, then true again to make sure ValueListenableBuilder of MarkerCard listens
     SharedState.markerCardVisibility.value = false;
@@ -308,9 +308,9 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
     final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
 
     // Define the Tween for each property (latitude, longitude, and zoom)
-    final latTween = Tween<double>(begin: _mapController.camera.center.latitude, end: target.latitude);
-    final lngTween = Tween<double>(begin: _mapController.camera.center.longitude, end: target.longitude);
-    final zoomTween = Tween<double>(begin: _mapController.camera.zoom, end: MapConstant.zoomLevel); // Adjusts zoom
+    final latTween = Tween<double>(begin:  SharedState.mapController.value.camera.center.latitude, end: target.latitude);
+    final lngTween = Tween<double>(begin:  SharedState.mapController.value.camera.center.longitude, end: target.longitude);
+    final zoomTween = Tween<double>(begin:  SharedState.mapController.value.camera.zoom, end: MapConstant.focusZoomLevel); // Adjusts zoom
 
     // Listen for the animation progress
     controller.addListener(() {
@@ -319,7 +319,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
       final zoomLevel = zoomTween.evaluate(curve);
 
       // Move the map to the animated position and zoom level
-      _mapController.move(LatLng(lat, lng), zoomLevel);
+      SharedState.mapController.value.move(LatLng(lat, lng), zoomLevel);
     });
 
     // Start the animation and dispose of the controller once it's done
@@ -338,7 +338,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
     final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
 
     // Get the current rotation of the map
-    final currentRotation = _mapController.camera.rotation;
+    final currentRotation =  SharedState.mapController.value.camera.rotation;
 
     // Define a Tween to animate the rotation from current rotation to target rotation
     final rotationTween = Tween<double>(begin: currentRotation, end: targetRotation);
@@ -346,7 +346,7 @@ class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateM
     // Add a listener to update the map's rotation as the animation progresses
     controller.addListener(() {
       final rotation = rotationTween.evaluate(curve);
-      _mapController.rotate(rotation);  // Update the map's rotation
+      SharedState.mapController.value.rotate(rotation);  // Update the map's rotation
     });
 
     // Start the animation and dispose of the controller once done

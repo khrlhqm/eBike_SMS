@@ -15,24 +15,7 @@
     // Set content header (must match with what's defined in Flutter)
     header("Content-Type: application/json");
 
-    // Get the posted JSON data
-    $data = json_decode(file_get_contents("php://input"), true);
-    
-    $query = "SELECT
-                l.location_id,
-                l.location_name_malay,
-                l.location_name_english,
-                l.location_type,
-                l.address,
-                w.latitude,
-                w.longitude
-            FROM
-                location AS l
-            LEFT JOIN waypoint AS W
-            ON
-                l.location_id = w.location_id
-            WHERE
-                w.latitude IS NOT NULL AND w.latitude IS NOT NULL;";
+    $query = "SELECT bike_id, status, current_latitude, current_longitude FROM bike;";
 
     // Execute query
     $result = $conn->query($query);
@@ -46,22 +29,19 @@
     } 
     // If query succeeded and results are available
     else {
-        $locations = [];
+        $bikes = [];
         while ($row = $result->fetch_assoc()) {
-            $locations[] = [
-                "location_id" => $row['location_id'],
-                "location_name_malay" => $row['location_name_malay'],
-                "location_name_english" => $row['location_name_english'],
-                "location_type" => $row['location_type'],
-                "address" => $row['address'],
-                "latitude" => $row['latitude'],
-                "longitude" => $row['longitude'],
+            $bikes[] = [
+                "bike_id" => $row['bike_id'],
+                "status" => $row['status'],
+                "current_latitude" => $row['current_latitude'],
+                "current_longitude" => $row['current_longitude']
             ]; 
         }
         echo json_encode([
             "status" => "success", 
-            "message" => "Location information forwarded.", 
-            "data" => $locations]
+            "message" => "Bike information forwarded.", 
+            "data" => $bikes]
         );
     }
 

@@ -260,8 +260,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: IconCard(
                     iconWidget:
                         CustomIcon.bicycle(50, color: ColorConstant.black),
-                    iconWidget:
-                        CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
                     onTap: () {
                       Navigator.push(

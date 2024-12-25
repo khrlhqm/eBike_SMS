@@ -21,6 +21,8 @@ class CustomMarker extends Marker{
     );
   }
 
+
+  // Singular Markers (User and riding)
   static Marker riding({
     required double latitude,
     required double longitude,
@@ -35,27 +37,29 @@ class CustomMarker extends Marker{
     );
   }
 
-  // Multiple Markers (Location & Bikes)
-  static location({
+  // Multiple Markers (Landmarks & Bikes)
+  static Marker landmark({
     required double latitude,
     required double longitude,
-    required String locationType,
+    required String landmarkType,
     int index = 0,
     VoidCallback? onTap,
     double dimension = 35})
   {
     return Marker(
-      key: ValueKey("location_marker_$index"),
+      key: ValueKey("landmark_marker_$index"),
       width: dimension,
       height: dimension,
       point: LatLng(latitude, longitude),
       child: GestureDetector(
         onTap: onTap,
-        child: CustomIcon.locationMarker(1, locationType),
+        child: CustomIcon.landmarkMarker(1, landmarkType),
       ),
     );
   }
 
+
+  // Multiple Markers (Landmarks & Bikes)
   static Marker bike({
     required double latitude,
     required double longitude,

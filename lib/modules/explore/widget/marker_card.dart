@@ -20,10 +20,10 @@ class MarkerCard extends StatefulWidget {
   final String bikeId;
   final String currentTotalDistance;
   final String currentRideTime;
-  final String locationNameMalay;
-  final String locationNameEnglish;
-  final String locationType;
-  final String address;
+  final String landmarkNameMalay;
+  final String landmarkNameEnglish;
+  final String landmarkType;
+  final String landmarkAddress;
 
   const MarkerCard({
     super.key,
@@ -34,11 +34,11 @@ class MarkerCard extends StatefulWidget {
     this.bikeId = "",
     this.currentTotalDistance = "",
     this.currentRideTime = "",
-    // For location marker cards:
-    this.locationNameMalay = "",
-    this.locationNameEnglish = "",
-    this.locationType = "",
-    this.address = "",
+    // For landmark marker cards:
+    this.landmarkNameMalay = "",
+    this.landmarkNameEnglish = "",
+    this.landmarkType = "",
+    this.landmarkAddress = "",
   });
 
   @override
@@ -78,7 +78,7 @@ class _MarkerCardState extends State<MarkerCard> {
               return _displayRidingBikeContent();
             case MarkerCardContent.warningBike:
               return _displayWarningBikeContent();
-            case MarkerCardContent.location:
+            case MarkerCardContent.landmark:
               return _displayLocationContent();
             default:
               return const SizedBox.shrink();
@@ -261,7 +261,7 @@ class _MarkerCardState extends State<MarkerCard> {
         ),
         (widget.bikeStatus == 'Available')
             ? Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -280,7 +280,7 @@ class _MarkerCardState extends State<MarkerCard> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -299,7 +299,7 @@ class _MarkerCardState extends State<MarkerCard> {
                           },
                         ),
                       ),
-                      const SizedBox(width: 15), // The gap between buttons
+                      const SizedBox(width: 10), // The gap between buttons
                       Expanded(
                         child: CustomRectangleButton(
                           height: 45,
@@ -387,14 +387,14 @@ class _MarkerCardState extends State<MarkerCard> {
     SharedState.isRiding.value = true;
     if(SharedState.cachedMarkers.value.isEmpty) {
       SharedState.cachedMarkers.value.addAll(SharedState.visibleMarkers.value);
-      SharedState.visibleMarkers.value.clear();
-      SharedState.visibleMarkers.value.add(
-        CustomMarker.riding(
-          latitude: parsedLat,
-          longitude: parsedLong,
-        ),
-      );
     }
+    SharedState.visibleMarkers.value.clear();
+    SharedState.visibleMarkers.value.add(
+      CustomMarker.riding(
+        latitude: parsedLat,
+        longitude: parsedLong,
+      ),
+    );
   }
 
 
@@ -732,7 +732,7 @@ class _MarkerCardState extends State<MarkerCard> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
-              child: CustomIcon.locationMarker(60, widget.locationType),
+              child: CustomIcon.landmarkMarker(60, widget.landmarkType),
             ),
             Expanded(
               child: Column(
@@ -747,7 +747,7 @@ class _MarkerCardState extends State<MarkerCard> {
                       controller: _scrollControllerMalay,
                       scrollDirection: Axis.vertical,
                       child: AutoSizeText(
-                        widget.locationNameMalay,
+                        widget.landmarkNameMalay,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: ColorConstant.black),
                         minFontSize: 14,
                       ),
@@ -763,7 +763,7 @@ class _MarkerCardState extends State<MarkerCard> {
                       controller: _scrollControllerEnglish,
                       scrollDirection: Axis.horizontal,
                       child: AutoSizeText(
-                        widget.locationNameEnglish,
+                        widget.landmarkNameEnglish,
                         style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: ColorConstant.black),
                       ),
                     ),
@@ -783,7 +783,7 @@ class _MarkerCardState extends State<MarkerCard> {
               SizedBox(
                 width: 70,
                 child: AutoSizeText(
-                  widget.locationType,
+                  widget.landmarkType,
                   minFontSize: 13,
                   maxFontSize: 14,
                   maxLines: 3,
@@ -807,7 +807,7 @@ class _MarkerCardState extends State<MarkerCard> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Text(
-                      widget.address,
+                      widget.landmarkAddress,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),

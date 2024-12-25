@@ -48,6 +48,7 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
                 mapController: _mapController,
                 allMarkers: SharedState.visibleMarkers,
                 initialCenter: LatLng(selectedLat, selectedLong),
+                initialZoom: MapConstant.focusZoomLevel,
                 enableInteraction: false,
               ),
 
@@ -105,11 +106,11 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
 
               // Location Marker Card
               MarkerCard(
-                markerCardState: MarkerCardContent.location,
-                locationNameMalay: widget.selectedLocation['location_name_malay'],
-                locationNameEnglish: widget.selectedLocation['location_name_english'],
-                locationType: widget.selectedLocation['location_type'],
-                address: widget.selectedLocation['address'],
+                markerCardState: MarkerCardContent.landmark,
+                landmarkNameMalay: widget.selectedLocation['landmark_name_malay'],
+                landmarkNameEnglish: widget.selectedLocation['landmark_name_english'],
+                landmarkType: widget.selectedLocation['landmark_type'],
+                landmarkAddress: widget.selectedLocation['address'],
               ),
 
               // Confirm Button
@@ -153,10 +154,10 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
     double parsedLong = double.parse(widget.selectedLocation['longitude']);
     debugPrint("widget.selectedLocation['longitude']: ${widget.selectedLocation['longitude']}");
     SharedState.visibleMarkers.value.add(
-        CustomMarker.location(
+        CustomMarker.landmark(
             latitude: parsedLat,
             longitude: parsedLong,
-            locationType: widget.selectedLocation['location_type']
+            landmarkType: widget.selectedLocation['landmark_type']
         )
     );
     setState(() {
@@ -175,7 +176,7 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch location: $e')),
+        SnackBar(content: Text('Failed to fetch user location: $e')),
       );
     }
   }
@@ -183,7 +184,7 @@ class _NavConfirmSelectedScreenState extends State<NavConfirmSelectedScreen> {
   Future<bool> getLocationPermission() async {
     bool serviceEnabled;
     LocationPermission permission;
-    // Check location services and permissions
+    // Check device location services and permissions
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       ScaffoldMessenger.of(context).showSnackBar(

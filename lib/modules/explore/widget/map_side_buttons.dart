@@ -135,7 +135,7 @@ class _MapSideButtonsState extends State<MapSideButtons> with TickerProviderStat
     // Define the Tween for each property (latitude, longitude, and zoom)
     final latTween = Tween<double>(begin: widget.mapController.camera.center.latitude, end: target.latitude);
     final lngTween = Tween<double>(begin: widget.mapController.camera.center.longitude, end: target.longitude);
-    final zoomTween = Tween<double>(begin: widget.mapController.camera.zoom, end: MapConstant.zoomLevel); // Adjust zoom if needed
+    final zoomTween = Tween<double>(begin: widget.mapController.camera.zoom, end: MapConstant.focusZoomLevel); // Adjust zoom if needed
 
     // Listen for the animation progress
     controller.addListener(() {

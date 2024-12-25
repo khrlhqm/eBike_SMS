@@ -46,6 +46,7 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
                 mapController: _mapController,
                 allMarkers: SharedState.visibleMarkers,
                 initialCenter: MapConstant.initCenterPoint,
+                initialZoom: MapConstant.initZoomLevel,
                 enableInteraction: true,
               );
             },
@@ -124,11 +125,11 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
           double parsedLat = double.parse(widget.allLocations[i]['latitude']);
           double parsedLong = double.parse(widget.allLocations[i]['longitude']);
           SharedState.visibleMarkers.value.add(
-            CustomMarker.location(
+            CustomMarker.landmark(
               index: i,
               latitude: parsedLat,
               longitude: parsedLong,
-              locationType: widget.allLocations[i]['location_type'],
+              landmarkType: widget.allLocations[i]['landmark_type'],
             ),
           );
         }
@@ -142,7 +143,7 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
   void _fetchCurrentUserLocation() async {
     if(getLocationPermission() == false) return;
 
-    // Fetch initial location
+    // Fetch users's initial location
     try {
       setState(() {
         _isMarkersLoaded = false;
@@ -155,7 +156,7 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
     }
     catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch location: $e')),
+        SnackBar(content: Text('Failed to fetch user location: $e')),
       );
     }
   }

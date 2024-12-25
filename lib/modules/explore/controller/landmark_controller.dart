@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 class LocationController extends ChangeNotifier {
   static Future<Map<String, dynamic>> getLocations() async {
     // Define the API URL
-    final url = Uri.parse("${ApiBase.baseUrl}/get_locations.php"); // TODO: Remember to run the host first
+    final url = Uri.parse("${ApiBase.baseUrl}/get_landmarks.php"); // TODO: Remember to run the host first
     debugPrint("Starting HTTP POST request to URL: $url");
 
     try {

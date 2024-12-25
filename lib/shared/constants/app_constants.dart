@@ -41,12 +41,13 @@ enum MarkerCardContent {
   confirmBike,
   ridingBike,
   warningBike,
-  location
+  landmark
 }
 
 class MapConstant{
   // Map camera zoom
-  static const double zoomLevel = 16.5;
+  static const double focusZoomLevel = 16.5;
+  static const double initZoomLevel = 16;
 
   // This is UTeM's center
   static const LatLng initCenterPoint = LatLng(2.31125, 102.32025);

@@ -35,7 +35,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
 
   @override
   Widget build(BuildContext context) {    // Dimensions of the QR code hole
-    final holeSize = MediaQuery.of(context).size.width * 0.7;
+    final holeSize = MediaQuery.of(context).size.width * 0.55;
 
     return Scaffold(
       body: Stack(
@@ -60,7 +60,6 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                     backgroundBlendMode: BlendMode.dstOut
                   ), // This one will handle background + difference out
                 ),
-
                 Align(
                   alignment: Alignment.center,
                   child: Container(
@@ -137,7 +136,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                 width: holeSize,
                 height: holeSize
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 50),
 
               // Flashlight (torch) button
               IconButton(

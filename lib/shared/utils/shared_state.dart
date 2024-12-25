@@ -9,11 +9,13 @@ class SharedState {
   // Map related
   static ValueNotifier<List<Marker>> visibleMarkers = ValueNotifier([]);
   static ValueNotifier<List<Marker>> cachedMarkers = ValueNotifier([]);
-  static ValueNotifier<List<Marker>> locationMarkers = ValueNotifier([]);
+  static ValueNotifier<List<Marker>> landmarkMarkers = ValueNotifier([]);
   static ValueNotifier<List<Marker>> bikeMarkers = ValueNotifier([]);
   static ValueNotifier<Marker> userMarker = ValueNotifier(CustomMarker.user(latitude: 0, longitude: 0));
   static ValueNotifier<Marker> ridingMarker = ValueNotifier(CustomMarker.riding(latitude: 0, longitude: 0));
+  static ValueNotifier<MapController> mapController = ValueNotifier(MapController());
 
+  // General
   static ValueNotifier<bool> markerCardVisibility = ValueNotifier(false);
   static ValueNotifier<bool> isNavigating = ValueNotifier(false);
   static ValueNotifier<bool> isRiding = ValueNotifier(false);
@@ -32,12 +34,12 @@ class SharedState {
   static ValueNotifier<String> rideStartDatetime = ValueNotifier("1999-12-31 00:00:00"); // In DATETIME format
   static ValueNotifier<String> rideEndDatetime = ValueNotifier("1999-12-31 00:00:00"); // In DATETIME format
 
-  // Location related
-  static ValueNotifier<String> locationNameMalay = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM)");
-  static ValueNotifier<String> locationNameEnglish = ValueNotifier("Faculty of Lorem Ipsum and Information Teknologi");
-  static ValueNotifier<String> locationType = ValueNotifier("Faculty");
-  static ValueNotifier<String> address = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM), Durian Tunggal 12345");
-  static ValueNotifier<double> locationLatitude = ValueNotifier(double.minPositive);
-  static ValueNotifier<double> locationLongitude = ValueNotifier(double.minPositive);
+  // Landmark related
+  static ValueNotifier<String> landmarkNameMalay = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM)");
+  static ValueNotifier<String> landmarkNameEnglish = ValueNotifier("Faculty of Lorem Ipsum and Information Teknologi");
+  static ValueNotifier<String> landmarkType = ValueNotifier("Faculty");
+  static ValueNotifier<String> landmarkAddress = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM), Durian Tunggal 12345");
+  static ValueNotifier<double> landmarkLatitude = ValueNotifier(double.minPositive);
+  static ValueNotifier<double> landmarkLongitude = ValueNotifier(double.minPositive);
 
 }

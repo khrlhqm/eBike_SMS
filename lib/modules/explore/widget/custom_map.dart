@@ -6,12 +6,14 @@ class CustomMap extends StatelessWidget{
   final  mapController;
   final ValueNotifier<List<Marker>> allMarkers;
   final LatLng initialCenter;
+  final double initialZoom;
   final bool enableInteraction;
 
   const CustomMap({super.key,
     required this.mapController,
     required this.allMarkers,
     required this.initialCenter,
+    required this.initialZoom,
     required this.enableInteraction
   });
 
@@ -45,7 +47,7 @@ class CustomMap extends StatelessWidget{
           mapController: mapController,
           options: MapOptions(
             initialCenter: initialCenter,
-            initialZoom: 16.0,
+            initialZoom: initialZoom,
             interactionOptions: InteractionOptions(
                 flags: (enableInteraction) ? InteractiveFlag.all : InteractiveFlag.none
             ),
