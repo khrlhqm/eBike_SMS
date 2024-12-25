@@ -9,7 +9,7 @@ class UserStorageService {
   }
 
   // Retrieve the user ID from secure storage
-  Future<int?> getUserId() async {
+  Future<int?> getUserIdgetUserIdgetUserIdgetUserId() async {
     String? userIdString = await _secureStorage.read(key: 'userId');
     if (userIdString != null) {
       return int.tryParse(userIdString); // Parse the string back to int

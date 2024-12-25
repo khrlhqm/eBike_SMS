@@ -29,10 +29,19 @@ class _MenuScreenState extends State<MenuScreen> {
   late String totalRideTime = ""; // TODO: Fetch from database
   Map<String, dynamic>? _userData;
 
+  final ValueNotifier<String> _totalRideTime = ValueNotifier<String>('');
+  bool _settingsExpanded = false; // Manage dropdown state
+
   @override
   void initState() {
     super.initState();
     _fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    _totalRideTime.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchUserData() async {
@@ -53,8 +62,7 @@ class _MenuScreenState extends State<MenuScreen> {
           if (responseBody['status'] == 'success') {
             // Set the user data
             setState(() {
-              _userData = responseBody[
-                  'data']; // Assuming the user data is in 'data' key
+              _userData = responseBody['data'];
             });
           } else {
             throw Exception(
@@ -67,7 +75,6 @@ class _MenuScreenState extends State<MenuScreen> {
         print("User ID not found in secure storage");
       }
     } catch (e) {
-      // Handle errors (e.g., show a dialog or log)
       print('Error loading user data: $e');
     }
   }
@@ -115,7 +122,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 15),
+          const SizedBox(height: 20),
           // Available Ride Time Section
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -132,6 +139,33 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
 
+                  // Positioned Button ("+ Add More")
+                  Positioned(
+                    top: 135,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TimeTopUpScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "+ Add More",
+                          style: TextStyle(
+                            color: ColorConstant.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   // Positioned Button ("+ Add More")
                   Positioned(
                     top: 135,
@@ -226,6 +260,8 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: IconCard(
                     iconWidget:
                         CustomIcon.bicycle(50, color: ColorConstant.black),
+                    iconWidget:
+                        CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
                     onTap: () {
                       Navigator.push(
@@ -236,7 +272,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 15), // Add spacing between cards
+                const SizedBox(width: 10), // Add spacing between cards
                 Expanded(
                   child: IconCard(
                     iconWidget: CustomIcon.learnColoured(50),
@@ -253,80 +289,93 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 15),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.zero,
               children: [
-                ExpansionMenuTile(
-                    label: "Settings",
-                    iconWidget:
-                        CustomIcon.settings(24, color: ColorConstant.darkBlue),
-                    enableForwardArrow: true,
-                    children: [
-                      // ListTile(
-                      //   title: const Text(
-                      //     "Account",
-                      //     style: TextStyle(
-                      //       color: ColorConstant.grey,
-                      //     ),
-                      //   ),
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //         builder: (context) => const AccountSettingsScreen(),
-                      //       ),
-                      //     );
-                      //   },
-                      // ),
-                      MenuTile(
-                        label: "Policy",
-                        labelColor: ColorConstant.grey,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const PolicyScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                      MenuTile(
-                        label: "About",
-                        labelColor: ColorConstant.grey,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const AboutScreen(),
-                            ),
-                          );
-                        },
-                      ),
-                    ]),
-                MenuTile(
-                  label: "Report",
-                  iconWidget: CustomIcon.report(
-                    22,
+                ExpansionTile(
+                  leading:
+                      CustomIcon.settings(24, color: ColorConstant.darkBlue),
+                  title: const Text(
+                    "Settings",
+                    style: TextStyle(
+                      color: ColorConstant.black,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const UserReportScreen(),
-                      ),
-                    );
+                  trailing: Icon(
+                    _settingsExpanded
+                        ? Icons.expand_more
+                        : Icons.arrow_forward_ios,
+                    color: ColorConstant.darkBlue,
+                    size: 20.0, // Set a consistent size for both icons
+                  ),
+                  onExpansionChanged: (bool expanded) {
+                    setState(() {
+                      _settingsExpanded = expanded;
+                    });
                   },
+                  children: [
+                    // ListTile(
+                    //   title: const Text(
+                    //     "Account",
+                    //     style: TextStyle(
+                    //       color: ColorConstant.grey,
+                    //     ),
+                    //   ),
+                    //   onTap: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //         builder: (context) => const AccountSettingsScreen(),
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
+                    ListTile(
+                      title: const Text(
+                        "Policy",
+                        style: TextStyle(
+                          color: ColorConstant.grey,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const PolicyScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    ListTile(
+                      title: const Text(
+                        "About",
+                        style: TextStyle(
+                          color: ColorConstant.grey,
+                        ),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const AboutScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
-                MenuTile(
-                  label: "Log out",
-                  labelColor: ColorConstant.red,
-                  iconWidget: CustomIcon.logout(22, color: ColorConstant.red),
+                ListTile(
+                  leading: CustomIcon.logout(24, color: ColorConstant.darkBlue),
+                  title: const Text(
+                    "Logout",
+                    style: TextStyle(
+                        color: ColorConstant.black, fontFamily: 'Poppins'),
+                  ),
                   onTap: () {
                     logoutModal(context);
                   },
-                )
+                ),
               ],
             ),
           ),
