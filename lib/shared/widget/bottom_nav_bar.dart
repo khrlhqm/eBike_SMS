@@ -1,10 +1,11 @@
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
-import 'package:ebikesms/modules/qr_scanner/screen/scanner_page.dart';
+import 'package:ebikesms/modules/qr_scanner/screen/qr_scanner.dart';
 import 'package:flutter/material.dart';
 
 import '../constants/app_constants.dart';
 import '../../modules/explore/screen/explore.dart';
 import '../../modules/menu/screen/menu.dart';
+import '../utils/calculation.dart';
 import '../utils/custom_icon.dart';
 import '../utils/shared_state.dart';
 
@@ -35,12 +36,10 @@ class BottomNavBar extends StatefulWidget {
 // User type: Rider
 // User type: Rider
 class _BottomNavBarRider extends State<BottomNavBar> {
-  final PageController _pageController = PageController();
-  final SharedState _sharedState = SharedState();
   late final double _labelSize = 11;
-  late double _navBarWidth;
   late final double _navBarHeight = 60;
-  int _selectedNavIndex = 0;
+  late int _selectedNavIndex = 0;
+  late double _navBarWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -51,50 +50,65 @@ class _BottomNavBarRider extends State<BottomNavBar> {
         child: Stack(
           alignment: Alignment.bottomCenter,
           children: [
-            bottomNavChildrenWidget().elementAt(_selectedNavIndex),
+            // Explore and Menu content (Scanner is accessed in the rounded button)
+            IndexedStack(
+              index: _selectedNavIndex,
+              children: const [
+                ExploreScreen(),
+                SizedBox.shrink(), // This is a dummy widget that exists BELOW middle rounded button
+                MenuScreen()
+              ],
+            ),
+
+            // Marker Card
             ValueListenableBuilder<bool>(
-              valueListenable: _sharedState.markerCardVisibility,
+              valueListenable: SharedState.markerCardVisibility,
               builder: (context, visible, _) {
                 return Visibility(
-                  visible: _sharedState.markerCardVisibility.value,
+                  visible: visible,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      TextButton(
-                        onPressed: (){ _sharedState.markerCardVisibility.value = false; },
-                        child: Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: const BoxDecoration(
-                            color: ColorConstant.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [BoxShadow(
-                              color: ColorConstant.grey,
-                              offset: Offset(0, 0),
-                              blurRadius: 2
-                            )]
-                          ),
-                          child: CustomIcon.close(10, color: ColorConstant.grey)
-                        )
+                      Visibility(
+                        visible: SharedState.markerCardVisibility.value && (SharedState.markerCardContent.value != MarkerCardContent.ridingBike && SharedState.markerCardContent.value != MarkerCardContent.warningBike),
+                        child: TextButton(
+                          onPressed: (){ SharedState.markerCardVisibility.value = false; },
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: const BoxDecoration(
+                              color: ColorConstant.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [BoxShadow(
+                                color: ColorConstant.grey,
+                                offset: Offset(0, 0),
+                                blurRadius: 2
+                              )]
+                            ),
+                            child: CustomIcon.close(10, color: ColorConstant.grey)
+                          )
+                        ),
                       ),
                       MarkerCard(
-                        markerCardState: _sharedState.markerCardState.value,
-                        navigationButtonEnable: _sharedState.navigationButtonEnable.value,
+                        markerCardState: SharedState.markerCardContent.value,
+                        isNavigating: SharedState.isNavigating.value,
                         // Bike marker cards:
-                        bikeStatus: _sharedState.bikeStatus.value,
-                        bikeId: _sharedState.bikeId.value,
-                        currentTotalDistance: _sharedState.currentTotalDistance.value,
-                        currentRideTime: _sharedState.currentRideTime.value,
+                        bikeStatus: SharedState.bikeStatus.value,
+                        bikeId: SharedState.bikeId.value,
+                        currentTotalDistance: SharedState.currentTotalDistance.value,
+                        currentRideTime: SharedState.currentRideTime.value,
                         // Location marker cards:
-                        locationNameMalay: _sharedState.locationNameMalay.value,
-                        locationNameEnglish: _sharedState.locationNameEnglish.value,
-                        locationType: _sharedState.locationType.value,
-                        address: _sharedState.address.value,
+                        locationNameMalay: SharedState.locationNameMalay.value,
+                        locationNameEnglish: SharedState.locationNameEnglish.value,
+                        locationType: SharedState.locationType.value,
+                        address: SharedState.address.value,
                       ),
                     ],
                   )
                 );
               }
             ),
+
+            // The bottom nav bar
             Stack(
               alignment: AlignmentDirectional.bottomCenter,
               fit: StackFit.passthrough,
@@ -114,8 +128,8 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                       BoxShadow(color: ColorConstant.shadow, blurRadius: 4.0, offset: Offset(0, 2)),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0), // To adjust the touch animation corner radius
+                  child: ClipRRect(  // To adjust the touch animation corner radius
+                    borderRadius: BorderRadius.circular(15.0),
                     child: BottomNavigationBar(
                       elevation: 0,
                       backgroundColor: Colors.transparent,
@@ -127,8 +141,8 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                       showUnselectedLabels: true,
                       items: _bottomNavigationBarItems(),
                       onTap: _onItemTapped,
-                    ),
-                  )
+                    )
+                  ),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
@@ -138,15 +152,21 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                     TextButton(
                       style: TextButton.styleFrom(padding: EdgeInsets.zero),
                       onPressed: () {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context)=> ScannerScreen())
+                        if(SharedState.isRiding.value) {
+                          _endRideSession();
+                        }
+                        else {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context)=> QRScannerScreen())
                           );
+                        }
                       },
-                      child: Builder(
-                        builder: (context) {
-                          switch(_sharedState.markerCardState.value) {
-                            case MarkerCardState.ridingBike:
+                      child: ValueListenableBuilder(
+                        valueListenable: SharedState.markerCardContent,
+                        builder: (context, markerCardState, child) {
+                          switch(markerCardState) {
+                            case MarkerCardContent.ridingBike:
                               return Container(
                                   padding: const EdgeInsets.all(15),
                                   decoration: BoxDecoration(
@@ -159,7 +179,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                                   ),
                                   child: CustomIcon.close(24, color: ColorConstant.red)
                               );
-                            case MarkerCardState.warningBike:
+                            case MarkerCardContent.warningBike:
                               return Container(
                                   padding: const EdgeInsets.all(15),
                                   decoration: const BoxDecoration(
@@ -170,13 +190,13 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                               );
                             default:
                               return Container(
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  color: ColorConstant.darkBlue,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: CustomIcon.qrScanner(28, color: ColorConstant.white)
-                            );
+                                  padding: const EdgeInsets.all(15),
+                                  decoration: const BoxDecoration(
+                                    color: ColorConstant.darkBlue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: CustomIcon.qrScanner(28, color: ColorConstant.white)
+                              );
                           }
                         },
                       )
@@ -184,12 +204,13 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                     const SizedBox(height: 3),
                     SizedBox(
                       width: 120,
-                      child: Builder(
-                        builder: (context) {
-                          switch(_sharedState.markerCardState.value) {
-                            case MarkerCardState.warningBike:
+                      child: ValueListenableBuilder(
+                        valueListenable: SharedState.markerCardContent,
+                        builder: (context, markerState, widget) {
+                          switch(markerState) {
+                            case MarkerCardContent.warningBike:
                               return SizedBox(height: _labelSize + 4);
-                            case MarkerCardState.ridingBike:
+                            case MarkerCardContent.ridingBike:
                               return Text(
                                 "End ride",
                                 textAlign: TextAlign.center,
@@ -222,17 +243,16 @@ class _BottomNavBarRider extends State<BottomNavBar> {
       setState(() {
         _selectedNavIndex = index;
         if(index != 0) {
-          temp = _sharedState.markerCardVisibility.value;
-          _sharedState.markerCardVisibility.value = false;
+          temp = SharedState.markerCardVisibility.value;
+          SharedState.markerCardVisibility.value = false;
         }
         else {
-          _sharedState.markerCardVisibility.value = temp;
+          SharedState.markerCardVisibility.value = temp;
         }
       });
-      _pageController.jumpToPage(index);
+      // _pageController.jumpToPage(index);
     }
   }
-
 
   List<BottomNavigationBarItem> _bottomNavigationBarItems() {
     return [
@@ -265,13 +285,26 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     ];
   }
 
-  List<Widget> bottomNavChildrenWidget() {
-    return [
-      ExploreScreen(_sharedState),
-      ScannerScreen(),
-      const MenuScreen(),
-      // MenuScreen(_sharedState), // TODO: Uncomment this and delete the line above
-    ];
+  void _endRideSession() async {
+    SharedState.isRiding.value = false;
+    SharedState.markerCardVisibility.value = false;
+    SharedState.markerCardContent.value = MarkerCardContent.scanBike;
+    SharedState.rideEndDatetime.value = await Calculation.getCurrentDateTime();
+
+    SharedState.visibleMarkers.value.clear();
+    SharedState.visibleMarkers.value.addAll(SharedState.cachedMarkers.value);
+
+    // Reset the timer for current ride time
+    SharedState.timer.value?.cancel();
+    SharedState.currentRideTime.value = "< 1 minute";
+
+    // Reset the timer for current ride time
+    SharedState.timer.value?.cancel();
+    SharedState.currentTotalDistance.value = "< 1 meter";
+
+    // TODO: Reset the total current distance
+
+    // TODO: Post ride and bike data (start and end datetime) to the database
   }
 }
 

@@ -5,6 +5,7 @@ import 'package:ebikesms/modules/explore/widget/map_side_buttons.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../../../../shared/utils/shared_state.dart';
 import '../../../../global_import.dart';
 
 class NavConfirmPinpointScreen extends StatefulWidget {
@@ -20,12 +21,92 @@ class NavConfirmPinpointScreen extends StatefulWidget {
 
 class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
   final MapController _mapController = MapController();
-  final List<Marker> _allMarkers = [];
   final ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(MapConstant.initCenterPoint); // Initialize with default value
   bool _isMarkersLoaded = false;
 
+  @override
+  void initState() {
+    super.initState();
+    SharedState.visibleMarkers.value.clear(); // Clear the markers before reinitializing again (avoid marker duplication)
+    _buildLocationMarkers();
+    _fetchCurrentUserLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          // Custom map display
+          ValueListenableBuilder<LatLng>(
+            valueListenable: _currentUserLatLng, // Listen to the ValueNotifier
+            builder: (context, latlng, widget) {
+              return CustomMap(
+                mapController: _mapController,
+                allMarkers: SharedState.visibleMarkers,
+                initialCenter: MapConstant.initCenterPoint,
+                enableInteraction: true,
+              );
+            },
+          ),
+
+          // Back button
+          const Expanded(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Padding(
+                          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
+                          child: CustomCircularBackButton()
+                      ),
+                    ],
+                  ),
+                ],
+              )
+          ),
+
+          // Map Side Buttons
+          MapSideButtons(
+              mapController: _mapController,
+              locationToPinpoint: _currentUserLatLng.value,
+              showGuideButton: false
+          ),
+
+          // Markers on the map (using the same
+          _displayPinpointOrLoading(_isMarkersLoaded),
+
+          // Confirm button
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
+                child: CustomRectangleButton(
+                  label: "Confirm",
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context)=> NavRouteScreen(
+                          startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
+                          endWaypoint: _mapController.camera.center
+                        )
+                      )
+                    );
+                  },
+                )
+              )
+            ],
+          ),
+      ])
+    );
+  }
+
   void _buildUserMarker() {
-    _allMarkers.add(
+    SharedState.visibleMarkers.value.add(
       CustomMarker.user(
         latitude: _currentUserLatLng.value.latitude,
         longitude: _currentUserLatLng.value.longitude,
@@ -42,8 +123,9 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
         if (widget.allLocations[i]['latitude'] != null && widget.allLocations[i]['longitude'] != null) {
           double parsedLat = double.parse(widget.allLocations[i]['latitude']);
           double parsedLong = double.parse(widget.allLocations[i]['longitude']);
-          _allMarkers.add(
+          SharedState.visibleMarkers.value.add(
             CustomMarker.location(
+              index: i,
               latitude: parsedLat,
               longitude: parsedLong,
               locationType: widget.allLocations[i]['location_type'],
@@ -120,10 +202,10 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
       _currentUserLatLng.value = currentLatLng;
       setState(() {
         // Remove the old User marker
-        _allMarkers.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
+        SharedState.visibleMarkers.value.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
 
         // Add the updated User marker
-        _allMarkers.add(
+        SharedState.visibleMarkers.value.add(
             CustomMarker.user(
                 latitude: _currentUserLatLng.value.latitude,
                 longitude: _currentUserLatLng.value.longitude
@@ -160,86 +242,6 @@ class _NavConfirmPinpointScreenState extends State<NavConfirmPinpointScreen> {
           ),
           child: const LoadingAnimation(dimension: 30),
         )
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _buildLocationMarkers();
-    _fetchCurrentUserLocation();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        alignment: Alignment.centerRight,
-        children: [
-          // Custom map display
-          ValueListenableBuilder<LatLng>(
-            valueListenable: _currentUserLatLng, // Listen to the ValueNotifier
-            builder: (context, latlng, widget) {
-              return CustomMap(
-                mapController: _mapController,
-                allMarkers: _allMarkers,
-                initialCenter: MapConstant.initCenterPoint,
-                enableInteraction: true,
-              );
-            },
-          ),
-
-          // Back button
-          const Expanded(
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Padding(
-                          padding: EdgeInsets.symmetric(vertical: 50, horizontal: 10),
-                          child: CustomCircularBackButton()
-                      ),
-                    ],
-                  ),
-                ],
-              )
-          ),
-
-          // Map Side Buttons
-          MapSideButtons(
-              mapController: _mapController,
-              currentUserLocation: _currentUserLatLng.value,
-              showGuideButton: false
-          ),
-
-          // Markers on the map (using the same
-          _displayPinpointOrLoading(_isMarkersLoaded),
-
-          // Confirm button
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Container(
-                margin: const EdgeInsets.fromLTRB(40, 10, 40, 30),
-                child: CustomRectangleButton(
-                  label: "Confirm",
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context)=> NavRouteScreen(
-                          startWaypoint: LatLng(_currentUserLatLng.value.latitude, _currentUserLatLng.value.longitude),
-                          endWaypoint: _mapController.camera.center
-                        )
-                      )
-                    );
-                  },
-                )
-              )
-            ],
-          ),
-      ])
     );
   }
 }

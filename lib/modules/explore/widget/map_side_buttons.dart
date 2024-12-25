@@ -5,13 +5,13 @@ import '../../learn/screen/learn.dart';
 
 class MapSideButtons extends StatefulWidget {
   final MapController mapController;
-  final LatLng currentUserLocation;
+  final LatLng locationToPinpoint;
   final bool showGuideButton;
 
   const MapSideButtons({
     super.key,
     required this.mapController,
-    required this.currentUserLocation,
+    required this.locationToPinpoint,
     required this.showGuideButton,
   });
 
@@ -19,7 +19,7 @@ class MapSideButtons extends StatefulWidget {
   State<MapSideButtons> createState() => _MapSideButtonsState();
 }
 
-class _MapSideButtonsState extends State<MapSideButtons> {
+class _MapSideButtonsState extends State<MapSideButtons> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -30,9 +30,7 @@ class _MapSideButtonsState extends State<MapSideButtons> {
           // Align Map Rotation Button
           ElevatedButton(
             onPressed: () {
-              setState(() {
-                widget.mapController.rotate(0.0);
-              });
+              animateRotation(0.0);
             },
             style: ElevatedButton.styleFrom(
               shape: const CircleBorder(),
@@ -51,13 +49,7 @@ class _MapSideButtonsState extends State<MapSideButtons> {
           // Pinpoint User Button
           ElevatedButton(
               onPressed: () {
-                setState(() {
-                  widget.mapController.move(
-                      LatLng(
-                          widget.currentUserLocation.latitude ?? MapConstant.initCenterPoint.latitude,
-                          widget.currentUserLocation.longitude ?? MapConstant.initCenterPoint.longitude
-                      ), 16.0);
-                });
+                animatePinpoint(widget.locationToPinpoint);
               },
               style: ElevatedButton.styleFrom(
                 shape: const CircleBorder(),
@@ -92,8 +84,8 @@ class _MapSideButtonsState extends State<MapSideButtons> {
                 padding: EdgeInsets.zero,
                 backgroundColor: ColorConstant.white,
                 shadowColor: ColorConstant.lightGrey,
-                elevation: 5,
-                minimumSize: const Size(54, 55), // Directly set size here
+                elevation: 2,
+                minimumSize: const Size(52, 53), // Directly set size here
               ),
               child: CustomIcon.learnColoured(30),
             ),
@@ -101,6 +93,64 @@ class _MapSideButtonsState extends State<MapSideButtons> {
         ],
       ),
     );
+  }
+
+  void animateRotation(double targetRotation) {
+    const duration = Duration(milliseconds: 300); // Duration for animation (adjust as needed)
+
+    // Create an AnimationController with the current vsync (usually this in StatefulWidget)
+    final controller = AnimationController(vsync: this, duration: duration);
+
+    // Define a CurvedAnimation for smooth easing
+    final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+
+    // Get the current rotation of the map
+    final currentRotation = widget.mapController.camera.rotation;
+
+    // Define a Tween to animate the rotation from current rotation to target rotation
+    final rotationTween = Tween<double>(begin: currentRotation, end: targetRotation);
+
+    // Add a listener to update the map's rotation as the animation progresses
+    controller.addListener(() {
+      final rotation = rotationTween.evaluate(curve);
+      widget.mapController.rotate(rotation);  // Update the map's rotation
+    });
+
+    // Start the animation and dispose of the controller once done
+    controller.forward().whenComplete(() {
+      controller.dispose();
+    });
+  }
+
+  void animatePinpoint(LatLng target) {
+    // Set the duration of the animation
+    const duration = Duration(milliseconds: 500); // 1 second for a smoother transition
+
+    // Create an AnimationController
+    final controller = AnimationController(vsync: this, duration: duration);
+
+    // Add a CurvedAnimation to apply a smooth curve to the animation
+    final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+
+    // Define the Tween for each property (latitude, longitude, and zoom)
+    final latTween = Tween<double>(begin: widget.mapController.camera.center.latitude, end: target.latitude);
+    final lngTween = Tween<double>(begin: widget.mapController.camera.center.longitude, end: target.longitude);
+    final zoomTween = Tween<double>(begin: widget.mapController.camera.zoom, end: MapConstant.zoomLevel); // Adjust zoom if needed
+
+    // Listen for the animation progress
+    controller.addListener(() {
+      final lat = latTween.evaluate(curve);
+      final lng = lngTween.evaluate(curve);
+      final zoomLevel = zoomTween.evaluate(curve);
+
+      // Move the map to the animated position and zoom level
+      widget.mapController.move(LatLng(lat, lng), zoomLevel);
+    });
+
+    // Start the animation and dispose of the controller once it's done
+    controller.forward().whenComplete(() {
+      controller.dispose();
+    });
   }
 }
 

@@ -141,7 +141,7 @@ class _TimeTopUpProcessScreenState extends State<TimeTopUpProcessScreen> {
     setState(() {
       transactionDate = dateTime;
       transactionTotal = widget.keyedTotal;
-      obtainedRideTime = Calculation.countRideTimeMinutes(transactionTotal);
+      obtainedRideTime = Calculation.convertMoneyToMinutes(transactionTotal);
       userId = widget.userId; // Get from login
     });
   }
