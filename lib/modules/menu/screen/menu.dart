@@ -29,25 +29,17 @@ class _MenuScreenState extends State<MenuScreen> {
   late String totalRideTime = ""; // TODO: Fetch from database
   Map<String, dynamic>? _userData;
 
-  final ValueNotifier<String> _totalRideTime = ValueNotifier<String>('');
-  bool _settingsExpanded = false; // Manage dropdown state
-
   @override
   void initState() {
     super.initState();
     _fetchUserData();
   }
 
-  @override
-  void dispose() {
-    _totalRideTime.dispose();
-    super.dispose();
-  }
-
   Future<void> _fetchUserData() async {
     try {
       // Retrieve the user ID from secure storage
       String? userId = await _secureStorage.read(key: 'userId');
+      print(userId);
 
       if (userId != null) {
         // Fetch user data from the API using the user_id
@@ -56,17 +48,20 @@ class _MenuScreenState extends State<MenuScreen> {
         );
 
         if (response.statusCode == 200) {
-          // Parse the user data
-          final responseBody = json.decode(response.body);
+          print('Response Body: ${response.body}'); // Print the raw response
+          try {
+            final responseBody = json.decode(response.body);
 
-          if (responseBody['status'] == 'success') {
-            // Set the user data
-            setState(() {
-              _userData = responseBody['data'];
-            });
-          } else {
-            throw Exception(
-                'Failed to fetch user data: ${responseBody['message']}');
+            if (responseBody['status'] == 'success') {
+              setState(() {
+                _userData = responseBody['data'];
+              });
+            } else {
+              throw Exception(
+                  'Failed to fetch user data: ${responseBody['message']}');
+            }
+          } catch (e) {
+            print('Error decoding JSON: $e');
           }
         } else {
           throw Exception('Failed to load user data');
@@ -75,6 +70,7 @@ class _MenuScreenState extends State<MenuScreen> {
         print("User ID not found in secure storage");
       }
     } catch (e) {
+      // Handle errors (e.g., show a dialog or log)
       print('Error loading user data: $e');
     }
   }
@@ -114,7 +110,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       style: const TextStyle(color: ColorConstant.grey),
                     ),
                     Text(
-                      _userData?['phone_number'] ?? '+06 ...',
+                      _userData?['user_email'] ?? 'XXXX@gmail.cm',
                       style: const TextStyle(color: ColorConstant.grey),
                     ),
                   ],
@@ -122,7 +118,7 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 15),
           // Available Ride Time Section
           Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -139,33 +135,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                   ),
 
-                  // Positioned Button ("+ Add More")
-                  Positioned(
-                    top: 135,
-                    left: 0,
-                    right: 0,
-                    child: Center(
-                      child: TextButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const TimeTopUpScreen(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "+ Add More",
-                          style: TextStyle(
-                            color: ColorConstant.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Poppins',
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
                   // Positioned Button ("+ Add More")
                   Positioned(
                     top: 135,
@@ -230,7 +199,7 @@ class _MenuScreenState extends State<MenuScreen> {
                           FittedBox(
                             fit: BoxFit.scaleDown,
                             child: AutoSizeText(
-                              _userData?['obtained_ride_time'] ??
+                              _userData?['available_ride_time'] ??
                                   'Empty Balance.', // Use the phone number or default value
                               maxFontSize: 28,
                               minFontSize: 24,
@@ -260,8 +229,6 @@ class _MenuScreenState extends State<MenuScreen> {
                   child: IconCard(
                     iconWidget:
                         CustomIcon.bicycle(50, color: ColorConstant.black),
-                    iconWidget:
-                        CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
                     onTap: () {
                       Navigator.push(
@@ -272,7 +239,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 10), // Add spacing between cards
+                const SizedBox(width: 15), // Add spacing between cards
                 Expanded(
                   child: IconCard(
                     iconWidget: CustomIcon.learnColoured(50),
@@ -289,93 +256,80 @@ class _MenuScreenState extends State<MenuScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 15),
           Expanded(
             child: ListView(
+              padding: EdgeInsets.zero,
               children: [
-                ExpansionTile(
-                  leading:
-                      CustomIcon.settings(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Settings",
-                    style: TextStyle(
-                      color: ColorConstant.black,
-                      fontFamily: 'Poppins',
-                    ),
+                ExpansionMenuTile(
+                    label: "Settings",
+                    iconWidget:
+                        CustomIcon.settings(24, color: ColorConstant.darkBlue),
+                    enableForwardArrow: true,
+                    children: [
+                      // ListTile(
+                      //   title: const Text(
+                      //     "Account",
+                      //     style: TextStyle(
+                      //       color: ColorConstant.grey,
+                      //     ),
+                      //   ),
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //         builder: (context) => const AccountSettingsScreen(),
+                      //       ),
+                      //     );
+                      //   },
+                      // ),
+                      MenuTile(
+                        label: "Policy",
+                        labelColor: ColorConstant.grey,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const PolicyScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      MenuTile(
+                        label: "About",
+                        labelColor: ColorConstant.grey,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const AboutScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                    ]),
+                MenuTile(
+                  label: "Report",
+                  iconWidget: CustomIcon.report(
+                    22,
                   ),
-                  trailing: Icon(
-                    _settingsExpanded
-                        ? Icons.expand_more
-                        : Icons.arrow_forward_ios,
-                    color: ColorConstant.darkBlue,
-                    size: 20.0, // Set a consistent size for both icons
-                  ),
-                  onExpansionChanged: (bool expanded) {
-                    setState(() {
-                      _settingsExpanded = expanded;
-                    });
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const UserReportScreen(),
+                      ),
+                    );
                   },
-                  children: [
-                    // ListTile(
-                    //   title: const Text(
-                    //     "Account",
-                    //     style: TextStyle(
-                    //       color: ColorConstant.grey,
-                    //     ),
-                    //   ),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => const AccountSettingsScreen(),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    ListTile(
-                      title: const Text(
-                        "Policy",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PolicyScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        "About",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
                 ),
-                ListTile(
-                  leading: CustomIcon.logout(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: ColorConstant.black, fontFamily: 'Poppins'),
-                  ),
+                MenuTile(
+                  label: "Log out",
+                  labelColor: ColorConstant.red,
+                  iconWidget: CustomIcon.logout(22, color: ColorConstant.red),
                   onTap: () {
                     logoutModal(context);
                   },
-                ),
+                )
               ],
             ),
           ),
