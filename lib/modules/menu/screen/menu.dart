@@ -129,15 +129,43 @@ class _MenuScreenState extends State<MenuScreen> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
+                  // Bottom larger box
                   Container(
                     width: double.infinity,
                     height: 185,
                     decoration: BoxDecoration(
-                      color: ColorConstant.shadowdarkBlue,
+                      color: ColorConstant.shadowdarkBlue, // Darker blue color
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
 
+                  // Positioned Button ("+ Add More")
+                  Positioned(
+                    top: 135,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const TimeTopUpScreen(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          "+ Add More",
+                          style: TextStyle(
+                            color: ColorConstant.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Poppins',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   // Positioned Button ("+ Add More")
                   Positioned(
                     top: 135,
@@ -197,21 +225,25 @@ class _MenuScreenState extends State<MenuScreen> {
                               ),
                             ],
                           ),
-                          ValueListenableBuilder<String>(
-                            valueListenable: _totalRideTime,
-                            builder: (context, value, child) {
-                              return Text(
-                                value.isNotEmpty ? value : 'Empty Balance',
-                                style: const TextStyle(
-                                  fontFamily: 'Poppins',
-                                  letterSpacing: 1.0,
-                                  color: ColorConstant.white,
-                                  fontSize: 28,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              );
-                            },
+                          const Spacer(),
+                          // Ride Time Value
+                          FittedBox(
+                            fit: BoxFit.scaleDown,
+                            child: AutoSizeText(
+                              _userData?['obtained_ride_time'] ??
+                                  'Empty Balance.', // Use the phone number or default value
+                              maxFontSize: 28,
+                              minFontSize: 24,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                letterSpacing: 1.0,
+                                fontWeight: FontWeight.bold,
+                                color: ColorConstant.white,
+                              ),
+                            ),
                           ),
+                          const Spacer(),
                         ],
                       ),
                     ),
@@ -226,6 +258,8 @@ class _MenuScreenState extends State<MenuScreen> {
               children: [
                 Expanded(
                   child: IconCard(
+                    iconWidget:
+                        CustomIcon.bicycle(50, color: ColorConstant.black),
                     iconWidget:
                         CustomIcon.bicycle(50, color: ColorConstant.black),
                     label: 'Ride History',
