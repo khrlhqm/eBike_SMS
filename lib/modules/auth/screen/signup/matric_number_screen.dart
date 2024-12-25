@@ -13,7 +13,6 @@ class _MatricPasswordScreenState extends State<MatricPasswordScreen> {
   final TextEditingController _matricNumber = TextEditingController();
   final TextEditingController _password = TextEditingController();
   final TextEditingController _rePassword = TextEditingController();
-
   
 
   bool _isPasswordVisible = false;

@@ -1,6 +1,10 @@
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
 import 'package:ebikesms/modules/qr_scanner/screen/qr_scanner.dart';
 import 'package:flutter/material.dart';
+import 'package:ebikesms/modules/admin/report/screen/incident_report.dart';
+import 'package:ebikesms/modules/admin/revenue/screen/revenue.dart';
+import 'package:ebikesms/modules/admin/menu.dart';
+
 
 import '../constants/app_constants.dart';
 import '../../modules/explore/screen/explore.dart';
@@ -12,7 +16,7 @@ import '../utils/shared_state.dart';
 
 class BottomNavBar extends StatefulWidget {
   final int userId;
-  final String userType;
+  final int userType;
 
   const BottomNavBar({
     super.key,
@@ -313,8 +317,117 @@ class _BottomNavBarRider extends State<BottomNavBar> {
 // User type: Admin
 // User type: Admin
 class _BottomNavBarAdmin extends State<BottomNavBar> {
+  final PageController _pageController = PageController();
+  late final double _labelSize = 11;
+  late double _navBarWidth;
+  late final double _navBarHeight = 60;
+  int _selectedNavIndex = 0;
+
   @override
   Widget build(BuildContext context) {
-    throw UnimplementedError(); // TODO: implement build
+    _navBarWidth = MediaQuery.of(context).size.width * 0.7;
+    return Scaffold(
+      body: Center(
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            _bottomNavChildrenWidget().elementAt(_selectedNavIndex),
+            Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              fit: StackFit.passthrough,
+              children: [
+                Container(
+                  height: _navBarHeight,
+                  width: _navBarWidth,
+                  constraints: BoxConstraints(
+                    maxWidth: _navBarWidth,
+                    minWidth: 200,
+                  ),
+                  margin: const EdgeInsets.only(bottom: 25),
+                  decoration: BoxDecoration(
+                    color: ColorConstant.white,
+                    borderRadius: BorderRadius.circular(15.0),
+                    boxShadow: const [
+                      BoxShadow(color: ColorConstant.shadow, blurRadius: 4.0, offset: Offset(0, 2)),
+                    ],
+                  ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(15.0),
+                    child: BottomNavigationBar(
+                      elevation: 0,
+                      backgroundColor: Colors.transparent,
+                      selectedItemColor: ColorConstant.darkBlue,
+                      selectedLabelStyle: TextStyle(fontSize: _labelSize, fontWeight: FontWeight.w600),
+                      unselectedItemColor: ColorConstant.black,
+                      unselectedLabelStyle: TextStyle(fontSize: _labelSize, fontWeight: FontWeight.normal),
+                      currentIndex: _selectedNavIndex,
+                      showUnselectedLabels: true,
+                      items: _bottomNavigationBarItems(),
+                      onTap: _onItemTapped,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _onItemTapped(int index) {
+    if (index != _selectedNavIndex) {
+      setState(() {
+        _selectedNavIndex = index;
+      });
+      _pageController.jumpToPage(index);
+    }
+  }
+
+  List<BottomNavigationBarItem> _bottomNavigationBarItems() {
+    return [
+      BottomNavigationBarItem(
+        label: 'Statistic',
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.statistic(22, color: ColorConstant.black),
+        ),
+        activeIcon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.statistic(22, color: ColorConstant.darkBlue),
+        ),
+      ),
+      BottomNavigationBarItem(
+        label: 'Report',
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.warning(22, color: ColorConstant.black),
+        ),
+        activeIcon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.warning(22, color: ColorConstant.darkBlue),
+        ),
+      ),
+      BottomNavigationBarItem(
+        label: 'Menu',
+        icon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.menu(23, color: ColorConstant.black),
+        ),
+        activeIcon: Padding(
+          padding: const EdgeInsets.only(bottom: 3),
+          child: CustomIcon.menu(23, color: ColorConstant.darkBlue),
+        ),
+      ),
+    ];
+  }
+
+  List<Widget> _bottomNavChildrenWidget() {
+    return [
+      RevenueScreen(), // Replace with your Statistic screen
+      IncidentReportScreen(),    // Replace with your Report screen
+      MenuScreen(),      // Replace with your Menu screen
+    ];
   }
 }
+
