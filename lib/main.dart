@@ -1,4 +1,3 @@
-import 'package:ebikesms/modules/auth/screen/signup.dart';
 import 'package:ebikesms/modules/explore/sub-screen/navigation/screen/nav_destination.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/menu/screen/menu.dart';
