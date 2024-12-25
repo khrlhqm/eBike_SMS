@@ -13,6 +13,18 @@ class CustomIcon{
     );
   }
 
+  static Widget statistic(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/statistic.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
+
   static Widget bicycle(
     double dimension,
       {Color color = Colors.white}
