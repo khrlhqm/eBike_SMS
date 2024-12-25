@@ -26,9 +26,8 @@ class _NavRouteScreenState extends State<NavRouteScreen> {
     _fetchRouteFromOSRM();
   }
 
-  /// Fetch route geometry from OSRM API
   Future<void> _fetchRouteFromOSRM() async {
-    final String osrmUrl = 'https://router.project-osrm.org/route/v1/driving/'
+    final String osrmUrl = 'https://router.project-osrm.org/route/v1/bike/'
         '${widget.startWaypoint.longitude},${widget.startWaypoint.latitude};'
         '${widget.endWaypoint.longitude},${widget.endWaypoint.latitude}'
         '?overview=full&geometries=polyline';

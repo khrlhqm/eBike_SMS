@@ -25,13 +25,19 @@ class _MenuScreenState extends State<MenuScreen> {
   final FlutterSecureStorage _secureStorage = const FlutterSecureStorage();
   Map<String, dynamic>? _userData;
 
-  late String totalRideTime = ""; // TODO: Fetch from database
+  final ValueNotifier<String> _totalRideTime = ValueNotifier<String>('');
   bool _settingsExpanded = false; // Manage dropdown state
 
   @override
   void initState() {
     super.initState();
     _fetchUserData();
+  }
+
+  @override
+  void dispose() {
+    _totalRideTime.dispose();
+    super.dispose();
   }
 
   Future<void> _fetchUserData() async {
@@ -52,8 +58,8 @@ class _MenuScreenState extends State<MenuScreen> {
           if (responseBody['status'] == 'success') {
             // Set the user data
             setState(() {
-              _userData = responseBody[
-                  'data']; // Assuming the user data is in 'data' key
+              _userData = responseBody['data'];
+              _totalRideTime.value = responseBody['obtained_ride_time'] ?? '0';
             });
           } else {
             throw Exception(
@@ -66,7 +72,6 @@ class _MenuScreenState extends State<MenuScreen> {
         print("User ID not found in secure storage");
       }
     } catch (e) {
-      // Handle errors (e.g., show a dialog or log)
       print('Error loading user data: $e');
     }
   }
@@ -112,18 +117,16 @@ class _MenuScreenState extends State<MenuScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          // Available Ride Time Section
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Stack(
               clipBehavior: Clip.none,
               children: [
-                // Bottom larger box
                 Container(
                   width: double.infinity,
                   height: 195,
                   decoration: BoxDecoration(
-                    color: ColorConstant.shadowdarkBlue, // Darker blue color
+                    color: ColorConstant.shadowdarkBlue,
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
@@ -185,149 +188,24 @@ class _MenuScreenState extends State<MenuScreen> {
                             ),
                           ],
                         ),
-                        Text(
-                          (totalRideTime.isEmpty)
-                              ? "Empty Balance"
-                              : totalRideTime,
-                          style: const TextStyle(
-                            fontFamily: 'Poppins',
-                            letterSpacing: 1.0,
-                            color: ColorConstant.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                          ),
+                        ValueListenableBuilder<String>(
+                          valueListenable: _totalRideTime,
+                          builder: (context, value, child) {
+                            return Text(
+                              value.isNotEmpty ? value : 'Empty Balance',
+                              style: const TextStyle(
+                                fontFamily: 'Poppins',
+                                letterSpacing: 1.0,
+                                color: ColorConstant.white,
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(width: 10),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: IconCard(
-                    iconWidget:
-                        CustomIcon.bicycle(50, color: ColorConstant.black),
-                    label: 'Ride History',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const RideHistoryScreen()),
-                      );
-                    },
-                  ),
-                ),
-                const SizedBox(width: 10), // Add spacing between cards
-                Expanded(
-                  child: IconCard(
-                    iconWidget: CustomIcon.learnColoured(50),
-                    label: 'Learn how to use',
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LearnScreen()),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: ListView(
-              children: [
-                ExpansionTile(
-                  leading:
-                      CustomIcon.settings(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Settings",
-                    style: TextStyle(
-                      color: ColorConstant.black,
-                      fontFamily: 'Poppins',
-                    ),
-                  ),
-                  trailing: Icon(
-                    _settingsExpanded
-                        ? Icons.expand_more
-                        : Icons.arrow_forward_ios,
-                    color: ColorConstant.darkBlue,
-                    size: 20.0, // Set a consistent size for both icons
-                  ),
-                  onExpansionChanged: (bool expanded) {
-                    setState(() {
-                      _settingsExpanded = expanded;
-                    });
-                  },
-                  children: [
-                    // ListTile(
-                    //   title: const Text(
-                    //     "Account",
-                    //     style: TextStyle(
-                    //       color: ColorConstant.grey,
-                    //     ),
-                    //   ),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //         builder: (context) => const AccountSettingsScreen(),
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    ListTile(
-                      title: const Text(
-                        "Policy",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const PolicyScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        "About",
-                        style: TextStyle(
-                          color: ColorConstant.grey,
-                        ),
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const AboutScreen(),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-                ListTile(
-                  leading: CustomIcon.logout(24, color: ColorConstant.darkBlue),
-                  title: const Text(
-                    "Logout",
-                    style: TextStyle(
-                        color: ColorConstant.black, fontFamily: 'Poppins'),
-                  ),
-                  onTap: () {
-                    logoutModal(context);
-                  },
                 ),
               ],
             ),

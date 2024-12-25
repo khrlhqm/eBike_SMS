@@ -5,20 +5,18 @@ import 'package:ebikesms/modules/menu/sub-menu/ride_history/screen/ride_history.
 import 'package:ebikesms/modules/menu/sub-menu/settings/screen/settings.dart';
 import 'package:ebikesms/modules/menu/sub-menu/time_top_up/screen/time_top_up.dart';
 import 'package:ebikesms/shared/widget/bottom_nav_bar.dart';
-import 'package:flutter/material.dart';
 import 'modules/auth/screen/login.dart'; // Adjust the path as needed
 import 'modules/auth/controller/user_storage_service.dart'; // Adjust the path as needed
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart'; // Add dependency in pubspec.yaml
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   const FlutterSecureStorage secureStorage = FlutterSecureStorage();
-  
+
   String? userId = await secureStorage.read(key: 'userId');
-  
+
   runApp(MyApp(isLoggedIn: userId != null));
 }
 
@@ -43,10 +41,9 @@ class MyApp extends StatelessWidget {
           displayMedium: TextStyle(fontFamily: 'Poppins'),
         ),
       ),
-      home: SignupScreen(pageController: pageController),  // Pass the PageController here
+      home: LoginScreen(),
+      //home: SignupScreen(
+      //pageController: pageController), // Pass the PageController here
     );
   }
 }
-
-
-
