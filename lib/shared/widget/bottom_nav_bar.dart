@@ -1,5 +1,6 @@
+import 'package:ebikesms/modules/explore/widget/end_ride_modal.dart';
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
-import 'package:ebikesms/modules/qr_scanner/screen/scanner_page.dart';
+import 'package:ebikesms/modules/qr_scanner/screen/qr_scanner.dart';
 import 'package:flutter/material.dart';
 import 'package:ebikesms/modules/admin/report/screen/report.dart';
 import 'package:ebikesms/modules/admin/revenue/screen/revenue.dart';
@@ -9,8 +10,10 @@ import 'package:ebikesms/modules/admin/menu.dart';
 import '../constants/app_constants.dart';
 import '../../modules/explore/screen/explore.dart';
 import '../../modules/menu/screen/menu.dart';
+import '../utils/calculation.dart';
 import '../utils/custom_icon.dart';
 import '../utils/shared_state.dart';
+
 
 class BottomNavBar extends StatefulWidget {
   final int userId;
@@ -24,25 +27,24 @@ class BottomNavBar extends StatefulWidget {
 
   @override
   State<BottomNavBar> createState() {
-    if (userType == 'Rider') {
-      return _BottomNavBarRider(); // If it's 'rider', show rider state
-    } else {
-      // If it's 'admin', show admin state
+    if(userType == 'Rider') {
+      return _BottomNavBarRider();  // If it's 'rider', show rider state
+    }
+    else { // If it's 'admin', show admin state
       return _BottomNavBarAdmin();
     }
   }
 }
 
+
 // User type: Rider
 // User type: Rider
 // User type: Rider
 class _BottomNavBarRider extends State<BottomNavBar> {
-  final PageController _pageController = PageController();
-  final SharedState _sharedState = SharedState();
   late final double _labelSize = 11;
-  late double _navBarWidth;
   late final double _navBarHeight = 60;
-  int _selectedNavIndex = 0;
+  late int _selectedNavIndex = 0;
+  late double _navBarWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -50,61 +52,73 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     _navBarWidth = MediaQuery.of(context).size.width * 0.7;
     return Scaffold(
       body: Center(
-          child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          bottomNavChildrenWidget().elementAt(_selectedNavIndex),
-          ValueListenableBuilder<bool>(
-              valueListenable: _sharedState.markerCardVisibility,
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            // Explore and Menu content (Scanner is accessed in the rounded button)
+            IndexedStack(
+              index: _selectedNavIndex,
+              children: const [
+                ExploreScreen(),
+                SizedBox.shrink(), // This is a dummy widget that exists BELOW middle rounded button
+                MenuScreen()
+              ],
+            ),
+
+            // Marker Card
+            ValueListenableBuilder<bool>(
+              valueListenable: SharedState.markerCardVisibility,
               builder: (context, visible, _) {
                 return Visibility(
-                    visible: _sharedState.markerCardVisibility.value,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              _sharedState.markerCardVisibility.value = false;
-                            },
-                            child: Container(
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                    color: ColorConstant.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: ColorConstant.grey,
-                                          offset: Offset(0, 0),
-                                          blurRadius: 2)
-                                    ]),
-                                child: CustomIcon.close(10,
-                                    color: ColorConstant.grey))),
-                        MarkerCard(
-                          markerCardState: _sharedState.markerCardState.value,
-                          navigationButtonEnable:
-                              _sharedState.navigationButtonEnable.value,
-                          // Bike marker cards:
-                          bikeStatus: _sharedState.bikeStatus.value,
-                          bikeId: _sharedState.bikeId.value,
-                          currentTotalDistance:
-                              _sharedState.currentTotalDistance.value,
-                          currentRideTime: _sharedState.currentRideTime.value,
-                          // Location marker cards:
-                          locationNameMalay:
-                              _sharedState.locationNameMalay.value,
-                          locationNameEnglish:
-                              _sharedState.locationNameEnglish.value,
-                          locationType: _sharedState.locationType.value,
-                          address: _sharedState.address.value,
+                  visible: visible,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Visibility(
+                        visible: SharedState.markerCardVisibility.value && (SharedState.markerCardContent.value != MarkerCardContent.ridingBike && SharedState.markerCardContent.value != MarkerCardContent.warningBike),
+                        child: TextButton(
+                          onPressed: (){ SharedState.markerCardVisibility.value = false; },
+                          child: Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: const BoxDecoration(
+                              color: ColorConstant.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [BoxShadow(
+                                color: ColorConstant.grey,
+                                offset: Offset(0, 0),
+                                blurRadius: 2
+                              )]
+                            ),
+                            child: CustomIcon.close(10, color: ColorConstant.grey)
+                          )
                         ),
-                      ],
-                    ));
-              }),
-          Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            fit: StackFit.passthrough,
-            children: [
-              Container(
+                      ),
+                      MarkerCard(
+                        markerCardState: SharedState.markerCardContent.value,
+                        isNavigating: SharedState.isNavigating.value,
+                        // Bike marker cards:
+                        bikeStatus: SharedState.bikeStatus.value,
+                        bikeId: SharedState.bikeId.value,
+                        currentTotalDistance: SharedState.currentTotalDistance.value,
+                        currentRideTime: SharedState.currentRideTime.value,
+                        // Location marker cards:
+                        landmarkNameMalay: SharedState.landmarkNameMalay.value,
+                        landmarkNameEnglish: SharedState.landmarkNameEnglish.value,
+                        landmarkType: SharedState.landmarkType.value,
+                        landmarkAddress: SharedState.landmarkAddress.value,
+                      ),
+                    ],
+                  )
+                );
+              }
+            ),
+
+            // The bottom nav bar
+            Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              fit: StackFit.passthrough,
+              children: [
+                Container(
                   height: _navBarHeight,
                   width: _navBarWidth,
                   constraints: BoxConstraints(
@@ -114,99 +128,109 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                   margin: const EdgeInsets.only(bottom: 25),
                   decoration: BoxDecoration(
                     color: ColorConstant.white,
-                    borderRadius: BorderRadius.circular(
-                        15.0), // To adjust the white box corner radius
+                    borderRadius: BorderRadius.circular(15.0), // To adjust the white box corner radius
                     boxShadow: const [
-                      BoxShadow(
-                          color: ColorConstant.shadow,
-                          blurRadius: 4.0,
-                          offset: Offset(0, 2)),
+                      BoxShadow(color: ColorConstant.shadow, blurRadius: 4.0, offset: Offset(0, 2)),
                     ],
                   ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        15.0), // To adjust the touch animation corner radius
+                  child: ClipRRect(  // To adjust the touch animation corner radius
+                    borderRadius: BorderRadius.circular(15.0),
                     child: BottomNavigationBar(
                       elevation: 0,
                       backgroundColor: Colors.transparent,
                       selectedItemColor: ColorConstant.darkBlue,
-                      selectedLabelStyle: TextStyle(
-                          fontSize: _labelSize, fontWeight: FontWeight.w600),
+                      selectedLabelStyle: TextStyle(fontSize: _labelSize, fontWeight: FontWeight.w600),
                       unselectedItemColor: ColorConstant.black,
-                      unselectedLabelStyle: TextStyle(
-                          fontSize: _labelSize, fontWeight: FontWeight.normal),
+                      unselectedLabelStyle: TextStyle(fontSize: _labelSize, fontWeight: FontWeight.normal),
                       currentIndex: _selectedNavIndex,
                       showUnselectedLabels: true,
                       items: _bottomNavigationBarItems(),
                       onTap: _onItemTapped,
+                    )
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // For blocking the center nav bar item
+                        const SizedBox(
+                          width: 120,
+                          height: 60,
+                        ),
+                        // The floating round scan button
+                        TextButton(
+                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                          onPressed: () {
+                            if(SharedState.isRiding.value) {
+                              EndRideModal(context, SharedState.mapController.value);
+                            }
+                            else {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context)=> QRScannerScreen())
+                              );
+                            }
+                          },
+                          child: ValueListenableBuilder(
+                            valueListenable: SharedState.markerCardContent,
+                            builder: (context, markerCardState, child) {
+                              switch(markerCardState) {
+                                case MarkerCardContent.ridingBike:
+                                  return Container(
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: BoxDecoration(
+                                        color: ColorConstant.white,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: ColorConstant.red,
+                                          width: 3,
+                                        ),
+                                      ),
+                                      child: CustomIcon.close(24, color: ColorConstant.red)
+                                  );
+                                case MarkerCardContent.warningBike:
+                                  return Container(
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: const BoxDecoration(
+                                        color: ColorConstant.red,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: CustomIcon.warning(28, color: ColorConstant.white)
+                                  );
+                                default:
+                                  return Container(
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: const BoxDecoration(
+                                        color: ColorConstant.darkBlue,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: CustomIcon.qrScanner(28, color: ColorConstant.white)
+                                  );
+                              }
+                            },
+                          )
+                        ),
+                      ],
                     ),
-                  )),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextButton(
-                      style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScannerScreen()));
-                      },
-                      child: Builder(
-                        builder: (context) {
-                          switch (_sharedState.markerCardState.value) {
-                            case MarkerCardState.ridingBike:
-                              return Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: BoxDecoration(
-                                    color: ColorConstant.white,
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: ColorConstant.red,
-                                      width: 3,
-                                    ),
-                                  ),
-                                  child: CustomIcon.close(24,
-                                      color: ColorConstant.red));
-                            case MarkerCardState.warningBike:
-                              return Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: const BoxDecoration(
-                                    color: ColorConstant.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: CustomIcon.warning(28,
-                                      color: ColorConstant.white));
-                            default:
-                              return Container(
-                                  padding: const EdgeInsets.all(15),
-                                  decoration: const BoxDecoration(
-                                    color: ColorConstant.darkBlue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: CustomIcon.qrScanner(28,
-                                      color: ColorConstant.white));
-                          }
-                        },
-                      )),
-                  const SizedBox(height: 3),
-                  SizedBox(
+                    const SizedBox(height: 3),
+                    SizedBox(
                       width: 120,
-                      child: Builder(
-                        builder: (context) {
-                          switch (_sharedState.markerCardState.value) {
-                            case MarkerCardState.warningBike:
+                      child: ValueListenableBuilder(
+                        valueListenable: SharedState.markerCardContent,
+                        builder: (context, markerState, widget) {
+                          switch(markerState) {
+                            case MarkerCardContent.warningBike:
                               return SizedBox(height: _labelSize + 4);
-                            case MarkerCardState.ridingBike:
+                            case MarkerCardContent.ridingBike:
                               return Text(
                                 "End ride",
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontSize: _labelSize,
-                                    color: ColorConstant.red,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(fontSize: _labelSize, color: ColorConstant.red, fontWeight: FontWeight.bold),
                               );
                             default:
                               return Text(
@@ -216,14 +240,16 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                               );
                           }
                         },
-                      )),
-                  const SizedBox(height: 34),
-                ],
-              )
-            ],
-          ),
-        ],
-      )),
+                      )
+                    ),
+                    const SizedBox(height: 34),
+                  ],
+                )
+              ],
+            ),
+          ],
+        )
+      ),
     );
   }
 
@@ -232,14 +258,15 @@ class _BottomNavBarRider extends State<BottomNavBar> {
     if (index != _selectedNavIndex) {
       setState(() {
         _selectedNavIndex = index;
-        if (index != 0) {
-          temp = _sharedState.markerCardVisibility.value;
-          _sharedState.markerCardVisibility.value = false;
-        } else {
-          _sharedState.markerCardVisibility.value = temp;
+        if(index != 0) {
+          temp = SharedState.markerCardVisibility.value;
+          SharedState.markerCardVisibility.value = false;
+        }
+        else {
+          SharedState.markerCardVisibility.value = temp;
         }
       });
-      _pageController.jumpToPage(index);
+      // _pageController.jumpToPage(index);
     }
   }
 
@@ -249,10 +276,12 @@ class _BottomNavBarRider extends State<BottomNavBar> {
         label: 'Explore',
         icon: Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: CustomIcon.location(22, color: ColorConstant.black)),
+            child: CustomIcon.location(22, color: ColorConstant.black)
+        ),
         activeIcon: Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: CustomIcon.location(22, color: ColorConstant.darkBlue)),
+            child: CustomIcon.location(22, color: ColorConstant.darkBlue)
+        ),
       ),
       const BottomNavigationBarItem(
         icon: SizedBox.shrink(),
@@ -262,23 +291,17 @@ class _BottomNavBarRider extends State<BottomNavBar> {
         label: 'Menu',
         icon: Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: CustomIcon.menu(23, color: ColorConstant.black)),
+            child: CustomIcon.menu(23, color: ColorConstant.black)
+        ),
         activeIcon: Padding(
             padding: const EdgeInsets.only(bottom: 3),
-            child: CustomIcon.menu(23, color: ColorConstant.darkBlue)),
+            child: CustomIcon.menu(23, color: ColorConstant.darkBlue)
+        ),
       ),
     ];
   }
-
-  List<Widget> bottomNavChildrenWidget() {
-    return [
-      ExploreScreen(_sharedState),
-      ScannerScreen(),
-      const MenuScreen(),
-      // MenuScreen(_sharedState), // TODO: Uncomment this and delete the line above
-    ];
-  }
 }
+
 
 // User type: Admin
 // User type: Admin

@@ -2,15 +2,15 @@ import 'package:ebikesms/shared/constants/app_constants.dart';
 import 'package:flutter/material.dart';
 
 class DestinationCard extends StatelessWidget {
-  final String locationNameMalay;
-  final String locationNameEnglish;
-  final String locationType;
+  final String landmarkNameMalay;
+  final String landmarkNameEnglish;
+  final String landmarkType;
   final VoidCallback onPressed;
   const DestinationCard({
     super.key,
-    required this.locationNameMalay,
-    required this.locationNameEnglish,
-    required this.locationType,
+    required this.landmarkNameMalay,
+    required this.landmarkNameEnglish,
+    required this.landmarkType,
     required this.onPressed
   });
 
@@ -28,7 +28,7 @@ class DestinationCard extends StatelessWidget {
           children: [
             Flexible(
               child: Text(
-                locationNameMalay,
+                landmarkNameMalay,
                 textAlign: TextAlign.center,
                 overflow: TextOverflow.fade,
                 style: const TextStyle(
@@ -39,7 +39,7 @@ class DestinationCard extends StatelessWidget {
               )
             ),
             Text(
-              locationType,
+              landmarkType,
               textAlign: TextAlign.center,
               style: const TextStyle(
                   fontSize: 14,

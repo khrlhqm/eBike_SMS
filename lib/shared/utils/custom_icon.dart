@@ -341,13 +341,13 @@ class CustomIcon{
   }
 
   // Dynamic Icons
-  static Widget locationMarker(
+  static Widget landmarkMarker(
       double dimension,
-      String locationType,
+      String landmarkType,
       ) {
     String markerName;
 
-    switch (locationType) {
+    switch (landmarkType) {
       case "Cafeteria":
         markerName = "cafeteria-marker";
         break;

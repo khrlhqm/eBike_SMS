@@ -43,7 +43,7 @@ class _TimeTopUpScreenState extends State<TimeTopUpScreen> {
           isValidAmount = false;
         }
         else {  // If amount is over the limit
-          labelText = "Ride Time: ${Calculation.countRideTimeFormatted(int.parse(_controller.text))}";
+          labelText = "Ride Time: ${Calculation.convertMoneyToLongRideTime(int.parse(_controller.text))}";
           labelColor = ColorConstant.black;
           isValidAmount = true;
         }

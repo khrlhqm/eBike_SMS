@@ -15,9 +15,6 @@
     // Set content header (must match with what's defined in Flutter)
     header("Content-Type: application/json");
 
-    // Get the posted JSON data
-    $data = json_decode(file_get_contents("php://input"), true);
-    
     $query = "SELECT bike_id, status, current_latitude, current_longitude FROM bike;";
 
     // Execute query
@@ -32,9 +29,9 @@
     } 
     // If query succeeded and results are available
     else {
-        $locations = [];
+        $bikes = [];
         while ($row = $result->fetch_assoc()) {
-            $locations[] = [
+            $bikes[] = [
                 "bike_id" => $row['bike_id'],
                 "status" => $row['status'],
                 "current_latitude" => $row['current_latitude'],
@@ -44,7 +41,7 @@
         echo json_encode([
             "status" => "success", 
             "message" => "Bike information forwarded.", 
-            "data" => $locations]
+            "data" => $bikes]
         );
     }
 
