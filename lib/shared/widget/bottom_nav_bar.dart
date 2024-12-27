@@ -1,7 +1,7 @@
 import 'package:ebikesms/modules/explore/widget/marker_card.dart';
 import 'package:ebikesms/modules/qr_scanner/screen/scanner_page.dart';
 import 'package:flutter/material.dart';
-import 'package:ebikesms/modules/admin/report/screen/incident_report.dart';
+import 'package:ebikesms/modules/admin/report/screen/report.dart';
 import 'package:ebikesms/modules/admin/revenue/screen/revenue.dart';
 import 'package:ebikesms/modules/admin/menu.dart';
 
@@ -392,7 +392,7 @@ class _BottomNavBarAdmin extends State<BottomNavBar> {
   List<Widget> _bottomNavChildrenWidget() {
     return [
       RevenueScreen(), // Replace with your Statistic screen
-      IncidentReportScreen(),    // Replace with your Report screen
+      ReportScreen(),    // Replace with your Report screen
       MenuScreen(),      // Replace with your Menu screen
     ];
   }
