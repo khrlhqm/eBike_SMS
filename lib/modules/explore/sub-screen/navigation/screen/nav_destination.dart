@@ -5,7 +5,7 @@ import '../../../../../shared/constants/app_constants.dart';
 import '../../../../../shared/utils/custom_icon.dart';
 import '../widget/destination_card.dart';
 import 'nav_confirm_pinpoint.dart';
-import '../../../controller/location_controller.dart';
+import '../../../controller/landmark_controller.dart';
 import 'nav_confirm_selected.dart';
 
 enum DataState { loading, hasResult, failure, noResult }
@@ -22,7 +22,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
   late List<dynamic> _allLocations;
   late List<dynamic> _displayingLocations;
   bool _isSearchHasText = false;
-  DataState _dataState = DataState.noResult; // To display loading animation
+  DataState _dataState = DataState.loading; // To display loading animation
 
   void _fetchLocations() async {
     var results = await LocationController.getLocations();
@@ -51,14 +51,14 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
       if (_isSearchHasText) {
         _displayingLocations.clear();
         String query = _controller.text.toLowerCase();
-        _displayingLocations = _allLocations.where((location) {
+        _displayingLocations = _allLocations.where((landmark) {
           // This "where" method acts similarly to an SQL where clause
-          return location['location_name_malay']
+          return landmark['landmark_name_malay']
                   .toLowerCase()
                   .contains(query) ||
-              location['location_name_english'].toLowerCase().contains(query) ||
-              location['location_type'].toLowerCase().contains(query) ||
-              location['address'].toLowerCase().contains(query);
+              landmark['landmark_name_english'].toLowerCase().contains(query) ||
+              landmark['landmark_type'].toLowerCase().contains(query) ||
+              landmark['address'].toLowerCase().contains(query);
         }).toList();
 
         if (_displayingLocations.isEmpty) {
@@ -283,7 +283,7 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
                     const Expanded(
                         child: Center(
                       child: Text(
-                        "We couldn't find the location you provided.",
+                        "We couldn't find the place you provided.",
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 16,
@@ -333,11 +333,11 @@ class _NavDestinationScreenState extends State<NavDestinationScreen> {
             itemBuilder: (BuildContext context, int index) {
               //return Container(color: ColorConstant.black);
               return DestinationCard(
-                locationNameMalay: _displayingLocations[index]
-                    ['location_name_malay'],
-                locationNameEnglish: _displayingLocations[index]
-                    ['location_name_english'],
-                locationType: _displayingLocations[index]['location_type'],
+                landmarkNameMalay: _displayingLocations[index]
+                    ['landmark_name_malay'],
+                landmarkNameEnglish: _displayingLocations[index]
+                    ['landmark_name_english'],
+                landmarkType: _displayingLocations[index]['landmark_type'],
                 onPressed: () {
                   Navigator.push(
                       context,

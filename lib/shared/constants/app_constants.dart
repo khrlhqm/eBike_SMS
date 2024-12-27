@@ -35,16 +35,20 @@ class ColorConstant {
   static const Color shadow = Color(0x41000000); // #eed202
 }
 
-enum MarkerCardState {
+enum MarkerCardContent {
   loading,
   scanBike,
   confirmBike,
   ridingBike,
   warningBike,
-  location
+  landmark
 }
 
 class MapConstant{
+  // Map camera zoom
+  static const double focusZoomLevel = 16.5;
+  static const double initZoomLevel = 16;
+
   // This is UTeM's center
   static const LatLng initCenterPoint = LatLng(2.31125, 102.32025);
   // This is UTeM's center

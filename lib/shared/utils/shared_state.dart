@@ -1,29 +1,45 @@
+import 'dart:async';
+
+import 'package:ebikesms/modules/explore/widget/custom_marker.dart';
 import 'package:flutter/material.dart';
+import '../../modules/global_import.dart';
 import '../constants/app_constants.dart';
 
 class SharedState {
-  // TODO: Declare user login ValueNotifiers
+  // Map related
+  static ValueNotifier<List<Marker>> visibleMarkers = ValueNotifier([]);
+  static ValueNotifier<List<Marker>> cachedMarkers = ValueNotifier([]);
+  static ValueNotifier<List<Marker>> landmarkMarkers = ValueNotifier([]);
+  static ValueNotifier<List<Marker>> bikeMarkers = ValueNotifier([]);
+  static ValueNotifier<Marker> userMarker = ValueNotifier(CustomMarker.user(latitude: 0, longitude: 0));
+  static ValueNotifier<Marker> ridingMarker = ValueNotifier(CustomMarker.riding(latitude: 0, longitude: 0));
+  static ValueNotifier<MapController> mapController = ValueNotifier(MapController());
 
-  ValueNotifier<bool> markerCardVisibility = ValueNotifier(false);
-  ValueNotifier<bool> navigationButtonEnable = ValueNotifier(true);
-  ValueNotifier<MarkerCardState> markerCardState = ValueNotifier(MarkerCardState.scanBike);
+  // General
+  static ValueNotifier<bool> markerCardVisibility = ValueNotifier(false);
+  static ValueNotifier<bool> isNavigating = ValueNotifier(false);
+  static ValueNotifier<bool> isRiding = ValueNotifier(false);
+  static ValueNotifier<MarkerCardContent> markerCardContent = ValueNotifier(MarkerCardContent.scanBike);
 
   // Bike related
-  ValueNotifier<String> bikeId = ValueNotifier("#999");
-  ValueNotifier<String> bikeStatus = ValueNotifier("Available");
-  ValueNotifier<double> bikeCurrentLatitude = ValueNotifier(double.minPositive);
-  ValueNotifier<double> bikeCurrentLongitude = ValueNotifier(double.minPositive);
+  static ValueNotifier<String> bikeId = ValueNotifier("#999");
+  static ValueNotifier<String> bikeStatus = ValueNotifier("Available");
+  static ValueNotifier<double> bikeCurrentLatitude = ValueNotifier(double.minPositive);
+  static ValueNotifier<double> bikeCurrentLongitude = ValueNotifier(double.minPositive);
 
   // Ride related
-  ValueNotifier<String> currentTotalDistance = ValueNotifier("999 km");
-  ValueNotifier<String> currentRideTime = ValueNotifier("999 mins");
+  static ValueNotifier<Timer?> timer = ValueNotifier<Timer?>(null);
+  static ValueNotifier<String> currentTotalDistance = ValueNotifier("< 1 meter"); // In km/m format
+  static ValueNotifier<String> currentRideTime = ValueNotifier("< 1 minute");  // In "xh xm" format
+  static ValueNotifier<String> rideStartDatetime = ValueNotifier("1999-12-31 00:00:00"); // In DATETIME format
+  static ValueNotifier<String> rideEndDatetime = ValueNotifier("1999-12-31 00:00:00"); // In DATETIME format
 
-  // Location related
-  ValueNotifier<String> locationNameMalay = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM)");
-  ValueNotifier<String> locationNameEnglish = ValueNotifier("Faculty of Lorem Ipsum and Information Teknologi");
-  ValueNotifier<String> locationType = ValueNotifier("Faculty");
-  ValueNotifier<String> address = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM), Durian Tunggal 12345");
-  ValueNotifier<double> locationLatitude = ValueNotifier(double.minPositive);
-  ValueNotifier<double> locationLongitude = ValueNotifier(double.minPositive);
+  // Landmark related
+  static ValueNotifier<String> landmarkNameMalay = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM)");
+  static ValueNotifier<String> landmarkNameEnglish = ValueNotifier("Faculty of Lorem Ipsum and Information Teknologi");
+  static ValueNotifier<String> landmarkType = ValueNotifier("Faculty");
+  static ValueNotifier<String> landmarkAddress = ValueNotifier("Fakulti Lorem Ipsum dan Technology Maklumat (FLITM), Durian Tunggal 12345");
+  static ValueNotifier<double> landmarkLatitude = ValueNotifier(double.minPositive);
+  static ValueNotifier<double> landmarkLongitude = ValueNotifier(double.minPositive);
 
 }

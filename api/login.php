@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Prepare and execute SQL to prevent SQL injection
-    $stmt = $conn->prepare("SELECT user_id, password FROM user WHERE matric_number = ?");
+    $stmt = $conn->prepare("SELECT user_id,user_type, password FROM user WHERE matric_number = ?");
     if ($stmt === false) {
         die(json_encode(array("status" => "error", "message" => "SQL prepare failed: " . $conn->error)));
     }
@@ -44,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Fetch the user data and password from the database
         $row = $result->fetch_assoc();
         $user_id = $row['user_id'];  // Fetch user_id
+        $user_type = $row['user_type'];  // Fetch user_type
         $hashedPassword = $row['password'];
 
         // Verify the entered password against the hashed password
@@ -52,7 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             echo json_encode(array(
                 "status" => "success",
                 "message" => "Login successful",
-                "user_id" => $user_id  // Include user_id in the response
+                "user_id" => $user_id,
+                "user_type" => $user_type  // Include user_id in the response
             ));
         } else {
             // Password mismatch
