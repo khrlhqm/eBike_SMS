@@ -1,3 +1,4 @@
+import 'package:ebikesms/modules/ring/ring.dart';
 import 'package:ebikesms/shared/widget/rectangle_button.dart';
 
 import '../../global_import.dart';
@@ -150,6 +151,12 @@ class _MarkerCardState extends State<MarkerCard> {
                           foregroundColor: ColorConstant.darkBlue,
                           borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RingPage(esp8266Ip: "192.168.0.51"), // Replace with your actual widget for `ring.dart`
+                                ),
+                              );
                             // TODO: Ring the bike (make buzzer sound)
                           }
                         )
