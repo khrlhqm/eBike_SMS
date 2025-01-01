@@ -99,7 +99,8 @@ class _MenuScreenState extends State<MenuScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      _userData?['full_name'] ?? 'Loading...',
+                      _userData?['user_name'] ??
+                          'Loading...', // Updated to match API response
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -107,11 +108,13 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      _userData?['matric_number'] ?? 'Loading...',
+                      _userData?['matric_number'] ??
+                          'N/A', // Ensure this key exists in API
                       style: const TextStyle(color: ColorConstant.grey),
                     ),
                     Text(
-                      _userData?['user_email'] ?? 'XXXX@gmail.cm',
+                      _userData?['user_email'] ??
+                          'N/A', // Ensure this key exists in API
                       style: const TextStyle(color: ColorConstant.grey),
                     ),
                   ],
