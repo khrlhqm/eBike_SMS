@@ -167,7 +167,7 @@ class _BottomNavBarRider extends State<BottomNavBar> {
                           style: TextButton.styleFrom(padding: EdgeInsets.zero),
                           onPressed: () {
                             if(SharedState.isRiding.value) {
-                              EndRideModal(context, SharedState.mapController.value);
+                              EndRideModal(context, SharedState.mainMapController.value);
                             }
                             else {
                               Navigator.push(
