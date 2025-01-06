@@ -1,6 +1,7 @@
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/modules/auth/controller/login_controller.dart';
-import 'package:ebikesms/modules/auth/screen/signup.dart';
+import 'package:ebikesms/modules/auth/screen/signup/matric_number_screen.dart';
+import 'package:ebikesms/modules/auth/screen/forgetpassword/screen/forgetpassword.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,9 +31,10 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final PageController pageController = PageController();
+
     return Scaffold(
-      backgroundColor:
-          ColorConstant.hintBlue, // Light blue background
+      backgroundColor: ColorConstant.hintBlue, // Light blue background
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -107,8 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(25),
                             borderSide: const BorderSide(
-                              color:
-                                  Color(0xFF003366), // Blue border color
+                              color: Color(0xFF003366), // Blue border color
                               width: 2.0,
                             ),
                           ),
@@ -160,15 +161,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
 
                   const SizedBox(height: 15),
-                  const Center(
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontFamily: 'Poppins',
+                  Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ForgetPasswordScreen()),
+                            );
+                        // Add your desired action here, like navigating to another screen
+                        print("Forgot Password tapped!");
+                      },
+                      child: const Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          color: Colors.blue,
+                          fontFamily: 'Poppins',
+                        ),
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 230),
                   // Sign Up Link
                   Center(
@@ -184,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const SignupScreen()),
+                                  builder: (context) => MatricPasswordScreen()),
                             );
                           },
                           child: const Text(

@@ -1,37 +1,42 @@
+import 'dart:async';
 
-import 'package:ebikesms/shared/widget/rectangle_button.dart';
+import 'package:ebikesms/modules/explore/controller/bike_controller.dart';
+import 'package:ebikesms/shared/utils/calculation.dart';
+import 'package:ebikesms/shared/utils/shared_state.dart';
 
 import '../../global_import.dart';
 import '../sub-screen/navigation/screen/nav_destination.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:http/http.dart' as http;
 
+import 'custom_marker.dart';
+
 class MarkerCard extends StatefulWidget {
-  final MarkerCardState markerCardState;
-  final bool navigationButtonEnable;
+  final MarkerCardContent markerCardState;
+  final bool isNavigating;
   final String bikeStatus;
   final String bikeId;
   final String currentTotalDistance;
   final String currentRideTime;
-  final String locationNameMalay;
-  final String locationNameEnglish;
-  final String locationType;
-  final String address;
+  final String landmarkNameMalay;
+  final String landmarkNameEnglish;
+  final String landmarkType;
+  final String landmarkAddress;
 
   const MarkerCard({
     super.key,
     required this.markerCardState,
-    required this.navigationButtonEnable,
+    this.isNavigating = false,
     // For bike marker cards:
     this.bikeStatus = "",
     this.bikeId = "",
     this.currentTotalDistance = "",
     this.currentRideTime = "",
-    // For location marker cards:
-    this.locationNameMalay = "",
-    this.locationNameEnglish = "",
-    this.locationType = "",
-    this.address = "",
+    // For landmark marker cards:
+    this.landmarkNameMalay = "",
+    this.landmarkNameEnglish = "",
+    this.landmarkType = "",
+    this.landmarkAddress = "",
   });
 
   @override
@@ -61,18 +66,18 @@ class _MarkerCardState extends State<MarkerCard> {
       child: Builder(
         builder: (context) {
           switch (widget.markerCardState) {
-            case MarkerCardState.loading:
+            case MarkerCardContent.loading:
               return _displayLoadingContent();
-            case MarkerCardState.scanBike:
+            case MarkerCardContent.scanBike:
               return _displayScanBikeContent();
-            case MarkerCardState.confirmBike:
+            case MarkerCardContent.confirmBike:
               return _displayConfirmBikeContent();
-            case MarkerCardState.ridingBike:
+            case MarkerCardContent.ridingBike:
               return _displayRidingBikeContent();
-            case MarkerCardState.warningBike:
+            case MarkerCardContent.warningBike:
               return _displayWarningBikeContent();
-            case MarkerCardState.location:
-              return _displayLocationContent();
+            case MarkerCardContent.landmark:
+              return _displayLandmarkContent();
             default:
               return const SizedBox.shrink();
           }
@@ -90,6 +95,7 @@ class _MarkerCardState extends State<MarkerCard> {
       ],
     );
   }
+
 
   Widget _displayScanBikeContent() {
     return Column(
@@ -129,12 +135,15 @@ class _MarkerCardState extends State<MarkerCard> {
 
                       ),
                       const Spacer(),
-                      const AutoSizeText(
-                        TextConstant.priceRateLabel,
-                        maxFontSize: 12,
-                        minFontSize: 11,
-                        style: TextStyle(
-                          fontSize: 13,
+                      Visibility(
+                        visible: (widget.bikeStatus == "Available"),
+                        child: const AutoSizeText(
+                          TextConstant.priceRateLabel,
+                          maxFontSize: 12,
+                          minFontSize: 11,
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
                         ),
                       )
                     ],
@@ -143,13 +152,15 @@ class _MarkerCardState extends State<MarkerCard> {
                   Row(
                     children: [
                       Expanded(
-                        child: RectangleButton(
+                        child: CustomRectangleButton(
                           height: 35,
                           label: "Ring",
                           fontSize: 12,
+                          enable: (widget.bikeStatus == "Available"),
                           fontWeight: FontWeight.w600,
                           backgroundColor: ColorConstant.white,
                           foregroundColor: ColorConstant.darkBlue,
+                          
                           borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
                           onPressed: () async {
                             final esp8266Ip = "192.168.164.53"; // Replace with your ESP8266 IP
@@ -178,22 +189,23 @@ class _MarkerCardState extends State<MarkerCard> {
           ],
         ),
         const Spacer(flex: 1),
-        const Column(
+        Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Get near the bike",
+              (widget.bikeStatus == "Available") ? "Get near the bike" : "Bike is unavailable",
               style: TextStyle(
-                  fontSize: 12
+                fontSize: 12,
+                color: (widget.bikeStatus == "Available") ? ColorConstant.black : ColorConstant.red,
               ),
             ),
             Text(
-              "Scan to start",
+              (widget.bikeStatus == "Available") ? "Scan the bike" : "Look for another bike",
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: ColorConstant.darkBlue,
+                color: (widget.bikeStatus == "Available") ? ColorConstant.darkBlue : ColorConstant.grey,
               ),
             ),
           ],
@@ -203,8 +215,10 @@ class _MarkerCardState extends State<MarkerCard> {
     );
   }
 
+
   Widget _displayConfirmBikeContent() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -240,46 +254,49 @@ class _MarkerCardState extends State<MarkerCard> {
                         style: const TextStyle(color: ColorConstant.black),
                       ),
                       const Spacer(),
-                      const Text(
+                      (widget.bikeStatus == "Available")
+                          ? const Text(
                         TextConstant.priceRateLabel,
                         style: TextStyle(
                           fontSize: 13,
                         ),
                       )
+                          : const SizedBox.shrink(),
                     ],
                   ),
                 ],
-              )
+              ),
             ),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              RichText(
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                text: TextSpan(
-                  style: const TextStyle(fontSize: 16, color: ColorConstant.black),
-                  children: [
-                    const TextSpan(text: "Start riding with "),
-                    TextSpan(
-                      text: widget.bikeId,
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const TextSpan(text: "?"),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        (widget.bikeStatus == 'Available')
+            ? Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Expanded(
-                      child: RectangleButton(
+                  RichText(
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 16, color: ColorConstant.black),
+                      children: [
+                        const TextSpan(text: "Start riding with "),
+                        TextSpan(
+                          text: widget.bikeId,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        const TextSpan(text: "?"),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Expanded(
+                        child: CustomRectangleButton(
                           height: 45,
                           label: "Cancel",
                           fontSize: 12,
@@ -288,32 +305,108 @@ class _MarkerCardState extends State<MarkerCard> {
                           foregroundColor: ColorConstant.darkBlue,
                           borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
                           onPressed: () {
-                            // TODO: Disconfirm the ride session, removing the scanned QR code
-                          }
+                            SharedState.markerCardVisibility.value = false;
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10), // The gap between buttons
+                      Expanded(
+                        child: CustomRectangleButton(
+                          height: 45,
+                          label: "Confirm",
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          backgroundColor: ColorConstant.darkBlue,
+                          foregroundColor: ColorConstant.white,
+                          onPressed: () {
+                            _confirmRideSession();
+                          },
+                        ),
                       )
+                    ],
                   ),
-                  const SizedBox(width: 15), // The gap between buttons
-                  Expanded(
-                    child: RectangleButton(
-                        height: 45,
-                        label: "Confirm",
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        backgroundColor: ColorConstant.darkBlue,
-                        foregroundColor: ColorConstant.white,
-                        onPressed: () {
-                          // TODO: Start ride session
-                        }
-                    ),
-                  )
                 ],
               ),
-            ],
-          ),
-        )
+            )
+            : const Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const SizedBox(height: 13),
+                Text(
+                  "This bike is unavailable",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: ColorConstant.red,
+                  ),
+                ),
+                Text(
+                  "Look for another bike",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: ColorConstant.grey,
+                  ),
+                ),
+              ],
+            ),
       ],
     );
   }
+
+
+  void _confirmRideSession() async {
+    // Set loading content while waiting to fetch bike data
+    SharedState.markerCardVisibility.value = false; // Purposely make it false first in order to see change
+    SharedState.markerCardVisibility.value = true;
+    SharedState.markerCardContent.value = MarkerCardContent.loading;
+    
+    // Fetch bike data
+    var results = await BikeController.getSingleBikeData(widget.bikeId);
+    if (results['status'] == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Status: ${results['status']}, Message: ${results['message']}")),
+      );
+      return;
+    }
+    double parsedLat = double.parse(results['data'][0]['current_latitude']);
+    double parsedLong = double.parse(results['data'][0]['current_longitude']);
+
+    // Assign the start location (latlong)
+    SharedState.bikeCurrentLatitude.value = parsedLat;
+    SharedState.bikeCurrentLongitude.value = parsedLong;
+
+    // TODO: Get bike can get distance
+    // TODO: Deduct the current session with ride time available
+    // SharedState.currentTotalDistance.value =  // TODO: Get updates in increments from ebike for the actual distance travel
+
+    // Start timer for ride time
+    int rideTimeValue = 0;
+    SharedState.timer.value = Timer.periodic(const Duration(minutes: 1), (timer) {
+      rideTimeValue++;
+      String rideTimeStr = Calculation.convertMinuteToShortRideTime(rideTimeValue);
+      SharedState.currentRideTime.value = rideTimeStr;
+    });
+
+    // Assign the start ride time, will be uploaded when end session occurs
+    SharedState.rideStartDatetime.value = await Calculation.getCurrentDateTime();
+
+    // Set riding bike content for the marker card
+    SharedState.markerCardVisibility.value = false; // Purposely make it false first in order to see change
+    SharedState.markerCardVisibility.value = true;
+    SharedState.markerCardContent.value = MarkerCardContent.ridingBike;
+    SharedState.isRiding.value = true;
+    if(SharedState.cachedMarkers.value.isEmpty) {
+      SharedState.cachedMarkers.value.addAll(SharedState.visibleMarkers.value);
+    }
+    SharedState.visibleMarkers.value.clear();
+    SharedState.visibleMarkers.value.add(
+      CustomMarker.riding(
+        latitude: parsedLat,
+        longitude: parsedLong,
+      ),
+    );
+  }
+
 
   Widget _displayRidingBikeContent() {
     return Column(
@@ -354,27 +447,28 @@ class _MarkerCardState extends State<MarkerCard> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  RectangleButton(
-                    height: 35,
-                    label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    backgroundColor: (widget.navigationButtonEnable) ? ColorConstant.white : ColorConstant.darkBlue,
-                    foregroundColor: (widget.navigationButtonEnable) ? ColorConstant.darkBlue : ColorConstant.white,
-                    borderSide: (widget.navigationButtonEnable)
-                        ? const BorderSide(width: 3, color: ColorConstant.darkBlue)
-                        : BorderSide.none,
-                    onPressed: () {
-                      if(widget.navigationButtonEnable){
-                        // TODO: End the navigation
-                      }
-                      else {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context)=> const NavDestinationScreen())
-                        );
-                      }
-                    }
+                  ValueListenableBuilder(
+                    valueListenable: SharedState.isNavigating, // Assuming SharedState.isNavigating is a ValueNotifier<bool>
+                    builder: (context, isNavigating, child) {
+                      return CustomRectangleButton(
+                        height: 35,
+                        label: isNavigating ? "End Navigation" : "Start Navigation",
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        backgroundColor: isNavigating ? ColorConstant.white : ColorConstant.darkBlue,
+                        foregroundColor: isNavigating ? ColorConstant.darkBlue : ColorConstant.white,
+                        borderSide: isNavigating
+                            ? const BorderSide(width: 3, color: ColorConstant.darkBlue)
+                            : BorderSide.none,
+                        onPressed: () {
+                          if (isNavigating) {
+                            _endNavigation();
+                          } else {
+                            _startNavigation();
+                          }
+                        },
+                      );
+                    },
                   ),
                 ],
               )
@@ -387,16 +481,23 @@ class _MarkerCardState extends State<MarkerCard> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: Column(
                 children: [
                   CustomIcon.distance(40, color: ColorConstant.black),
                   const SizedBox(height: 5),
-                  Text(
-                    widget.currentTotalDistance,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold
+                  SizedBox(
+                    width: 50,
+                    child: AutoSizeText(
+                      widget.currentTotalDistance,
+                      maxLines: 1,
+                      minFontSize: 8,
+                      maxFontSize: 12,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
                   )
                 ],
@@ -419,7 +520,7 @@ class _MarkerCardState extends State<MarkerCard> {
                     fontSize: 13
                 ),
                 children: [
-                  TextSpan(text: "Your current\n"),
+                  TextSpan(text: "Your ongoing\n"),
                   TextSpan(
                     text: "   session",
                   ),
@@ -433,16 +534,28 @@ class _MarkerCardState extends State<MarkerCard> {
               margin: const EdgeInsets.symmetric(horizontal: 10),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: Column(
                 children: [
-                  CustomIcon.clock(35, color: ColorConstant.black),
-                  const SizedBox(height: 5),
-                  Text(
-                    widget.currentRideTime,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold
+                  CustomIcon.clock(30, color: ColorConstant.black),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: 50,
+                    child: ValueListenableBuilder(
+                      valueListenable: SharedState.currentRideTime,
+                      builder: (context, rideTime, widget) {
+                        return AutoSizeText(
+                          rideTime, // "1h 43m",
+                          maxLines: 1,
+                          minFontSize: 8,
+                          maxFontSize: 12,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold
+                          ),
+                        );
+                      },
                     ),
                   )
                 ],
@@ -466,77 +579,86 @@ class _MarkerCardState extends State<MarkerCard> {
               child: CustomIcon.bicycle(70, color: ColorConstant.black),
             ),
             Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Text(
-                          "Bike ID ",
-                          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: ColorConstant.black),
-                        ),
-                        Text(
-                          widget.bikeId,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: ColorConstant.black),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        CustomIcon.bikeStatus(14, widget.bikeStatus),
-                        const SizedBox(width: 3),
-                        AutoSizeText(
-                          widget.bikeStatus,
-                          maxFontSize: 12,
-                          minFontSize: 11,
-                          style: const TextStyle(color: ColorConstant.black),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 5),
-                    RectangleButton(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const Text(
+                        "Bike ID ",
+                        style: TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: ColorConstant.black),
+                      ),
+                      Text(
+                        widget.bikeId,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: ColorConstant.black),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      CustomIcon.bikeStatus(14, widget.bikeStatus),
+                      const SizedBox(width: 3),
+                      AutoSizeText(
+                        widget.bikeStatus,
+                        maxFontSize: 12,
+                        minFontSize: 11,
+                        style: const TextStyle(color: ColorConstant.black),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  ValueListenableBuilder(
+                    valueListenable: SharedState.isNavigating, // Assuming SharedState.isNavigating is a ValueNotifier<bool>
+                    builder: (context, isNavigating, child) {
+                      return CustomRectangleButton(
                         height: 35,
-                        label: (widget.navigationButtonEnable) ? "End Navigation" : "Start Navigation",
+                        label: isNavigating ? "End Navigation" : "Start Navigation",
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        backgroundColor: (widget.navigationButtonEnable) ? ColorConstant.white : ColorConstant.darkBlue,
-                        foregroundColor: (widget.navigationButtonEnable) ? ColorConstant.darkBlue : ColorConstant.white,
-                        borderSide: (widget.navigationButtonEnable)
+                        backgroundColor: isNavigating ? ColorConstant.white : ColorConstant.darkBlue,
+                        foregroundColor: isNavigating ? ColorConstant.darkBlue : ColorConstant.white,
+                        borderSide: isNavigating
                             ? const BorderSide(width: 3, color: ColorConstant.darkBlue)
                             : BorderSide.none,
                         onPressed: () {
-                          if(widget.navigationButtonEnable){
-                            // TODO: End the navigation
+                          if (isNavigating) {
+                            _endNavigation();
+                          } else {
+                            _startNavigation();
                           }
-                          else {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context)=> const NavDestinationScreen())
-                            );
-                          }
-                        }
-                    ),
-                  ],
-                )
+                        },
+                      );
+                    },
+                  ),
+                ],
+              )
             ),
           ],
         ),
         const Spacer(flex: 1),
         Row(
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: Column(
                 children: [
-                  CustomIcon.distance(40, color: ColorConstant.black),
+                  CustomIcon.distance(40, color: ColorConstant.red),
                   const SizedBox(height: 5),
-                  Text(
-                    widget.currentTotalDistance,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstant.red
+                  SizedBox(
+                    width: 50,
+                    child: AutoSizeText(
+                      widget.currentTotalDistance,
+                      maxLines: 1,
+                      minFontSize: 8,
+                      maxFontSize: 12,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: ColorConstant.red
+                      ),
                     ),
                   )
                 ],
@@ -554,9 +676,9 @@ class _MarkerCardState extends State<MarkerCard> {
               minFontSize: 11,
               TextSpan(
                 style: TextStyle(
-                  color: ColorConstant.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13
+                    color: ColorConstant.red,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 13
                 ),
                 children: [
                   TextSpan(text: "Please return\n"), // First line
@@ -573,17 +695,31 @@ class _MarkerCardState extends State<MarkerCard> {
               margin: const EdgeInsets.symmetric(horizontal: 10),
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
               child: Column(
                 children: [
-                  CustomIcon.clock(35, color: ColorConstant.black),
-                  const SizedBox(height: 5),
-                  Text(
-                    widget.currentRideTime,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: ColorConstant.red
+                  CustomIcon.clock(30, color: ColorConstant.red),
+                  const SizedBox(height: 4),
+                  SizedBox(
+                    width: 50,
+                    child: SizedBox(
+                      width: 50,
+                      child: ValueListenableBuilder(
+                        valueListenable: SharedState.currentRideTime,
+                        builder: (context, rideTime, widget) {
+                          return AutoSizeText(
+                            rideTime, // "1h 43m",
+                            maxLines: 1,
+                            minFontSize: 8,
+                            maxFontSize: 12,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   )
                 ],
@@ -596,9 +732,7 @@ class _MarkerCardState extends State<MarkerCard> {
     );
   }
 
-  final _scrollControllerMalay = ScrollController();
-  final _scrollControllerEnglish = ScrollController();
-  Widget _displayLocationContent() {
+  Widget _displayLandmarkContent() {
     return Column(
       children: [
         Row(
@@ -606,19 +740,21 @@ class _MarkerCardState extends State<MarkerCard> {
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(10, 0, 25, 0),
-              child: CustomIcon.locationMarker(60, widget.locationType),
+              child: CustomIcon.landmarkMarker(60, widget.landmarkType),
             ),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(
-                    height: 50,
+                  Container(
+                    constraints: const BoxConstraints(
+                      minHeight: 0, // Wraps content
+                      maxHeight: 50,
+                    ),
                     child: SingleChildScrollView(
-                      controller: _scrollControllerMalay,
                       scrollDirection: Axis.vertical,
                       child: AutoSizeText(
-                        widget.locationNameMalay,
+                        widget.landmarkNameMalay,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: ColorConstant.black),
                         minFontSize: 14,
                       ),
@@ -629,12 +765,10 @@ class _MarkerCardState extends State<MarkerCard> {
                     radius: const Radius.circular(50),
                     thumbVisibility: true,
                     trackVisibility: true,
-                    controller: _scrollControllerEnglish,
                     child: SingleChildScrollView(
-                      controller: _scrollControllerEnglish,
                       scrollDirection: Axis.horizontal,
                       child: AutoSizeText(
-                        widget.locationNameEnglish,
+                        widget.landmarkNameEnglish,
                         style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14, color: ColorConstant.black),
                       ),
                     ),
@@ -654,7 +788,7 @@ class _MarkerCardState extends State<MarkerCard> {
               SizedBox(
                 width: 70,
                 child: AutoSizeText(
-                  widget.locationType,
+                  widget.landmarkType,
                   minFontSize: 13,
                   maxFontSize: 14,
                   maxLines: 3,
@@ -678,7 +812,7 @@ class _MarkerCardState extends State<MarkerCard> {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Text(
-                      widget.address,
+                      widget.landmarkAddress,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),
@@ -690,5 +824,25 @@ class _MarkerCardState extends State<MarkerCard> {
         const Spacer(flex: 8),
       ],
     );
+  }
+
+  void _startNavigation() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NavDestinationScreen()),
+    );
+  }
+
+  void _endNavigation() {
+    setState(() {
+      if (SharedState.isNavigating.value) {
+        SharedState.isNavigating.value = false;
+        SharedState.routePoints.value = [];
+        SharedState.visibleMarkers.value
+            .removeWhere((marker) => (marker.key == const ValueKey("pinpoint_marker")));
+        SharedState.visibleMarkers.value
+            .removeWhere((marker) => (marker.key as ValueKey).value.toString().startsWith("landmark_marker_"));
+      }
+    });
   }
 }

@@ -33,6 +33,8 @@ class LoginController extends ChangeNotifier {
         if (responseBody['status'] == 'success') {
           // Store the user_id locally or pass it to the next screen
           int userId = responseBody['user_id']; // Now this will work since user_id is part of the response
+          String userType = responseBody['user_type'];
+
           await _userStorageService.saveUserId(userId);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful')),
@@ -43,7 +45,7 @@ class LoginController extends ChangeNotifier {
             MaterialPageRoute(
               builder: (context) => BottomNavBar(
                 userId: userId,
-                userType: "Rider",
+                userType: userType,
               )
             ), // Pass userId to the next screen
           );

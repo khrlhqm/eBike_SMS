@@ -1,117 +1,178 @@
-import 'package:ebikesms/modules/explore/controller/bike_data_controller.dart';
-import 'package:ebikesms/modules/learn/screen/learn.dart';
+import 'dart:core';
+
+import 'package:ebikesms/modules/explore/controller/bike_controller.dart';
+import 'package:ebikesms/modules/explore/widget/custom_marker.dart';
+import 'package:ebikesms/modules/explore/widget/map_side_buttons.dart';
 import 'package:ebikesms/modules/global_import.dart';
 import 'package:ebikesms/shared/utils/shared_state.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
-import '../controller/location_controller.dart';
+import '../controller/landmark_controller.dart';
+import '../widget/custom_map.dart';
 
 class ExploreScreen extends StatefulWidget {
-  final SharedState sharedState;
-  const ExploreScreen(this.sharedState, {super.key});
+  const ExploreScreen({super.key});
 
   @override
   _ExploreScreenState createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends State<ExploreScreen> {
-  final MapController _mapController = MapController();
+class _ExploreScreenState extends State<ExploreScreen> with TickerProviderStateMixin {
   late List<dynamic> _allLocations;
   late List<dynamic> _allBikes;
-  late LatLng _currentUserLocation;
-  final List<Marker> _allMarkers = [];
+  late ValueNotifier<LatLng> _currentUserLatLng = ValueNotifier(MapConstant.initCenterPoint);
   bool _isMarkersLoaded = false;
 
-  Widget _displayMap() {
-    _allMarkers.length;
-    return FlutterMap(
-      mapController: _mapController,
-      options: const MapOptions(
-        initialCenter: LocationConstant.initialCenter,
-        initialZoom: 16.0,
-        interactionOptions: InteractionOptions(flags: InteractiveFlag.all),
+  @override
+  void initState() {
+    super.initState();
+    SharedState.visibleMarkers.value.clear(); // Clear the markers before reinitializing again (avoid marker duplication)
+    _fetchLandmarks();
+    _fetchBikes();
+    _fetchCurrentUserLocation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        alignment: Alignment.centerRight,
+        children: [
+          // Custom map
+          ValueListenableBuilder(
+            valueListenable: SharedState.isRiding,
+            builder: (context, _, __) {
+              return ValueListenableBuilder(
+                  valueListenable: SharedState.visibleMarkers,
+                  builder: (context, _, __) {
+                    return ValueListenableBuilder(
+                      valueListenable: SharedState.routePoints,
+                      builder: (context, _, __) {
+                        return CustomMap(
+                          mapController: SharedState.mainMapController.value,
+                          initialCenter: MapConstant.initCenterPoint,
+                          initialZoom: MapConstant.initZoomLevel,
+                          enableInteraction: true,
+                          allMarkers: SharedState.visibleMarkers.value,
+                          routePoints: SharedState.routePoints.value
+                        );
+                      },
+                    );
+                  }
+              );
+            }
+          ),
+
+          // Map Side Buttons
+          ValueListenableBuilder(
+            valueListenable: SharedState.isRiding,
+            builder: (context, isRiding, _) {
+              if(isRiding){
+                animatePinpoint(LatLng(SharedState.bikeCurrentLatitude.value, SharedState.bikeCurrentLongitude.value));
+                animateRotation(0.0);
+              }
+              return MapSideButtons(
+                mapController: SharedState.mainMapController.value,
+                locationToPinpoint: (isRiding)
+                    ? LatLng(SharedState.bikeCurrentLatitude.value, SharedState.bikeCurrentLongitude.value)
+                    : _currentUserLatLng.value,
+                showGuideButton: true
+              );
+            },
+          ),
+
+          // Loading Animation
+          Visibility(
+            visible: !_isMarkersLoaded,
+            child: Center(
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                decoration: const BoxDecoration(
+                  color: ColorConstant.white,
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: ColorConstant.shadow,
+                      offset: Offset(0, 2),
+                      blurRadius: 10,
+                      spreadRadius: 0
+                    )
+                  ]
+                ),
+                child: const LoadingAnimation(dimension: 30),
+              )
+            )
+          ),
+        ],
       ),
-      children: [
-        TileLayer(
-          urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-          userAgentPackageName: 'dev.fleaflet.flutter_map.example',
-        ),
-        MarkerLayer(markers: _allMarkers),
-      ],
     );
   }
 
-  void _buildMarkers(String type) {
-    _isMarkersLoaded = false;
-    try {
-      switch (type) {
-        case "Location":
-          if (_allLocations.isNotEmpty) {
-            for (int i = 0; i < _allLocations.length; i++) {
-              if (_allLocations[i]['latitude'] != null && _allLocations[i]['longitude'] != null) {
-                double parsedLat = double.parse(_allLocations[i]['latitude']);
-                double parsedLong = double.parse(_allLocations[i]['longitude']);
-                _allMarkers.add(
-                  Marker(
-                    width: 40,
-                    height: 40,
-                    point: LatLng(parsedLat, parsedLong),
-                    child: GestureDetector(
-                      onTap: () => _onTapLocationMarker(i),
-                      child: CustomIcon.locationMarker(1, _allLocations[i]['location_type']),
-                    ),
-                  ),
-                );
-              }
-            }
-          }
-          break;
-
-        case "Bike":
-          if (_allBikes.isNotEmpty) {
-            for (int i = 0; i < _allBikes.length; i++) {
-              if (_allBikes[i]['current_latitude'] != null && _allBikes[i]['current_longitude'] != null) {
-                double parsedLat = double.parse(_allBikes[i]['current_latitude']);
-                double parsedLong = double.parse(_allBikes[i]['current_longitude']);
-                _allMarkers.add(
-                  Marker(
-                    width: 40,
-                    height: 40,
-                    point: LatLng(parsedLat, parsedLong),
-                    child: GestureDetector(
-                      onTap: () => _onTapBikeMarker(i),
-                      child: CustomIcon.bikeMarker(1, _allBikes[i]['status']),
-                    ),
-                  ),
-                );
-              }
-            }
-          }
-          break;
-
-        case "User":
-          _allMarkers.add(
-            Marker(
-              key: const ValueKey("user_marker"),
-              width: 20,
-              height: 20,
-              point: LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
-              child: CustomIcon.userMarker(1),
+  void _buildLandmarkMarkers() {
+    if (_allLocations.isNotEmpty) {
+      for (int i = 0; i < _allLocations.length; i++) {
+        if (_allLocations[i]['latitude'] != null && _allLocations[i]['longitude'] != null) {
+          double parsedLat = double.parse(_allLocations[i]['latitude']);
+          double parsedLong = double.parse(_allLocations[i]['longitude']);
+          SharedState.visibleMarkers.value.add(
+            CustomMarker.landmark(
+              index: i,
+              latitude: parsedLat,
+              longitude: parsedLong,
+              landmarkType: _allLocations[i]['landmark_type'],
+              onTap: () => _onTapLocationMarker(i),
             ),
           );
-          break;
-        default:
-          break;
+        }
       }
-    } catch (e) {
-      print("Error building markers: $e");
     }
     setState(() {
       _isMarkersLoaded = true;
     });
   }
 
-  void _fetchLocations() async {
+  void _buildBikeMarkers() {
+    if (_allBikes.isNotEmpty) {
+      for (int i = 0; i < _allBikes.length; i++) {
+        if (_allBikes[i]['current_latitude'] != null && _allBikes[i]['current_longitude'] != null) {
+          double parsedLat = double.parse(_allBikes[i]['current_latitude']);
+          double parsedLong = double.parse(_allBikes[i]['current_longitude']);
+          // Ignoring bikes that have "Riding" status
+          if (_allBikes[i]['status'] != "Riding") {
+            SharedState.visibleMarkers.value.add(
+              CustomMarker.bike(
+                index: i,
+                latitude: parsedLat,
+                longitude: parsedLong,
+                bikeStatus: _allBikes[i]['status'],
+                onTap: () => _onTapBikeMarker(i),
+              ),
+            );
+          }
+        }
+      }
+    }
+    setState(() {
+      _isMarkersLoaded = true;
+    });
+  }
+
+  void _buildUserMarker() {
+    SharedState.visibleMarkers.value.add(
+      CustomMarker.user(
+        latitude: _currentUserLatLng.value.latitude,
+        longitude: _currentUserLatLng.value.longitude,
+      ),
+    );
+    setState(() {
+      _isMarkersLoaded = true;
+    });
+  }
+
+  void _fetchLandmarks() async {
+    setState(() {
+      _isMarkersLoaded = false;
+    });
     var results = await LocationController.getLocations();
     if(results['status'] == 0) { // Failed
       ScaffoldMessenger.of(context).showSnackBar(
@@ -119,18 +180,42 @@ class _ExploreScreenState extends State<ExploreScreen> {
       );
     }
     _allLocations = results['data'];
-    _buildMarkers("Location");
+    _buildLandmarkMarkers();
   }
 
   void _fetchBikes() async {
-    var results = await BikeDataController.getBikes();
+    setState(() {
+      _isMarkersLoaded = false;
+    });
+    var results = await BikeController.getAllBikeData();
     if(results['status'] == 0) { // Failed
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Status: ${results['status']}, Message: ${results['message']}")),
       );
     }
     _allBikes = results['data'];
-    _buildMarkers("Bike");
+    _buildBikeMarkers();
+  }
+
+  void _fetchCurrentUserLocation() async {
+    if(getLocationPermission() == false) return;
+
+    // Fetch user's initial location
+    try {
+      setState(() {
+        _isMarkersLoaded = false;
+      });
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
+      _currentUserLatLng.value = currentLatLng;
+      _buildUserMarker();
+      _updateUserRealTime();
+    }
+    catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to fetch user location: $e')),
+      );
+    }
   }
 
   Future<bool> getLocationPermission() async {
@@ -164,24 +249,6 @@ class _ExploreScreenState extends State<ExploreScreen> {
     return true;
   }
 
-  void _fetchCurrentUserLocation() async {
-    if(getLocationPermission() == false) return;
-
-    // Fetch initial location
-    try {
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      LatLng currentLatLng = LatLng(position.latitude, position.longitude);
-      _currentUserLocation = currentLatLng;
-      _buildMarkers("User");
-      _updateUserRealTime();
-    }
-    catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to fetch location: $e')),
-      );
-    }
-  }
-
   void _updateUserRealTime() {
     Geolocator.getPositionStream(
       locationSettings: const LocationSettings(
@@ -190,8 +257,19 @@ class _ExploreScreenState extends State<ExploreScreen> {
       ),
     ).listen((Position position) {
       LatLng currentLatLng = LatLng(position.latitude, position.longitude);
-      _currentUserLocation = currentLatLng;
-      _updateUserMarker();
+      _currentUserLatLng.value = currentLatLng;
+      setState(() {
+        // Remove the old User marker
+        SharedState.visibleMarkers.value.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
+
+        // Add the updated User marker
+        SharedState.visibleMarkers.value.add(
+            CustomMarker.user(
+                latitude: _currentUserLatLng.value.latitude,
+                longitude: _currentUserLatLng.value.longitude
+            )
+        );
+      });
     }, onError: (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error receiving location updates: $e')),
@@ -199,166 +277,107 @@ class _ExploreScreenState extends State<ExploreScreen> {
     });
   }
 
-  void _updateUserMarker() {
-    setState(() {
-      // Remove the old User marker
-      _allMarkers.removeWhere((marker) => marker.key == const ValueKey("user_marker"));
+  void _updateRideMarkerRealTime() {
+    if(SharedState.isRiding.value) {
 
-      // Add the updated User marker
-      _allMarkers.add(
-        Marker(
-          width: 20,
-          height: 20,
-          point: LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude),
-          child: CustomIcon.userMarker(1),
-        ),
-      );
-    });
-  }
-
-  void _pointToUserLocation() {
-    setState(() {
-      _mapController.move(LatLng(_currentUserLocation.latitude, _currentUserLocation.longitude), 16.0);
-    });
-  }
-
-  void _alignMapLocation() {
-    setState(() {
-      _mapController.rotate(0.0);
-    });
+    }
+    // TODO: Make ride markers update in real time (needs IoT API)
   }
 
   void _onTapLocationMarker(int index) {
     // Update these values to make marker card visible and it's details
-    widget.sharedState.markerCardState.value = MarkerCardState.location;
-    widget.sharedState.locationNameMalay.value = _allLocations[index]['location_name_malay'];
-    widget.sharedState.locationNameEnglish.value = _allLocations[index]['location_name_english'];
-    widget.sharedState.locationType.value = _allLocations[index]['location_type'];
-    widget.sharedState.address.value = _allLocations[index]['address'];
-    widget.sharedState.locationLatitude.value = double.parse(_allLocations[index]['latitude']);
-    widget.sharedState.locationLongitude.value = double.parse(_allLocations[index]['longitude']);
+    SharedState.markerCardContent.value = MarkerCardContent.landmark;
+    SharedState.landmarkNameMalay.value = _allLocations[index]['landmark_name_malay'];
+    SharedState.landmarkNameEnglish.value = _allLocations[index]['landmark_name_english'];
+    SharedState.landmarkType.value = _allLocations[index]['landmark_type'];
+    SharedState.landmarkAddress.value = _allLocations[index]['address'];
+    SharedState.landmarkLatitude.value = double.parse(_allLocations[index]['latitude']);
+    SharedState.landmarkLongitude.value = double.parse(_allLocations[index]['longitude']);
+
+    // Map animation when tapped
+    animatePinpoint(LatLng(double.parse(_allLocations[index]['latitude']), double.parse(_allLocations[index]['longitude'])));
+    animateRotation(0);
 
     // Must set to false first, then true again to make sure ValueListenableBuilder of MarkerCard listens
-    widget.sharedState.markerCardVisibility.value = false;
-    widget.sharedState.markerCardVisibility.value = true;
+    SharedState.markerCardVisibility.value = false;
+    SharedState.markerCardVisibility.value = true;
     // This is not redundant code. (Though it can be improved)
   }
 
   void _onTapBikeMarker(int index) {
     // Update these values to make marker card visible and it's details
-    widget.sharedState.markerCardState.value = MarkerCardState.scanBike;
-    widget.sharedState.bikeId.value = _allBikes[index]['bike_id'];
-    widget.sharedState.bikeStatus.value = _allBikes[index]['status'];
-    widget.sharedState.bikeCurrentLatitude.value = double.parse(_allBikes[index]['current_latitude']) ;
-    widget.sharedState.bikeCurrentLongitude.value = double.parse(_allBikes[index]['current_longitude']);
+    SharedState.markerCardContent.value = MarkerCardContent.scanBike;
+    SharedState.bikeId.value = _allBikes[index]['bike_id'];
+    SharedState.bikeStatus.value = _allBikes[index]['status'];
+    SharedState.bikeCurrentLatitude.value = double.parse(_allBikes[index]['current_latitude']) ;
+    SharedState.bikeCurrentLongitude.value = double.parse(_allBikes[index]['current_longitude']);
+
+    // Map animation when tapped
+    animatePinpoint(LatLng(double.parse(_allBikes[index]['current_latitude']), double.parse(_allBikes[index]['current_longitude'])));
+    animateRotation(0);
 
     // Must set to false first, then true again to make sure ValueListenableBuilder of MarkerCard listens
-    widget.sharedState.markerCardVisibility.value = false;
-    widget.sharedState.markerCardVisibility.value = true;
+    SharedState.markerCardVisibility.value = false;
+    SharedState.markerCardVisibility.value = true;
     // This is not redundant code. (Though it can be improved)
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _fetchCurrentUserLocation();
-    _fetchLocations();
-    _fetchBikes();
+  void animatePinpoint(LatLng target) {
+    // Set the duration of the animation
+    const duration = Duration(milliseconds: 500); // 1 second for a smoother transition
+
+    // Create an AnimationController
+    final controller = AnimationController(vsync: this, duration: duration);
+
+    // Add a CurvedAnimation to apply a smooth curve to the animation
+    final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+
+    // Define the Tween for each property (latitude, longitude, and zoom)
+    final latTween = Tween<double>(begin: SharedState.mainMapController.value.camera.center.latitude, end: target.latitude);
+    final lngTween = Tween<double>(begin: SharedState.mainMapController.value.camera.center.longitude, end: target.longitude);
+    final zoomTween = Tween<double>(begin: SharedState.mainMapController.value.camera.zoom, end: MapConstant.focusZoomLevel); // Adjusts zoom
+
+    // Listen for the animation progress
+    controller.addListener(() {
+      final lat = latTween.evaluate(curve);
+      final lng = lngTween.evaluate(curve);
+      final zoomLevel = zoomTween.evaluate(curve);
+
+      // Move the map to the animated position and zoom level
+      SharedState.mainMapController.value.move(LatLng(lat, lng), zoomLevel);
+    });
+
+    // Start the animation and dispose of the controller once it's done
+    controller.forward().whenComplete(() {
+      controller.dispose();
+    });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        alignment: Alignment.centerRight,
-        children: [
-          // Map background
-          _displayMap(),
-          // Loading Animation
-          Visibility(
-            visible: !_isMarkersLoaded,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                    color: ColorConstant.white,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                          color: ColorConstant.shadow, // Shadow color
-                          offset: Offset(0, 2),                 // Shadow position
-                          blurRadius: 10.0,                      // Spread of the shadow
-                          spreadRadius: 0.0                     // Additional spread
-                      )
-                    ]
-                ),
-                child: const LoadingAnimation(dimension: 30),
-              )
-            )
-          ),
-          // Pinpoint-user and learn buttons
-          Padding(
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  onPressed: _alignMapLocation,
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: ColorConstant.white, // Background color
-                    shadowColor: ColorConstant.lightGrey, // Box shadow color
-                    elevation: 2,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CustomIcon.compassColoured(30),
-                  ),
-                ),
-                const SizedBox(height: 13),
-                ElevatedButton(
-                  onPressed: _pointToUserLocation,
-                  style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: ColorConstant.white, // Background color
-                    shadowColor: ColorConstant.lightGrey, // Box shadow color
-                    elevation: 2,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(13),
-                    child: CustomIcon.crosshairColoured(25),
-                  )
-                ),
-                const SizedBox(height: 13),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const LearnScreen(),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    padding: EdgeInsets.zero,
-                    backgroundColor: ColorConstant.white,
-                    shadowColor: ColorConstant.lightGrey,
-                    elevation: 5,
-                    minimumSize: const Size(54, 55), // Directly set size here
-                  ),
-                  child: CustomIcon.learnColoured(30),
-                )
-              ],
-            ),
-          )
-        ],
-      ),
-    );
+  void animateRotation(double targetRotation) {
+    const duration = Duration(milliseconds: 300); // Duration for animation (adjust as needed)
+
+    // Create an AnimationController with the current vsync (usually this in StatefulWidget)
+    final controller = AnimationController(vsync: this, duration: duration);
+
+    // Define a CurvedAnimation for smooth easing
+    final curve = CurvedAnimation(parent: controller, curve: Curves.easeInOut);
+
+    // Get the current rotation of the map
+    final currentRotation =  SharedState.mainMapController.value.camera.rotation;
+
+    // Define a Tween to animate the rotation from current rotation to target rotation
+    final rotationTween = Tween<double>(begin: currentRotation, end: targetRotation);
+
+    // Add a listener to update the map's rotation as the animation progresses
+    controller.addListener(() {
+      final rotation = rotationTween.evaluate(curve);
+      SharedState.mainMapController.value.rotate(rotation);  // Update the map's rotation
+    });
+
+    // Start the animation and dispose of the controller once done
+    controller.forward().whenComplete(() {
+      controller.dispose();
+    });
   }
 }
 
