@@ -1,5 +1,5 @@
 import 'package:ebikesms/modules/global_import.dart';
-import '../../../widget/menu_strip_item.dart';
+import '../../../widget/menu_tile.dart';
 
 class AccountSettingsScreen extends StatelessWidget {
   const AccountSettingsScreen({super.key});
@@ -22,19 +22,19 @@ class AccountSettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          StripMenuItem(
+          MenuTile(
             label: "Reset password",
-            textColor: ColorConstant.black,
+            labelColor: ColorConstant.black,
             onTap: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AccountSettingsScreen()));
+                context,
+                MaterialPageRoute(builder: (context) => const AccountSettingsScreen())
+              );
             },
           ),
-          StripMenuItem(
+          MenuTile(
             label: "",
-            textColor: ColorConstant.black,
+            labelColor: ColorConstant.black,
             onTap: () {},
           ),
         ],

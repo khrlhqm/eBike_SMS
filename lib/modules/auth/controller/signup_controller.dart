@@ -2,41 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:ebikesms/modules/auth/screen/login.dart';
-import 'package:ebikesms/modules/auth/screen/authentication.dart'; // Import biometric screen
+import 'package:ebikesms/modules/auth/screen/signup/authentication.dart'; // Import biometric screen
 import 'package:ebikesms/ip.dart';
 
 class SignupController extends ChangeNotifier {
   Future<int> registerUser(
     BuildContext context,
+    String userEmail,
     String matricNumber,
     String password,
-    String confirmPassword,
     String fullname,
     String username,
   ) async {
-    // Validation: check for empty fields and matching passwords
-    if (matricNumber.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All fields are required')),
-      );
-      return 0;
-    }
+    
 
-    if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Passwords do not match')),
-      );
-      return 0;
-    }
-
-    // Navigate to BiometricAuthScreen and await its result
-    int? authResult = await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const BiometricAuthScreen()),
-    );
+    // // Navigate to BiometricAuthScreen and await its result
+    // int? authResult = await Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => const BiometricAuthScreen()),
+    // );
 
     // Proceed based on biometric authentication result
-    if (authResult == 1) {
+    // if (authResult == 1) {
       // Biometric authentication successful, proceed with API call
       final url = Uri.parse("${ApiBase.baseUrl}/signup.php");
       
@@ -46,6 +33,7 @@ class SignupController extends ChangeNotifier {
           url,
           headers: {"Content-Type": "application/json"},
           body: json.encode({
+            "user_email": userEmail,
             "matric_number": matricNumber,
             "password": password,
             "user_name": username,
@@ -85,12 +73,12 @@ class SignupController extends ChangeNotifier {
         );
         return 0; // Indicate failure
       }
-    } else {
-      // Biometric authentication failed
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Biometric authentication failed')),
-      );
-      return 0; // Indicate failure
-    }
+    // } else {
+    //   // Biometric authentication failed
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(content: Text('Biometric authentication failed')),
+    //   );
+    //   return 0; // Indicate failure
+    // }
   }
 }

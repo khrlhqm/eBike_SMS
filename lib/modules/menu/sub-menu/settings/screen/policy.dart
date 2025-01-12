@@ -1,6 +1,4 @@
 import 'package:ebikesms/modules/global_import.dart';
-import '../../../widget/menu_strip_item.dart';
-import 'package:ebikesms/shared/constants/app_constants.dart';
 
 class PolicyScreen extends StatelessWidget {
   const PolicyScreen({super.key});
@@ -34,7 +32,7 @@ class PolicyScreen extends StatelessWidget {
                   const Positioned(
                     top: 150,
                     left: 20,
-                    child: BackButtonWidget(
+                    child: CustomBackButton(
                       buttonColor: ColorConstant.darkBlue,
                       iconSize: 30.0,
                     ),

@@ -13,6 +13,17 @@ class CustomIcon{
     );
   }
 
+  static Widget statistic(
+    double dimension,
+      {Color color = Colors.white}
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/statistic.svg',
+      width: dimension,
+      height: dimension,
+      colorFilter: ColorFilter.mode(color, BlendMode.srcIn)
+    );
+  }
 
   static Widget bicycle(
     double dimension,
@@ -279,6 +290,46 @@ class CustomIcon{
     );
   }
 
+  static Widget forgetpassword(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/resetpassword.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+  static Widget email(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/email.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+   static Widget newpass(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/newpass.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
+  static Widget report(
+    double dimension,
+  ) {
+    return SvgPicture.asset(
+      'assets/icons/report.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget userMarker(
     double dimension,
   ) {
@@ -290,13 +341,13 @@ class CustomIcon{
   }
 
   // Dynamic Icons
-  static Widget locationMarker(
+  static Widget landmarkMarker(
       double dimension,
-      String locationType,
+      String landmarkType,
       ) {
     String markerName;
 
-    switch (locationType) {
+    switch (landmarkType) {
       case "Cafeteria":
         markerName = "cafeteria-marker";
         break;
@@ -333,6 +384,16 @@ class CustomIcon{
     );
   }
 
+  static Widget ridingMarker(
+      double dimension,
+    ) {
+    return SvgPicture.asset(
+      'assets/icons/markers/riding-marker.svg',
+      width: dimension,
+      height: dimension,
+    );
+  }
+
   static Widget bikeMarker(
       double dimension,
       String bikeStatus,
@@ -341,16 +402,13 @@ class CustomIcon{
 
     switch (bikeStatus) {
       case "Available":
-        markerName = "bike-selected-marker";
-        break;
-      case "Riding":
-        markerName = "bike-riding-marker";
-        break;
-      case "Selected":
-        markerName = "bike-selected-marker";
+        markerName = "bike-available-marker";
         break;
       case "Unavailable":
         markerName = "bike-unavailable-marker";
+        break;
+      case "Riding":
+        markerName = "riding-marker";
         break;
       default:
         markerName = "default-marker"; // For unknown types
