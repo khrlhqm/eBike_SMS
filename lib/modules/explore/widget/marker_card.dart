@@ -150,21 +150,20 @@ class _MarkerCardState extends State<MarkerCard> {
                   ),
                   const SizedBox(height: 5),
                   Row(
-                    children: [
-                      Expanded(
-                        child: CustomRectangleButton(
-                          height: 35,
-                          label: "Ring",
-                          fontSize: 12,
-                          enable: (widget.bikeStatus == "Available"),
-                          fontWeight: FontWeight.w600,
-                          backgroundColor: ColorConstant.white,
-                          foregroundColor: ColorConstant.darkBlue,
-                          
-                          borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
-                          onPressed: () async {
-                          final serverIp = "192.168.0.17"; // Replace with your server's IP
-                          final url = Uri.parse('http://192.168.0.17/e-bike/ring.php?endpoint=ring'); // Updated API URL
+                  children: [
+                    Expanded(
+                      child: CustomRectangleButton(
+                        height: 35,
+                        label: "Ring",
+                        fontSize: 12,
+                        enable: (widget.bikeStatus == "Available"),
+                        fontWeight: FontWeight.w600,
+                        backgroundColor: ColorConstant.white,
+                        foregroundColor: ColorConstant.darkBlue,
+                        borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
+                        onPressed: () async {
+                          final serverIp = "etourmersing.com"; // Replace with the Arduino server's IP
+                          final url = Uri.parse('https://etourmersing.com/Ebike_API/ring.php?endpoint=ring'); // Updated API URL
 
                           try {
                             final response = await http.post(url); // Use POST request to interact with the API
@@ -172,19 +171,31 @@ class _MarkerCardState extends State<MarkerCard> {
                             if (response.statusCode == 200) {
                               // Success: Log or display a message
                               print("Bike is ringing!");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Bike is ringing!")),
+                              );
                             } else {
                               // Error: Log the status code
                               print("Failed to ring the bike. Status code: ${response.statusCode}");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text("Failed to ring the bike. Status code: ${response.statusCode}"),
+                                ),
+                              );
                             }
                           } catch (e) {
                             // Handle connection or other errors
                             print("Error: $e");
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text("Error: $e")),
+                            );
                           }
                         },
                       ),
                     ),
                   ],
                 )
+
 
                 ],
               )
