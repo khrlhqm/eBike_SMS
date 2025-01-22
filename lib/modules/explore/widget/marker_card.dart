@@ -162,8 +162,8 @@ class _MarkerCardState extends State<MarkerCard> {
                         foregroundColor: ColorConstant.darkBlue,
                         borderSide: const BorderSide(width: 2, color: ColorConstant.darkBlue),
                         onPressed: () async {
-                          final serverIp = "etourmersing.com"; // Replace with the Arduino server's IP
-                          final url = Uri.parse('https://etourmersing.com/Ebike_API/ring.php?endpoint=ring'); // Updated API URL
+                          final url = Uri.parse("${ApiBase.baseUrl}/ring.php?endpoint=ring");
+                          //final url = Uri.parse('https://etourmersing.com/Ebike_API/ring.php?endpoint=ring'); // Updated API URL
 
                           try {
                             final response = await http.post(url); // Use POST request to interact with the API
